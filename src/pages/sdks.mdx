@@ -1,14 +1,169 @@
-import { Libraries } from '@/components/Libraries'
-
 export const description =
-  'Protocol offers fine-tuned JavaScript, Ruby, PHP, Python, and Go libraries to make your life easier and give you the best experience when consuming the API.'
+  'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
 
-export const sections = [
-  { title: 'Official libraries', id: 'official-libraries' },
-]
+# Concepts
 
-# Protocol SDKs
+The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
 
-The recommended way to interact with the Protocol API is by using one of our official SDKs. Today, Protocol offers fine-tuned JavaScript, Ruby, PHP, Python, and Go libraries to make your life easier and give you the best experience when consuming the API. {{ className: 'lead' }}
+---
 
-<Libraries />
+## Flow
+
+Refers to creating structured sequences of interactions, as in building conversation flows. Two key methods are addKeyword and addAnswer, which allow keywords to be associated with specific responses, providing options for customizing the conversation flow.
+
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+import { addKeyword } from '@bot-whatsapp/bot'
+
+addKeyword(['hello','hi']).addAnswer('Ey! welcome')
+```
+
+```js {{ title: 'app.js' }}
+const { addKeyword } = require('@bot-whatsapp/bot') 
+
+addKeyword(['hello','hi']).addAnswer('Ey! welcome')
+```
+</CodeGroup>
+
+
+
+Some examples of how to use the addKeyword in which you can place the __keyword__ or a list of __keywords__ that will be used to start a conversational flow
+
+
+```ts
+// Example with single keyword
+addKeyword('hello').addAnswer('Ey! welcome')
+
+// Example with multi keywords
+addKeyword(['hello','hi']).addAnswer('Ey! welcome')
+```
+
+---
+
+## Provider
+
+Refers to creating structured sequences of interactions, as in building conversation flows. Two key methods are addKeyword and addAnswer, which allow keywords to be associated with specific responses, providing options for customizing the conversation flow.
+
+```ts {{ title: 'app.ts' }}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+// ...stuff code...
+
+const main = async () => {
+    
+    await createBot({
+        database: new MemoryDB(),
+        provider: createProvider(BaileysProvider),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
+
+```ts {{ title: 'provider.wppconnect.ts' }}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { WPPConnectProviderClass } from '@bot-whatsapp/provider-wppconnect'
+
+// ...stuff code...
+
+const main = async () => {
+    
+    await createBot({
+        database: new MemoryDB(),
+        provider: createProvider(WPPConnectProviderClass),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
+
+```ts {{ title: 'provider.meta.ts' }}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { MetaProvider } from '@bot-whatsapp/provider-meta'
+
+// ...stuff code...
+
+const main = async () => {
+    
+    await createBot({
+        database: new MemoryDB(),
+        provider: createProvider(MetaProvider, {
+              jwtToken: 'jwtToken',
+              numberId: 'numberId',
+              verifyToken: 'verifyToken',
+              version: 'v16.0',
+        }),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
+
+---
+
+## Database
+
+Refers to creating structured sequences of interactions, as in building conversation flows. Two key methods are addKeyword and addAnswer, which allow keywords to be associated with specific responses, providing options for customizing the conversation flow.
+
+```ts {{ title: 'app.ts' }}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+// ...stuff code...
+
+const main = async () => {
+    
+    await createBot({
+        database: new MemoryDB(),
+        provider: createProvider(BaileysProvider),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
+
+```ts {{ title: 'provider.wppconnect.ts' }}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { WPPConnectProviderClass } from '@bot-whatsapp/provider-wppconnect'
+
+// ...stuff code...
+
+const main = async () => {
+    
+    await createBot({
+        database: new MemoryDB(),
+        provider: createProvider(WPPConnectProviderClass),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
+
+```ts {{ title: 'provider.meta.ts' }}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { MetaProvider } from '@bot-whatsapp/provider-meta'
+
+// ...stuff code...
+
+const main = async () => {
+    
+    await createBot({
+        database: new MemoryDB(),
+        provider: createProvider(MetaProvider, {
+              jwtToken: 'jwtToken',
+              numberId: 'numberId',
+              verifyToken: 'verifyToken',
+              version: 'v16.0',
+        }),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
