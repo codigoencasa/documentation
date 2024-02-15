@@ -40,4 +40,8 @@
     margin-left: calc(50% - min(50%, 33rem));
     margin-right: calc(50% - min(50%, 33rem));
   }
+
+  p {
+    @apply text-base
+  }
 }
