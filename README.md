@@ -4,6 +4,8 @@ Protocol is a [Tailwind UI](https://tailwindui.com) site template built using [T
 
 ## Getting started
 
+Video: [https://www.youtube.com/watch?v=tLQPuy2L8Vw&feature=youtu.be](https://www.youtube.com/watch?v=tLQPuy2L8Vw&feature=youtu.be)
+
 To get started with this template, first install the yarn dependencies:
 
 ```bash
