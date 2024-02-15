@@ -7,35 +7,105 @@ The library is based on three key components for its correct functioning: the Fl
 
 ---
 
-## State
+## State Conversational
 
-Refers to creating structured sequences of interactions, as in building conversation flows. Two key methods are addKeyword and addAnswer, which allow keywords to be associated with specific responses, providing options for customizing the conversation flow.
+Often, we will need to manage conversations and keep the context in a memory called "state" which is volatile and accessible from any function executed in a stream.
 
 <CodeGroup>
-```ts {{ title: 'app.ts' }}
-import { addKeyword } from '@bot-whatsapp/bot'
-
-addKeyword(['hello','hi']).addAnswer('Ey! welcome')
-```
-
-```js {{ title: 'app.js' }}
-const { addKeyword } = require('@bot-whatsapp/bot') 
-
-addKeyword(['hello','hi']).addAnswer('Ey! welcome')
+```ts 
+  const welcomeFlow = addKeyword(['hello'])
+      .addAnswer(
+          '¿Whati"s your name?',
+          {capture: true},
+          async (ctx, { flowDynamic, state }) => {
+              await state.update({ name: ctx.body })
+              await flowDynamic('Gracias por tu nombre!')
+          }
+      )
+      .addAnswer(
+          '¿Cual es tu edad?',
+           {capture: true},
+          async (ctx, { flowDynamic, state }) => {
+              const name = state.get('name')
+              await state.update({ age: ctx.body })
+              await flowDynamic(`Gracias por tu edad! ${name}`)
+          }
+      )
+      .addAnswer('Tus datos son:', null, async (_, { flowDynamic, state }) => {
+          const myState = state.getMyState()
+          await flowDynamic(`Nombre: ${myState.name} Edad: ${myState.age}`)
+      })
 ```
 </CodeGroup>
 
 
+---
 
-Some examples of how to use the addKeyword in which you can place the __keyword__ or a list of __keywords__ that will be used to start a conversational flow
+## Dynamic Messages
 
+In other occasions we need to send messages in a dynamic way of data that can be variable, below you can see an example of how you should do it and how you should NOT do it.
+
+<Error>
+ ❌ Avoid it this, does not work because addAnswer serializes the content at the start of execution.
+</Error>
 
 ```ts
-// Example with single keyword
-addKeyword('hello').addAnswer('Ey! welcome')
+let name = ''
 
-// Example with multi keywords
-addKeyword(['hello','hi']).addAnswer('Ey! welcome')
+const flow = addKeyword('hello')
+    .addAnswer(`What it is your name`, { capture: true }, async (ctx) => {
+        name = ctx.body
+    })
+    .addAnswer(`Tu nombre es: ${name}`)
+```
+<Note>
+If you want to send a dynamic message use flowDynamic.
+</Note>
+
+```ts
+const flow = addKeyword('hello')
+    .addAnswer(`What it is your name`, { capture: true }, async (ctx, { state }) => {
+        await state.update({ name: ctx.body })
+    })
+    .addAction(async (ctx, { state, flowDynamic }) => {
+        const name = state.get('name')
+        await flowDynamic(`Tu nombre es: ${name}`)
+    })
+```
+
+---
+
+## Send File
+
+When you want to send an image, audio, file or any other file you can do it in this way
+
+```ts
+const flow = addKeyword('hello')
+    .addAnswer(`Send image from URL`, 
+        { media: 'https://i.imgur.com/0HpzsEm.png' }
+    )
+    .addAnswer(`Send video from URL`, 
+        { media: 'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4' }
+    )
+    .addAnswer(`Send file from URL`, 
+        { media: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' }
+    )
+```
+
+Other ways to use when the route is coming from a dynamic data source
+
+```ts
+const flow = addKeyword('hello')
+    .addAction(async (_,{flowDynamic}) => {
+        // ...db get source...
+        await flowDynamic([
+            {body:'esto es una imagen', media:'https://i.imgur.com/0HpzsEm.png'}
+        ])
+        await flowDynamic([
+            {body:'esto es un video', media:'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4'}
+        ])
+    })
+
 ```
 
 ---
