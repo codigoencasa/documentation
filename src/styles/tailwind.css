@@ -1,0 +1,43 @@
+:root {
+  --shiki-color-text: theme('colors.white');
+  --shiki-token-constant: theme('colors.teal.300');
+  --shiki-token-string: theme('colors.teal.300');
+  --shiki-token-comment: theme('colors.zinc.500');
+  --shiki-token-keyword: theme('colors.sky.300');
+  --shiki-token-parameter: theme('colors.pink.300');
+  --shiki-token-function: theme('colors.violet.300');
+  --shiki-token-string-expression: theme('colors.teal.300');
+  --shiki-token-punctuation: theme('colors.zinc.200');
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Coolvetica";
+  font-display: swap;
+  src: url("/fonts/DMSans-SemiBold.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Coolvetica";
+  font-display: swap;
+  font-weight: 300;
+  src: url("/fonts/DMSans-Medium.ttf");
+}
+
+@layer base {
+  html {
+    font-family: "Coolvetica", system-ui, sans-serif;
+    font-weight: 300;
+  }
+}
+
+@layer components {
+  .aling-block {
+    max-width: 50rem;
+    margin-left: calc(50% - min(50%, 33rem));
+    margin-right: calc(50% - min(50%, 33rem));
+  }
+}
