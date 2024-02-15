@@ -197,7 +197,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'Resources',
+    title: 'Showcases',
     links: [
       { title: 'Conversations', href: '/conversations' },
       { title: 'Messages', href: '/messages' },
@@ -206,9 +206,11 @@ export const navigation = [
     ],
   },
   {
-    title: 'Showcases',
+    title: 'Plugins',
     links: [
-      { title: 'My first chatbot', href: '/showcase-my-first-bot' },
+      { title: 'Telegram', href: '/showcase-my-first-bot' },
+      { title: 'Shopify', href: '/showcase-my-first-bot' },
+      { title: 'Agents', href: '/showcase-my-first-bot' },
     ],
   },
 ]
