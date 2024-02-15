@@ -199,11 +199,16 @@ export const navigation = [
   {
     title: 'Resources',
     links: [
-      { title: 'Contacts', href: '/contacts' },
       { title: 'Conversations', href: '/conversations' },
       { title: 'Messages', href: '/messages' },
       { title: 'Groups', href: '/groups' },
       { title: 'Attachments', href: '/attachments' },
+    ],
+  },
+  {
+    title: 'Showcases',
+    links: [
+      { title: 'My first chatbot', href: '/showcase-my-first-bot' },
     ],
   },
 ]

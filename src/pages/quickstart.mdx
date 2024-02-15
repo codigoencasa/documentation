@@ -3,92 +3,60 @@ export const description =
 
 # Quickstart
 
-This guide will get you all set up and ready to use the Protocol API. We'll cover how to get started using one of our API clients and how to make your first API request. We'll also look at where to go next to find all the information you need to take full advantage of our powerful REST API. {{ className: 'lead' }}
-
+Creating a bot is as simple as running the following command and following the instructions
 <Note>
-  Before you can make requests to the Protocol API, you will need to grab your
-  API key from your dashboard. You find it under [Settings &raquo; API](#).
+  Prerequisites to consider before using this tool, [Node](https://nodejs.org/en) v20 or higher and [Git](https://git-scm.com/download)
 </Note>
 
-## Choose your client
-
-Before making your first API request, you need to pick which API client you will use. In addition to good ol' cURL HTTP requests, Protocol offers clients for JavaScript, Python, and PHP. In the following example, you can see how to install each client.
 
 <CodeGroup>
-
-```bash {{ title: 'cURL' }}
-# cURL is most likely already installed on your machine
-curl --version
+```bash {{ title: 'pnpm' }}
+pnpm create bot-whatsapp@latest
 ```
 
-```bash {{ language: 'js' }}
-# Install the Protocol JavaScript SDK
-npm install @example/protocol-api --save
+```bash {{ title: 'npm' }}
+npm create bot-whatsapp@latest
 ```
-
-```bash {{ language: 'python' }}
-# Install the Protocol Python SDK
-pip install protocol_api
-```
-
-```bash {{ language: 'php' }}
-# Install the Protocol PHP SDK
-composer require protocol/sdk
-```
-
 </CodeGroup>
+
+Use the space key to select and the enter key to confirm. 
+
+The CLI performs a preliminary check of the Node and operating system version, informing you if it meets the requirements or providing you with relevant information. In addition to generating a base project for you to simply start up
+
+
+## Requirements
+
+Make sure you have installed Node version 20 or higher, below you can see an example to check the version of node you are using.
+
+```bash
+node -v
+v20.10.0
+```
 
 <div className="not-prose aling-block">
   <Button
-    href="/sdks"
+    href="https://nodejs.org/en"
     variant="text"
+    target="_blank"
     arrow="right"
-    children="Check out our list of first-party SDKs"
+    children="Download node from its official website"
   />
 </div>
 
-## Making your first API request
+It is recommended to have GIT installed for proper operation. If you are using Linux or MacOc you probably already have GIT installed by default.
 
-After picking your preferred client, you are ready to make your first call to the Protocol API. Below, you can see how to send a GET request to the Conversations endpoint to get a list of all your conversations. In the cURL example, results are limited to ten conversations, the default page length for each client.
-
-<CodeGroup tag="GET" label="/v1/conversations">
-
-```bash {{ title: 'cURL' }}
-curl -G https://api.protocol.chat/v1/conversations \
-  -H "Authorization: Bearer {token}" \
-  -d limit=10
+```bash
+git -v
+git version XXXX
 ```
-
-```js
-import ApiClient from '@example/protocol-api'
-
-const client = new ApiClient(token)
-
-await client.conversations.list()
-```
-
-```python
-from protocol_api import ApiClient
-
-client = ApiClient(token)
-
-client.conversations.list()
-```
-
-```php
-$client = new \Protocol\ApiClient($token);
-
-$client->conversations->list();
-```
-
-</CodeGroup>
 
 <div className="not-prose aling-block">
   <Button
-    href="/conversations"
+    href="https://git-scm.com/downloads"
     variant="text"
+    target="_blank"
     arrow="right"
-    children="Read the docs for the Conversations endpoint"
+    children="Download GIT from its official website"
   />
 </div>
 
