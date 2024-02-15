@@ -1,42 +1,111 @@
 export const description =
-  'In this guide, we’ll look at how authentication works. Protocol offers two ways to authenticate your API requests: Basic authentication and OAuth2 with a token.'
+  'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
 
-# Authentication
+# Practices
 
-You'll need to authenticate your requests to access any of the endpoints in the Protocol API. In this guide, we'll look at how authentication works. Protocol offers two ways to authenticate your API requests: Basic authentication and OAuth2 with a token — OAuth2 is the recommended way. {{ className: 'lead' }}
+The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
 
-## Basic authentication
+---
 
-With basic authentication, you use your username and password to authenticate your HTTP requests. Unless you have a very good reason, you probably shouldn't use basic auth. Here's how to authenticate using cURL:
+## State Conversational
 
-```bash {{ title: 'Example request with basic auth' }}
-curl https://api.protocol.chat/v1/conversations \
-  -u username:password
+Often, we will need to manage conversations and keep the context in a memory called "state" which is volatile and accessible from any function executed in a stream.
+
+<CodeGroup>
+```ts 
+  const welcomeFlow = addKeyword(['hello'])
+      .addAnswer(
+          '¿Whati"s your name?',
+          {capture: true},
+          async (ctx, { flowDynamic, state }) => {
+              await state.update({ name: ctx.body })
+              await flowDynamic('Gracias por tu nombre!')
+          }
+      )
+      .addAnswer(
+          '¿Cual es tu edad?',
+           {capture: true},
+          async (ctx, { flowDynamic, state }) => {
+              const name = state.get('name')
+              await state.update({ age: ctx.body })
+              await flowDynamic(`Gracias por tu edad! ${name}`)
+          }
+      )
+      .addAnswer('Tus datos son:', null, async (_, { flowDynamic, state }) => {
+          const myState = state.getMyState()
+          await flowDynamic(`Nombre: ${myState.name} Edad: ${myState.age}`)
+      })
+```
+</CodeGroup>
+
+
+---
+
+## Dynamic Messages
+
+In other occasions we need to send messages in a dynamic way of data that can be variable, below you can see an example of how you should do it and how you should NOT do it.
+
+<Error>
+ ❌ Avoid it this, does not work because addAnswer serializes the content at the start of execution.
+</Error>
+
+```ts
+let name = ''
+
+const flow = addKeyword('hello')
+    .addAnswer(`What it is your name`, { capture: true }, async (ctx) => {
+        name = ctx.body
+    })
+    .addAnswer(`Tu nombre es: ${name}`)
+```
+<Note>
+If you want to send a dynamic message use flowDynamic.
+</Note>
+
+```ts
+const flow = addKeyword('hello')
+    .addAnswer(`What it is your name`, { capture: true }, async (ctx, { state }) => {
+        await state.update({ name: ctx.body })
+    })
+    .addAction(async (ctx, { state, flowDynamic }) => {
+        const name = state.get('name')
+        await flowDynamic(`Tu nombre es: ${name}`)
+    })
 ```
 
-Please don't commit your Protocol password to GitHub!
+---
 
-## OAuth2 with bearer token
+## Send File
 
-The recommended way to authenticate with the Protocol API is by using OAuth2. When establishing a connection using OAuth2, you will need your access token — you will find it in the [Protocol dashboard](#) under API settings. Here's how to add the token to the request header using cURL:
+When you want to send an image, audio, file or any other file you can do it in this way
 
-```bash {{ title: 'Example request with bearer token' }}
-curl https://api.protocol.chat/v1/conversations \
-  -H "Authorization: Bearer {token}"
+```ts
+const flow = addKeyword('hello')
+    .addAnswer(`Send image from URL`, 
+        { media: 'https://i.imgur.com/0HpzsEm.png' }
+    )
+    .addAnswer(`Send video from URL`, 
+        { media: 'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4' }
+    )
+    .addAnswer(`Send file from URL`, 
+        { media: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' }
+    )
 ```
 
+Other ways to use when the route is coming from a dynamic data source
 
-Always keep your token safe and reset it if you suspect it has been compromised.
+```ts
+const flow = addKeyword('hello')
+    .addAction(async (_,{flowDynamic}) => {
+        // ...db get source...
+        await flowDynamic([
+            {body:'esto es una imagen', media:'https://i.imgur.com/0HpzsEm.png'}
+        ])
+        await flowDynamic([
+            {body:'esto es un video', media:'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4'}
+        ])
+    })
 
-## Using an SDK
+```
 
-If you use one of our official SDKs, you won't have to worry about any of the above — fetch your access token from the [Protocol dashboard](#) under API settings, and the client library will take care of the rest. All the client libraries use OAuth2 behind the scenes.
-
-<div className="not-prose">
-  <Button
-    href="/sdks"
-    variant="text"
-    arrow="right"
-    children="Check out our list of first-party SDKs"
-  />
-</div>
+---
