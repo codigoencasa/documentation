@@ -191,7 +191,7 @@ export const navigation = [
       { title: 'Quickstart', href: '/quickstart' },
       { title: 'Concepts', href: '/sdks' },
       { title: 'Practices', href: '/authentication' },
-      { title: 'Pagination', href: '/pagination' },
+      { title: 'Events', href: '/pagination' },
       { title: 'Errors', href: '/errors' },
       { title: 'Webhooks', href: '/webhooks' },
     ],
