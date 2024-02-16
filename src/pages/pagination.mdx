@@ -1,0 +1,77 @@
+export const description =
+  'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
+
+# Events
+
+Sometimes users send messages such as an image, video or special location messages, among others, for that case there are events.
+
+---
+
+## WELCOME
+
+When a user sends a "text" message that does not exist in a keyword of another flow, the WELCOME event will be triggered by default, which is the default event.
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  
+  const welcomeFlow = addKeyword(EVENTS.WELCOME).addAnswer('Message hello')
+```
+```js {{ title: 'app.js' }}
+  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  
+  const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('Message hello')
+```
+</CodeGroup>
+
+
+---
+
+## MEDIA
+
+When a user sends a "text" message that does not exist in a keyword of another flow, the WELCOME event will be triggered by default, which is the default event.
+
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  
+  const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('I received a media image/video')
+```
+```js {{ title: 'app.js' }}
+  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  
+  const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('I received a media image/video')
+```
+</CodeGroup>
+
+<Note>
+To save the media file you must invoke the saveFile function from the provider you are using.
+</Note>
+
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+  const welcomeFlow = addKeyword<BaileysProvider>(EVENTS.MEDIA)
+  .addAnswer('I received a media image/video', async (ctx, { provider }) => {
+    const localPath = await provider.saveFile(ctx, {path:'...'})
+    //console.log(localPath)
+  })
+```
+```js {{ title: 'app.js' }}
+  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  const { BaileysProvider } = require('@bot-whatsapp/bot')
+  
+  const welcomeFlow = addKeyword(EVENTS.MEDIA)
+  .addAnswer('I received a media image/video', async (ctx, { provider }) => {
+    const localPath = await provider.saveFile(ctx, {path:'...'})
+    //console.log(localPath)
+  })
+```
+</CodeGroup>
+
+---
+
+
+
+---
