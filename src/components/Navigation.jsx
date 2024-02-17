@@ -209,8 +209,8 @@ export const navigation = [
     title: 'Plugins',
     links: [
       { title: 'Telegram', href: '/telegram' },
-      { title: 'Shopify', href: '/showcase-my-first-bot' },
-      { title: 'Agents', href: '/showcase-my-first-bot' },
+      { title: 'Shopify', href: '/shopify' },
+      { title: 'Agents', href: '/agentsOpenAi' },
     ],
   },
 ]
