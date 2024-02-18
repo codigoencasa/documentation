@@ -1,79 +1,28 @@
-# How to implement Telegram as a provider
+# How to implement Telegram as a provider?
 
-<div style={{ borderRadius: '10px', backgroundColor: '#211951', padding: '.5rem'}}>
-  <span style={{ color: 'white', fontSize: "21px" }}>&#9432;</span> Create your first Telegram bot if you don't have one yet [create your firts Telegram bot](https://core.telegram.org/bots/tutorial, "Create your firts Telegra bot")
-</div>
+<Note>
+Create your first Telegram bot if you don't have one yet [create your firts Telegram bot](https://core.telegram.org/bots/tutorial "Create your firts Telegra bot")
+</Note>
 
-To implement a chatbot on Telegram, you need to install the library `@builderbot-plugins/telegram`
+To implement a chatbot on Telegram, you need to install the library `@builderbot-plugins/telegram` run this command in your console
 
-run this command in your console
-```bash
+<CodeGroup>
+
+```bash {{ title: 'pnpm' }}
     pnpm install @builderbot-plugins/telegram
 ```
-
-You must have your environment __TELEGRAM_TOKEN__ set in your `.env` for the plugin to work
-
-```typescript
-    import 'dotenv/config'
-    import { createBot, MemoryDB, createProvider, addKeyword, createFlow, EVENTS } from '@bot-whatsapp/bot'
-    import { createShopifyFlow } from '@builderbot-plugins/shopify'
-    import { TelegramProvider } from '@builderbot-plugins/telegram'
-
-
-    const main = async () => {
-
-        const provider = createProvider(TelegramProvider)
-
-        const { flow } = await createShopifyFlow()
-
-        await createBot({
-            database: new MemoryDB(),
-            provider,
-            flow: createFlow(flow)
-        })
-
-    }
-
-    main()
+```bash {{ title: 'npm' }}
+    npm install @builderbot-plugins/telegram
 ```
+</CodeGroup>
 
 
 ```typescript
-    import 'dotenv/config'
     import { createBot, MemoryDB, createProvider, addKeyword, createFlow, EVENTS } from '@bot-whatsapp/bot'
     import { createShopifyFlow } from '@builderbot-plugins/shopify'
     import { TelegramProvider } from '@builderbot-plugins/telegram'
 
-
     const main = async () => {
-
-        const provider = createProvider(TelegramProvider, {
-            token: process.env.TELEGRAM_TOKEN
-        })
-
-        const { flow } = await createShopifyFlow()
-
-        await createBot({
-            database: new MemoryDB(),
-            provider,
-            flow: createFlow(flow)
-        })
-
-    }
-
-    main()
-```
-
-
-```typescript
-    import 'dotenv/config'
-    import { createBot, MemoryDB, createProvider, addKeyword, createFlow, EVENTS } from '@bot-whatsapp/bot'
-    import { createShopifyFlow } from '@builderbot-plugins/shopify'
-    import { TelegramProvider } from '@builderbot-plugins/telegram'
-
-
-    const main = async () => {
-
         const provider = createProvider(TelegramProvider, {
             token: 'YOUR_TOKEN_HERE'
         })
@@ -87,7 +36,6 @@ You must have your environment __TELEGRAM_TOKEN__ set in your `.env` for the plu
         })
 
     }
-
     main()
 ```
 
