@@ -7,9 +7,9 @@ The library is based on three key components for its correct functioning: the Fl
 
 ---
 
-## State Conversational
+## Conversational history
 
-Often, we will need to manage conversations and keep the context in a memory called "state" which is volatile and accessible from any function executed in a stream.
+Often, we will need to manage conversations and keep the context in a memory called `state` which is volatile and accessible from any function executed in a stream.
 
 <CodeGroup>
 ```ts 
@@ -106,6 +106,65 @@ const flow = addKeyword('hello')
         ])
     })
 
+```
+
+---
+
+## Goto other flow
+
+If you want to divert a conversational flow to another logic flow based on a response input you can do it in this way
+
+```ts
+
+const flowToA = addKeyword(EVENTS.ACTION).addAnswer('to continue flow A after choose')
+
+const flowDefault = addKeyword(EVENTS.ACTION).addAnswer('none option')
+
+const flow = addKeyword('order')
+    .addAnswer(
+        [
+            `Withc one is the best option for you?`,
+            `Type **A**`,
+            `Type **B**`,
+            `Type **C**`,
+        ], 
+        { capture: true }
+    )
+    .addAnswer(`Thanks for you answer`,async (ctx, {gotoFlow})=> {
+        const userAnswer = ctx.body
+        if(userAnswer === 'A') return gotoFlow(flowToA)
+        return gotoFlow(flowDefault)
+
+    })
+    .addAnswer(`this message will not be sent`)
+```
+
+<Error>
+ ❌ This does not work, the invocation of the gotoFlow function must necessarily include a return.
+</Error>
+
+```ts
+
+//...stuf...
+    ....addAnswer(`Thanks for you answer`,async (ctx, {gotoFlow})=> {
+        gotoFlow(flowToA)
+
+    })
+    .addAnswer(`this message will not be sent`)
+```
+
+<Note>
+ This does work
+</Note>
+
+```ts
+
+//...stuf...
+    ....addAnswer(`Thanks for you answer`,async (ctx, {gotoFlow})=> {
+        return gotoFlow(flowToA)
+
+    })
+    .addAnswer(`this message will not be sent`)
 ```
 
 ---
