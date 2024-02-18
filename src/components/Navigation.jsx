@@ -189,7 +189,7 @@ export const navigation = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
-      { title: 'Concepts', href: '/sdks' },
+      { title: 'Concepts', href: '/concepts' },
       { title: 'Practices', href: '/authentication' },
       { title: 'Events', href: '/pagination' },
       { title: 'Errors', href: '/errors' },
