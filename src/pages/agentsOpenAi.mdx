@@ -1,0 +1,110 @@
+# How to implement an OpenAi plugin for
+
+Before you start, you must make sure to have an API key from [OpenAI](https://platform.openai.com) and set your __OPENAI_API_KEY__ environment in your `.env` file.
+
+Install the library to make use of OpenAI:
+
+```bash
+    npm install @builderbot-plugins/openai-agents
+```
+
+If you have pnpm package manager run this way:
+
+```bash
+    pnpm install @builderbot-plugins/openai-agents
+```
+
+```typescript
+    import "dotenv/config"
+    import { createBot, createProvider, createFlow, addKeyword, EVENTS } = from "@bot-whatsapp/bot";
+
+    import BaileysProvider from "@bot-whatsapp/provider/baileys";
+    import MockAdapter from "@bot-whatsapp/database/mock";
+
+    /** ... other flows importations */
+
+    import { EmployeesClass } from "@builderbot-plugins/openai-agents";
+
+    /**
+     * PLugin Configuration
+     */
+
+    const emplyeeInstace = new EmployeesClass({
+            apiKey: "YOUR_OPENAPI_KEY_HERE",
+            model: "gpt-3.5-turbo-16k",
+            temperature: 0
+    })
+
+    emplyeeInstace.employees([
+    {
+        name: "SALES_AGENT", // NAME OF YOUR AGENT
+        description: // DESCRIPTION OF YOUR AGENT AND WHAT IT WILL DO
+            "I'm Rob, the friendly salesperson in charge of assisting you if you intend to buy or are interested in any product. My responses are brief.",
+        flow: YOUR_FLOW_HERE, // YOUR FLOW IMPLEMENTATION
+    },
+    {
+        name: "EXPERT_AGENT",
+        description:
+            "Hello, my name is Leifer. I am the specialized person in charge of resolving your doubts about our chatbot course, which is developed with Node.js and JavaScript. This course is designed to facilitate sales automation in your business. I will provide concise and direct answers to maximize your understanding."
+        flow: expertoFlow,
+    }
+    ])
+
+
+    /**
+     * ENTRY POINT! 
+     * THIS NOT USE AI FOR MANAGE EVENTS
+     * WELCOME FLOW OR FIRTS FLOW
+     */
+    const welcomeFlow = addKeyword(EVENTS.WELCOME).addAction(async (ctx, ctxFn) => {
+        const {state} = ctxFn
+        const pluginAi = ctxFn.extensions.employeesAddon
+
+        /** This function is the one that does the job */
+        /** Determine the flow and retrieva an employee object */
+        const employeeDeterminated = await pluginAi.determine(ctx.body)
+
+        if(!employeeDeterminated?.employee){
+            return ctxFn.flowDynamic("Oops, I'm sorry, I don't understand. How can I help you?")
+        }
+        state.update({answer:employeeDeterminated.answer})
+        pluginAi.gotoFlow(employeeDeterminated.employee, ctxFn)
+    })
+
+    const expertFlow = addKeyword(EVENTS.ACTION)
+        .addAction(async (_, {state, flowDynamic}) =>{
+            const currentState = state.getMyState()
+            return flowDynamic(currentState.answer) /** here come the answer by OpenAi pluggin */
+        })
+
+
+    // ----- INITIALIZE
+    const main = async () => {
+    const adapterDB = new MockAdapter();
+    const adapterFlow = createFlow([
+        welcomeFlow,
+        expertFlow
+        /** ... other flows */
+    ]);
+    
+    const adapterProvider = createProvider(BaileysProvider);
+
+    const configBot = {
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    }
+
+    const configExtra = {
+        extensions:{
+        employeesAddon: emplyeeInstace
+        }
+    }
+
+    await createBot(configBot,configExtra);
+    };
+
+    main();
+```
+
+__REFERENCES:__ [OpenAi-Agents](https://github.com/codigoencasa/bot-plugins/tree/feature/shopify/packages/openai-agents)

@@ -1,0 +1,99 @@
+# How to implement a Shopify plugin for your virtual shop
+
+To integrate your Shopify store, you need to set your __SHOPIFY_DOMAIN__ and __SHOPIFY_API_KEY__
+and your __OPENAI_API_KEY__
+
+your `.env` file must look like this:
+
+```plaintext
+SHOPIFY_DOMAIN="YOUR_SHOPIFY_DOMAIN_HERE"
+SHOPIFY_API_KEY="YOUR_SHOPIFY_API_KEY_HERE"
+OPENAI_API_KEY="YOUR_OPENAI_API_KEY_HERE"
+```
+
+got your [Shopify Api Key](https://www.shopify.com/partners/blog/17056443-how-to-generate-a-shopify-api-token)\
+got your [Shopify Domain](https://help.shopify.com/en/manual/domains)
+
+To integrate the plugin into your other flows, you need to install the library:
+
+```bash
+    pnpm install @builderbot-plugins/shopify
+```
+
+and then
+
+```typescript
+    import 'dotenv/config'
+    import { createBot, MemoryDB, createProvider, addKeyword, createFlow, EVENTS } from '@bot-whatsapp/bot'
+    import { createShopifyFlow } from '@builderbot-plugins/shopify'
+    import { TelegramProvider, handleCtx } from '@builderbot-plugins/telegram'
+
+    const main = async () => {
+
+        const provider = createProvider(TelegramProvider)
+
+        const { flow } = await createShopifyFlow()
+
+        await createBot({
+            database: new MemoryDB(),
+            provider,
+            flow: createFlow(flow)
+        })
+
+    }
+
+    main()
+```
+---
+> properties [OPTIONAL]
+
+`embeddingInstance`: your model embedding for retrieval information by default take openai embedding model.\
+`flows`: your other smart flows.\
+`modelInstance`: your model instance by default take openai model.\
+`modelName`: your model name by default take __"gpt-3.5-turbo-16k"__\
+`openApiKey`: your openai api key.\
+`shopifyApiKey`: your shopify api key.\
+`shopifyDomain`: your shopify domain.
+---
+
+
+__note:__ The library allows integration with other smartFlows. You can do it this way:
+
+```typescript
+    await createShopifyFlow({
+        flows: [
+            {
+                name: "SALES_AGENT",
+                description: "I'm Rob, the friendly salesperson in charge of assisting you if you intend to buy or are interested in any product. My responses are brief."
+                flow: YOUR_FLOW_HERE
+            }
+        ]
+    })
+```
+
+Since the plugin only returns one flow, you could even work in a hybrid mode like this:
+
+```typescript
+    /** Your importations */
+
+    const main = async () => {
+
+        const provider = createProvider(TelegramProvider)
+
+        const { flow: flows } = await createShopifyFlow()
+        const grettingFlow = addKeyword('foo').addAnswer('not ai flow')
+
+        await createBot({
+            database: new MemoryDB(),
+            provider,
+            flow: createFlow([...flows, grettingFlow])
+        })
+
+    }
+
+    main()
+```
+
+__REFERENCE:__\
+[Shopify pluggin](https://github.com/codigoencasa/bot-plugins/tree/feature/shopify/packages/shopify)\
+[Telegram provider](https://github.com/codigoencasa/bot-plugins/tree/feature/shopify/packages/telegram)
