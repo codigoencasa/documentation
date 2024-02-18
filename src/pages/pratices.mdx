@@ -168,3 +168,18 @@ const flow = addKeyword('order')
 ```
 
 ---
+
+## How turn off bot
+
+Sometimes we will need to turn off the bot for a certain user, so that we can have a conversation with the client without the bot's interference.
+
+```ts
+  const welcomeFlow = addKeyword<BaileysProvider>('margic keyword')
+    .addAnswer('type number to?',{capture:true}, async (ctx, {blacklist, flowDynamic}) => {
+      const numberToBan = ctx.body
+      blacklist.add(numberToBan)
+      await flowDynamic(`Number ${numberToBan} is now blacklist you can chating only with human`)
+    })
+```
+
+---

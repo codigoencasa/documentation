@@ -187,7 +187,7 @@ function DiscordIcon(props) {
 
 function SocialLink({ href, icon: Icon, children }) {
   return (
-    <Link href={href} className="group">
+    <Link href={href} target='_blank' className="group">
       <span className="sr-only">{children}</span>
       <Icon className="h-5 w-5 fill-zinc-700 transition group-hover:fill-zinc-900 dark:group-hover:fill-zinc-500" />
     </Link>
@@ -204,10 +204,10 @@ function SmallPrint() {
         <SocialLink href="#" icon={TwitterIcon}>
           Follow us on Twitter
         </SocialLink>
-        <SocialLink href="#" icon={GitHubIcon}>
+        <SocialLink href="https://github.com/codigoencasa/bot-whatsapp" icon={GitHubIcon}>
           Follow us on GitHub
         </SocialLink>
-        <SocialLink href="#" icon={DiscordIcon}>
+        <SocialLink href="https://link.codigoencasa.com/DISCORD" icon={DiscordIcon}>
           Join our Discord server
         </SocialLink>
       </div>

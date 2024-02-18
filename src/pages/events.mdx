@@ -72,6 +72,56 @@ To save the media file you must invoke the saveFile function from the provider y
 
 ---
 
+---
 
+## DOCUMENT
+
+When a user sends a "text" message that does not exist in a keyword of another flow, the WELCOME event will be triggered by default, which is the default event.
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  
+  const welcomeFlow = addKeyword(EVENTS.WELCOME).addAnswer('Message hello')
+```
+```js {{ title: 'app.js' }}
+  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  
+  const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('Message hello')
+```
+</CodeGroup>
 
 ---
+
+## LOCATION
+
+When a user sends a "text" message that does not exist in a keyword of another flow, the WELCOME event will be triggered by default, which is the default event.
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  
+  const welcomeFlow = addKeyword(EVENTS.WELCOME).addAnswer('Message hello')
+```
+```js {{ title: 'app.js' }}
+  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  
+  const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('Message hello')
+```
+</CodeGroup>
+
+---
+
+## VOICE_NOTE
+
+When a user sends a "text" message that does not exist in a keyword of another flow, the WELCOME event will be triggered by default, which is the default event.
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  
+  const welcomeFlow = addKeyword(EVENTS.WELCOME).addAnswer('Message hello')
+```
+```js {{ title: 'app.js' }}
+  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  
+  const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('Message hello')
+```
+</CodeGroup>
