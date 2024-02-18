@@ -1,44 +1,51 @@
-# How to implement Telegram as a provider
+# How to implement Telegram as a provider?
 
-Create your first Telegram bot if you don't have one yet [create your firts Telegram bot](https://core.telegram.org/bots/tutorial, "Create your firts Telegra bot")
+<Note>
+Create your first Telegram bot if you don't have one yet [create your firts Telegram bot](https://core.telegram.org/bots/tutorial "Create your firts Telegra bot")
+</Note>
 
-To implement a chatbot on Telegram, you need to install the library `@builderbot-plugins/telegram`
+To implement a chatbot on Telegram, you need to install the library `@builderbot-plugins/telegram` run this command in your console
 
-run this command in your console
-```bash
+<CodeGroup>
+
+```bash {{ title: 'pnpm' }}
     pnpm install @builderbot-plugins/telegram
 ```
+```bash {{ title: 'npm' }}
+    npm install @builderbot-plugins/telegram
+```
+</CodeGroup>
+
 
 ```typescript
-    import 'dotenv/config'
-    import { createBot, MemoryDB, createProvider, addKeyword, addAnswer, createFlow } from '@bot-whatsapp/bot'
+    import { createBot, MemoryDB, createProvider, addKeyword, createFlow, EVENTS } from '@bot-whatsapp/bot'
     import { createShopifyFlow } from '@builderbot-plugins/shopify'
     import { TelegramProvider } from '@builderbot-plugins/telegram'
 
-
     const main = async () => {
-
         const provider = createProvider(TelegramProvider, {
-            token: "YOUR_TELEGRAM_TOKEN_HERE"
+            token: 'YOUR_TOKEN_HERE'
         })
 
-        const welcomeFlow = addKeyword('hola').addAnswer('hola amigo!')
+        const { flow } = await createShopifyFlow()
 
         await createBot({
             database: new MemoryDB(),
             provider,
-            flow: createFlow([welcomeFlow])
+            flow: createFlow(flow)
         })
 
     }
-
     main()
 ```
-If you need expose a webhook, you can initialize a polka server onto provider.
+
+This plugin, like the default providers, extends from the __Providerclass__ and integrates with the `bot-whatsapp` library through the __createProvider function__.
+
+This provider, like the default providers, also exposes a function to create webhooks if needed. For this, you need to instantiate the function that exposes a __Polka__ server in which you need to declare the __handleCtx callback__ to handle the entire context of your chatbot.
 
 ```typescript
     import 'dotenv/config'
-    import { createBot, MemoryDB, createProvider, addKeyword, addAnswer, createFlow } from '@bot-whatsapp/bot'
+    import { createBot, MemoryDB, createProvider, addKeyword, createFlow, EVENTS } from '@bot-whatsapp/bot'
     import { createShopifyFlow } from '@builderbot-plugins/shopify'
     import { TelegramProvider, handleCtx } from '@builderbot-plugins/telegram'
 
