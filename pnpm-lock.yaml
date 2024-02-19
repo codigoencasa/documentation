@@ -69,8 +69,8 @@ dependencies:
     specifier: ^16.0.1
     version: 16.0.1(postcss@8.4.35)
   preact:
-    specifier: ^10.19.4
-    version: 10.19.4
+    specifier: ^10.19.5
+    version: 10.19.5
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -4996,8 +4996,8 @@ packages:
       source-map-js: 1.0.2
     dev: false
 
-  /preact@10.19.4:
-    resolution: {integrity: sha512-dwaX5jAh0Ga8uENBX1hSOujmKWgx9RtL80KaKUFLc6jb4vCEAc3EeZ0rnQO/FO4VgjfPMfoLFWnNG8bHuZ9VLw==}
+  /preact@10.19.5:
+    resolution: {integrity: sha512-OPELkDmSVbKjbFqF9tgvOowiiQ9TmsJljIzXRyNE8nGiis94pwv1siF78rQkAP1Q1738Ce6pellRg/Ns/CtHqQ==}
     dev: false
 
   /prelude-ls@1.2.1:
