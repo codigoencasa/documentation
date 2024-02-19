@@ -96,8 +96,8 @@ dependencies:
     specifier: ^5.0.0
     version: 5.0.0
   zustand:
-    specifier: ^4.5.0
-    version: 4.5.0(react@18.2.0)
+    specifier: ^4.5.1
+    version: 4.5.1(react@18.2.0)
 
 devDependencies:
   '@ianvs/prettier-plugin-sort-imports':
@@ -6436,8 +6436,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zustand@4.5.0(react@18.2.0):
-    resolution: {integrity: sha512-zlVFqS5TQ21nwijjhJlx4f9iGrXSL0o/+Dpy4txAP22miJ8Ti6c1Ol1RLNN98BMib83lmDH/2KmLwaNXpjrO1A==}
+  /zustand@4.5.1(react@18.2.0):
+    resolution: {integrity: sha512-XlauQmH64xXSC1qGYNv00ODaQ3B+tNPoy22jv2diYiP4eoDKr9LA+Bh5Bc3gplTrFdb6JVI+N4kc1DZ/tbtfPg==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@types/react': '>=16.8'
