@@ -51,33 +51,27 @@ This provider, like the default providers, also exposes a function to create web
 
     const main = async () => {
 
-        const provider = createProvider(TelegramProvider)
-        /**  your Polka server instance here */
+        const provider = createProvider(TelegramProvider, {
+            token: "YOUR_TELEGRAM_TOKEN_HERE"
+        })
+
         provider.initHttpServer(9000)
-            /** your webhook handle for the bot */
             .http.server.post('/webhook', handleCtx(({
-                { telegram },
                 sendMessage
                 }, req, res) => {
-                   /* your top level function */
                     sendMessage(req.body.chatId, req.body.message)
-                    /* or */
-                    /* your own implementation of sendMessage using the core package library */
-                    telegram.sendMessage(req.body.chatId, req.body.message)
                     res.end('ok')
-                }))
-
-        const { flow } = await createShopifyFlow()
+            }))
+        
+        const welcomeFlow = addKeyword('hola').addAnswer('hola amigo!')
 
         await createBot({
             database: new MemoryDB(),
             provider,
-            flow: createFlow(flow)
+            flow: createFlow([welcomeFlow])
         })
 
     }
 
     main()
 ```
-
-The `sendMessage` function is a top-level function that abstracts the responsibility of message sending to the library, allowing the developer to focus solely on chatbot creation.
