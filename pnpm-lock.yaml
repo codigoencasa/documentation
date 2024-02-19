@@ -18,11 +18,11 @@ dependencies:
     specifier: ^3.0.1
     version: 3.0.1(webpack@5.90.1)
   '@mdx-js/react':
-    specifier: ^2.3.0
-    version: 2.3.0(react@18.2.0)
+    specifier: ^3.0.1
+    version: 3.0.1(@types/react@18.2.55)(react@18.2.0)
   '@next/mdx':
     specifier: ^14.1.0
-    version: 14.1.0(@mdx-js/loader@3.0.1)(@mdx-js/react@2.3.0)
+    version: 14.1.0(@mdx-js/loader@3.0.1)(@mdx-js/react@3.0.1)
   '@sindresorhus/slugify':
     specifier: ^2.2.1
     version: 2.2.1
@@ -97,7 +97,7 @@ dependencies:
     version: 5.0.0
   zustand:
     specifier: ^4.5.0
-    version: 4.5.0(react@18.2.0)
+    version: 4.5.0(@types/react@18.2.55)(react@18.2.0)
 
 devDependencies:
   '@ianvs/prettier-plugin-sort-imports':
@@ -711,9 +711,10 @@ packages:
       - supports-color
     dev: false
 
-  /@mdx-js/react@2.3.0(react@18.2.0):
-    resolution: {integrity: sha512-zQH//gdOmuu7nt2oJR29vFhDv88oGPmVw6BggmrHeMI+xgEkp1B2dX9/bMBSYtK0dyLX/aOmesKS09g222K1/g==}
+  /@mdx-js/react@3.0.1(@types/react@18.2.55)(react@18.2.0):
+    resolution: {integrity: sha512-9ZrPIU4MGf6et1m1ov3zKf+q9+deetI51zprKB1D/z3NOb+rUxxtEl3mCjW5wTGh6VhRdwPueh1oRzi6ezkA8A==}
     peerDependencies:
+      '@types/react': '>=16'
       react: '>=16'
     dependencies:
       '@types/mdx': 2.0.11
@@ -731,7 +732,7 @@ packages:
       glob: 10.3.10
     dev: true
 
-  /@next/mdx@14.1.0(@mdx-js/loader@3.0.1)(@mdx-js/react@2.3.0):
+  /@next/mdx@14.1.0(@mdx-js/loader@3.0.1)(@mdx-js/react@3.0.1):
     resolution: {integrity: sha512-YLYsViq91+H8+3oCtK1iuMWdeN14K70Hy6/tYScY+nfo5bQ84A/A+vA6UdNC9MkbWQ/373hQubx2p4JvUjlb2Q==}
     peerDependencies:
       '@mdx-js/loader': '>=0.15.0'
@@ -743,7 +744,7 @@ packages:
         optional: true
     dependencies:
       '@mdx-js/loader': 3.0.1(webpack@5.90.1)
-      '@mdx-js/react': 2.3.0(react@18.2.0)
+      '@mdx-js/react': 3.0.1(@types/react@18.2.55)(react@18.2.0)
       source-map: 0.7.4
     dev: false
 
@@ -6436,7 +6437,7 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zustand@4.5.0(react@18.2.0):
+  /zustand@4.5.0(@types/react@18.2.55)(react@18.2.0):
     resolution: {integrity: sha512-zlVFqS5TQ21nwijjhJlx4f9iGrXSL0o/+Dpy4txAP22miJ8Ti6c1Ol1RLNN98BMib83lmDH/2KmLwaNXpjrO1A==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
@@ -6451,6 +6452,7 @@ packages:
       react:
         optional: true
     dependencies:
+      '@types/react': 18.2.55
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
