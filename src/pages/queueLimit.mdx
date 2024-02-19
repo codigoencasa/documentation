@@ -1,0 +1,20 @@
+# How to implement and manage Queue Limit
+
+
+To increase the high concurrency limit in the chatbot, it will be necessary to add the queue extension to the constant that holds the extensions and then enter it into the createBot function. This configuration should be done in the main entry point file that contain "createBot", for this example we are using the constant "configExtra":
+
+```bash
+    const configExtra = {
+      extensions: {
+        ai,
+      },
+      queue: {
+        timeout: 20000,
+        concurrencyLimit: 120
+      }
+    };
+
+    createBot(configBot, configExtra);
+```
+Note: The "configBot" constant contains necessary configurations for the adapter flow, provider, and database. Ensure this is correctly set up as per your project's requirements.
+
