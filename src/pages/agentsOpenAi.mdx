@@ -1,12 +1,21 @@
 # How to implement an OpenAi plugin for
 
+
+<Note>
 Before you start, you must make sure to have an API key from [OpenAI](https://platform.openai.com)
+</Note>
 
 Install the library to make use of OpenAI:
 
-```bash
+<CodeGroup>
+
+```bash {{ title: 'pnpm' }}
+    pnpm install @builderbot-plugins/openai-agents
+```
+```bash {{ title: 'npm' }}
     npm install @builderbot-plugins/openai-agents
 ```
+</CodeGroup>
 
 ```typescript
     import "dotenv/config"

@@ -1,15 +1,21 @@
 # How to implement a Shopify plugin for your virtual shop
 
-got your [Shopify Api Key](https://www.shopify.com/partners/blog/17056443-how-to-generate-a-shopify-api-token)\
-got your [Shopify Domain](https://help.shopify.com/en/manual/domains)
+<Note>
+If you need help to generate your Shopify API key you can visit these resources [Shopify Api Key](https://www.shopify.com/partners/blog/17056443-how-to-generate-a-shopify-api-token)
+</Note>
 
 To integrate the plugin into your other flows, you need to install the library:
 
-```bash
+<CodeGroup>
+
+```bash {{ title: 'pnpm' }}
     pnpm install @builderbot-plugins/shopify
 ```
+```bash {{ title: 'npm' }}
+    npm install @builderbot-plugins/shopify
+```
+</CodeGroup>
 
-and then
 
 ```typescript
     import 'dotenv/config'
