@@ -7,7 +7,7 @@ The library is based on three key components for its correct functioning: the Fl
 
 ---
 
-## Conversational history
+## Conversational history {{ tag: 'state'  }}
 
 Often, we will need to manage conversations and keep the context in a memory called `state` which is volatile and accessible from any function executed in a stream.
 
@@ -41,7 +41,7 @@ Often, we will need to manage conversations and keep the context in a memory cal
 
 ---
 
-## Dynamic Messages
+## Dynamic Messages {{ tag: 'flowDynamic'  }}
 
 In other occasions we need to send messages in a dynamic way of data that can be variable, below you can see an example of how you should do it and how you should NOT do it.
 
@@ -110,7 +110,7 @@ const flow = addKeyword('hello')
 
 ---
 
-## Goto other flow
+## Goto other flow {{ tag: 'gotoFlow'  }}
 
 If you want to divert a conversational flow to another logic flow based on a response input you can do it in this way
 
@@ -165,6 +165,21 @@ const flow = addKeyword('order')
 
     })
     .addAnswer(`this message will not be sent`)
+```
+
+---
+
+## How turn off bot
+
+Sometimes we will need to turn off the bot for a certain user, so that we can have a conversation with the client without the bot's interference.
+
+```ts
+  const welcomeFlow = addKeyword<BaileysProvider>('margic keyword')
+    .addAnswer('type number to?',{capture:true}, async (ctx, {blacklist, flowDynamic}) => {
+      const numberToBan = ctx.body
+      blacklist.add(numberToBan)
+      await flowDynamic(`Number ${numberToBan} is now blacklist you can chating only with human`)
+    })
 ```
 
 ---
