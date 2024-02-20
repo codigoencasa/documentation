@@ -1,20 +1,31 @@
 # How to implement and manage Queue Limit
 
 
-To increase the high concurrency limit in the chatbot, it will be necessary to add the queue extension to the constant that holds the extensions and then enter it into the createBot function. This configuration should be done in the main entry point file that contain "createBot", for this example we are using the constant "configExtra":
+To increase the high concurrency limit in the chatbot, it will be necessary to add the queue extension to the constant that holds the extensions and then enter it into the createBot function. This configuration should be done in the main entry point file that contain "createBot"
 
-```bash
-    const configExtra = {
-      extensions: {
-        ai,
-      },
-      queue: {
-        timeout: 20000,
-        concurrencyLimit: 120
-      }
-    };
+```bash {{ title: 'app.ts' }}
+const main = async () => {
 
-    createBot(configBot, configExtra);
+    await createBot({
+        database: new MemoryDB(),
+        provider: createProvider(BaileysProvider),
+        flow: createFlow([...])
+    }, {
+        queue: {
+            timeout: 20000,
+            concurrencyLimit: 50
+        }
+    })
+}
 ```
-Note: The "configBot" constant contains necessary configurations for the adapter flow, provider, and database. Ensure this is correctly set up as per your project's requirements.
+----
 
+<Properties>
+  <Property name="timeout" type="number">
+ Number of milliseconds used as maximum duration for the execution of an asynchronous function. __default 20000__
+  </Property>
+  <Property name="concurrencyLimit" type="number">
+ Number of parallel processes you can be running at the same time. __default 15__
+  </Property>
+
+</Properties>
