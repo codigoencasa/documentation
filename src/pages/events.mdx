@@ -92,17 +92,68 @@ When a user sends a "text" message that does not exist in a keyword of another f
 
 ## Received Location {{ tag: 'LOCATION'  }}
 
-When a user sends a "text" message that does not exist in a keyword of another flow, the WELCOME event will be triggered by default, which is the default event.
+<Note>
+Location must be sent via WhatsApp, does not yet allow location links from external apps
+</Note>
+
+When your chatbot needs to access a user's location, it's important to ensure that the location is sent directly from the WhatsApp app to have results. Once the location is received, you can perform a console log of ctx to view the details of the received location.
+
+The received location context will look something like this in console:
+
 <CodeGroup>
-```ts {{ title: 'app.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
-  
-  const welcomeFlow = addKeyword(EVENTS.WELCOME).addAnswer('Message hello')
+```js {{title: 'terminal'}}
+ctx:  {
+  key: {
+    remoteJid: '5900000000@s.whatsapp.net',
+    fromMe: false,
+    id: '3EB049C15E7C5BD65A1F2B',
+    participant: undefined
+  },
+  messageTimestamp: 1708537544,
+  pushName: 'Diego Reyes 👨🏾‍💻 | yeyodev',
+  broadcast: false,
+  message: Message {
+    locationMessage: LocationMessage {
+      degreesLatitude: -2.1462137699127197,
+      degreesLongitude: -79.88981628417969,
+      name: 'Doctor Miguel Angel Jijón Teran',
+      address: 'Doctor Miguel Angel Jijón Teran, Guayaquil, Ecuador',
+      jpegThumbnail: [Uint8Array],
+      contextInfo: [ContextInfo]
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2
+    }
+  },
+  body: '_event_location__0d5c9f57-0909-44a1-995f-902f9df3b21f',
+  name: 'Diego Reyes | yeyodev 👨🏾‍💻',
+  from: '593000000000'
+}
+
 ```
-```js {{ title: 'app.js' }}
-  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
-  
-  const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('Message hello')
+</CodeGroup>
+
+This will output the user's latitude and longitude in the console, allowing you to effectively utilize the location data for your chatbot's functionality.
+
+To access the location data, you can use the following approach:
+
+<CodeGroup>
+```ts {{ title: 'location.flow.ts' }}
+import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
+
+export default addKeyword(EVENTS.LOCATION).addAnswer("I have received your location!", null, async (ctx) => {
+  const userLatitude = ctx.message.locationMessage.degreesLatitude;
+  const userLongitude = ctx.message.locationMessage.degreesLongitude;
+})
+```
+```js {{ title: 'location.flow.js' }}
+import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
+
+export default addKeyword(EVENTS.LOCATION).addAnswer("I have received your location!", null, async (ctx) => {
+  const userLatitude = ctx.message.locationMessage.degreesLatitude;
+  const userLongitude = ctx.message.locationMessage.degreesLongitude;
+})
 ```
 </CodeGroup>
 
