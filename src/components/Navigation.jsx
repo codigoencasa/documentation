@@ -190,10 +190,17 @@ export const navigation = [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
       { title: 'Concepts', href: '/concepts' },
-      { title: 'Practices', href: '/pratices' },
+      { title: 'Uses cases', href: '/pratices' },
       { title: 'Events', href: '/events' },
       { title: 'Errors', href: '/errors' },
-      { title: 'Webhooks', href: '/webhooks' },
+    ],
+  },
+  {
+    title: 'Features',
+    links: [
+      { title: 'Add Functions', href: '/add-functions' },
+      { title: 'Context', href: '/context' },
+      { title: 'Methods', href: '/methods' },
     ],
   },
   {
