@@ -11,7 +11,7 @@ import { UsersIcon } from '@/components/icons/UsersIcon'
 const resources = [
   {
     href: '/contacts',
-    name: 'Curso',
+    name: 'Contact',
     description:
       'Learn about the contact model and how to create, retrieve, update, delete, and list contacts.',
     icon: UserIcon,
