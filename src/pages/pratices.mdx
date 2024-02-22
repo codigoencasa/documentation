@@ -15,25 +15,25 @@ Often, we will need to manage conversations and keep the context in a memory cal
 ```ts 
   const welcomeFlow = addKeyword(['hello'])
       .addAnswer(
-          '¿Whati"s your name?',
+          "¿What's your name?",
           {capture: true},
           async (ctx, { flowDynamic, state }) => {
               await state.update({ name: ctx.body })
-              await flowDynamic('Gracias por tu nombre!')
+              await flowDynamic('Thanks for giving me your name!')
           }
       )
       .addAnswer(
-          '¿Cual es tu edad?',
+          '¿How old are you?',
            {capture: true},
           async (ctx, { flowDynamic, state }) => {
               const name = state.get('name')
               await state.update({ age: ctx.body })
-              await flowDynamic(`Gracias por tu edad! ${name}`)
+              await flowDynamic(`Thanks for sharing your age! ${name}`)
           }
       )
-      .addAnswer('Tus datos son:', null, async (_, { flowDynamic, state }) => {
+      .addAnswer('Here is your data:', null, async (_, { flowDynamic, state }) => {
           const myState = state.getMyState()
-          await flowDynamic(`Nombre: ${myState.name} Edad: ${myState.age}`)
+          await flowDynamic(`Name: ${myState.name} Age: ${myState.age}`)
       })
 ```
 </CodeGroup>
@@ -53,10 +53,10 @@ In other occasions we need to send messages in a dynamic way of data that can be
 let name = ''
 
 const flow = addKeyword('hello')
-    .addAnswer(`What it is your name`, { capture: true }, async (ctx) => {
+    .addAnswer(`What is your name?`, { capture: true }, async (ctx) => {
         name = ctx.body
     })
-    .addAnswer(`Tu nombre es: ${name}`)
+    .addAnswer(`Your name is: ${name}`)
 ```
 <Note>
 If you want to send a dynamic message use flowDynamic.
@@ -64,12 +64,12 @@ If you want to send a dynamic message use flowDynamic.
 
 ```ts
 const flow = addKeyword('hello')
-    .addAnswer(`What it is your name`, { capture: true }, async (ctx, { state }) => {
+    .addAnswer(`What is your name?`, { capture: true }, async (ctx, { state }) => {
         await state.update({ name: ctx.body })
     })
     .addAction(async (ctx, { state, flowDynamic }) => {
         const name = state.get('name')
-        await flowDynamic(`Tu nombre es: ${name}`)
+        await flowDynamic(`Your name is: ${name}`)
     })
 ```
 
@@ -99,10 +99,10 @@ const flow = addKeyword('hello')
     .addAction(async (_,{flowDynamic}) => {
         // ...db get source...
         await flowDynamic([
-            {body:'esto es una imagen', media:'https://i.imgur.com/0HpzsEm.png'}
+            {body:'This is an image', media:'https://i.imgur.com/0HpzsEm.png'}
         ])
         await flowDynamic([
-            {body:'esto es un video', media:'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4'}
+            {body:'This is a video', media:'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4'}
         ])
     })
 
@@ -110,20 +110,22 @@ const flow = addKeyword('hello')
 
 ---
 
-## Goto other flow {{ tag: 'gotoFlow'  }}
+## Switch to another flow {{ tag: 'gotoFlow'  }}
 
-If you want to divert a conversational flow to another logic flow based on a response input you can do it in this way
+If you want to divert a conversational flow to another logic flow based on a response input you can do it in this way:
 
 ```ts
 
-const flowToA = addKeyword(EVENTS.ACTION).addAnswer('to continue flow A after choose')
+const flowToA = addKeyword(EVENTS.ACTION).addAnswer('Here we have Option A!')
+const flowToB = addKeyword(EVENTS.ACTION).addAnswer('Here we have Option B!')
+const flowToC = addKeyword(EVENTS.ACTION).addAnswer('Here we have Option C!')
 
-const flowDefault = addKeyword(EVENTS.ACTION).addAnswer('none option')
+const flowDefault = addKeyword(EVENTS.ACTION).addAnswer("We don't have that Option 🤔")
 
 const flow = addKeyword('order')
     .addAnswer(
         [
-            `Withc one is the best option for you?`,
+            `Which one is the best option for you?`,
             `Type **A**`,
             `Type **B**`,
             `Type **C**`,
@@ -132,7 +134,15 @@ const flow = addKeyword('order')
     )
     .addAnswer(`Thanks for you answer`,async (ctx, {gotoFlow})=> {
         const userAnswer = ctx.body
-        if(userAnswer === 'A') return gotoFlow(flowToA)
+        if(userAnswer === 'A'){
+            return gotoFlow(flowToA)
+        } 
+        if(userAnswer === 'B'){
+            return gotoFlow(flowToB)
+        } 
+        if(userAnswer === 'C'){
+            return gotoFlow(flowToC)
+        } 
         return gotoFlow(flowDefault)
 
     })
@@ -145,7 +155,7 @@ const flow = addKeyword('order')
 
 ```ts
 
-//...stuf...
+//...Previous code...
     ....addAnswer(`Thanks for you answer`,async (ctx, {gotoFlow})=> {
         gotoFlow(flowToA)
 
@@ -159,7 +169,7 @@ const flow = addKeyword('order')
 
 ```ts
 
-//...stuf...
+//...Previous code...
     ....addAnswer(`Thanks for you answer`,async (ctx, {gotoFlow})=> {
         return gotoFlow(flowToA)
 
@@ -171,14 +181,14 @@ const flow = addKeyword('order')
 
 ## How turn off bot
 
-Sometimes we will need to turn off the bot for a certain user, so that we can have a conversation with the client without the bot's interference.
+Sometimes we will need to turn off the bot for a certain user, so that we can have a conversation with the client without the bot interfering.
 
 ```ts
-  const welcomeFlow = addKeyword<BaileysProvider>('margic keyword')
-    .addAnswer('type number to?',{capture:true}, async (ctx, {blacklist, flowDynamic}) => {
+  const banListFlow = addKeyword<BaileysProvider>('magic keyword')
+    .addAnswer("What's the number to ignore?", {capture:true}, async (ctx, {blacklist, flowDynamic}) => {
       const numberToBan = ctx.body
       blacklist.add(numberToBan)
-      await flowDynamic(`Number ${numberToBan} is now blacklist you can chating only with human`)
+      await flowDynamic(`This number ${numberToBan} is now on the black-list and can only chat with a human 🤖`)
     })
 ```
 
