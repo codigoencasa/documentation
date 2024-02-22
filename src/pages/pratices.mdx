@@ -77,7 +77,7 @@ const flow = addKeyword('hello')
 
 ## Send File
 
-When you want to send an image, audio, file or any other file you can do it in this way
+When you want to send an image, audio, file or any other file you can do it this way. It is __important__ to note that the URL must be __publicly accessible__.
 
 ```ts
 const flow = addKeyword('hello')
@@ -103,6 +103,20 @@ const flow = addKeyword('hello')
         ])
         await flowDynamic([
             {body:'This is a video', media:'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4'}
+        ])
+    })
+
+```
+
+If you need to send a file that is stored locally you can do that too. The use of `join` is recommended to ensure correct directory concatenation.
+
+```ts
+const flow = addKeyword('hello')
+    .addAction(async (_,{flowDynamic}) => {
+        const pathLocal = join('assets','doc.pdf')
+        // pathLocal = c:/doc.pdf
+        await flowDynamic([
+            {body:'This is a video', media: pathLocal }
         ])
     })
 
@@ -179,17 +193,32 @@ const flow = addKeyword('order')
 
 ---
 
-## How turn off bot
+## Turn off bot a certain user {{ tag: 'state'  }}
 
 Sometimes we will need to turn off the bot for a certain user, so that we can have a conversation with the client without the bot interfering.
 
 ```ts
-  const banListFlow = addKeyword<BaileysProvider>('magic keyword')
-    .addAnswer("What's the number to ignore?", {capture:true}, async (ctx, {blacklist, flowDynamic}) => {
-      const numberToBan = ctx.body
-      blacklist.add(numberToBan)
-      await flowDynamic(`This number ${numberToBan} is now on the black-list and can only chat with a human 🤖`)
-    })
+const flow = addKeyword<BaileysProvider>('magic keyword')
+  .addAction(async (_, { state, endFlow }) => {
+      const botOffForThisUser = state.get<boolean>('botOffForThisUser')
+      if(botOffForThisUser) return endFlow()
+  })
+  .addAnswer('Hello!')
+```
+
+---
+
+## Turn off for everyone {{ tag: 'state'  }}
+
+Sometimes we will need to disable the bot for all people, without the need to shut down the server or stop the script.
+
+```ts
+const flow = addKeyword<BaileysProvider>('botoff')
+  .addAction(async (_, { globalState, endFlow }) => {
+      const botOffForEveryOne = globalState.get<boolean>('botOffForEveryOne')
+      if(botOffForEveryOne) return endFlow()
+  })
+  .addAnswer('Hello!')
 ```
 
 ---

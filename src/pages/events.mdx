@@ -103,31 +103,17 @@ The received location context will look something like this in console:
 <CodeGroup>
 ```js {{title: 'terminal'}}
 ctx:  {
-  key: {
-    remoteJid: '5900000000@s.whatsapp.net',
-    fromMe: false,
-    id: '3EB049C15E7C5BD65A1F2B',
-    participant: undefined
-  },
-  messageTimestamp: 1708537544,
-  pushName: 'Diego Reyes 👨🏾‍💻 | yeyodev',
-  broadcast: false,
+  ...
   message: Message {
     locationMessage: LocationMessage {
       degreesLatitude: -2.1462137699127197,
       degreesLongitude: -79.88981628417969,
       name: 'Doctor Miguel Angel Jijón Teran',
       address: 'Doctor Miguel Angel Jijón Teran, Guayaquil, Ecuador',
-      jpegThumbnail: [Uint8Array],
-      contextInfo: [ContextInfo]
     },
-    messageContextInfo: MessageContextInfo {
-      deviceListMetadata: [DeviceListMetadata],
-      deviceListMetadataVersion: 2
-    }
   },
   body: '_event_location__0d5c9f57-0909-44a1-995f-902f9df3b21f',
-  name: 'Diego Reyes | yeyodev 👨🏾‍💻',
+  name: 'yeyodev 👨🏾‍💻',
   from: '593000000000'
 }
 
