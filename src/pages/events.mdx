@@ -9,7 +9,7 @@ Sometimes users send messages such as an image, video or special location messag
 
 ## Default  {{ tag: 'WELCOME'  }}
 
-When a user sends a "text" message that does not exist in a keyword of another flow, the WELCOME event will be triggered by default, which is the default event.
+When a user sends a "text" message that does not exist in a keyword on another flow, the WELCOME event will be triggered by default, which is the default event.
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
@@ -28,18 +28,18 @@ When a user sends a "text" message that does not exist in a keyword of another f
 
 ## Received Image or Video {{ tag: 'MEDIA'  }}
 
-When a user sends a "text" message that does not exist in a keyword of another flow, the WELCOME event will be triggered by default, which is the default event.
+When a user sends an image or video, MEDIA event will be triggered by default, which is the default event.
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
   
-  const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('I received a media image/video')
+  const mediaFlow = addKeyword(EVENTS.MEDIA).addAnswer('I received a media image/video')
 ```
 ```js {{ title: 'app.js' }}
   const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
   
-  const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('I received a media image/video')
+  const mediaFlow = addKeyword(EVENTS.MEDIA).addAnswer('I received a media image/video')
 ```
 </CodeGroup>
 
@@ -52,7 +52,7 @@ To save the media file you must invoke the saveFile function from the provider y
   import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
   import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
 
-  const welcomeFlow = addKeyword<BaileysProvider>(EVENTS.MEDIA)
+  const mediaFlow = addKeyword<BaileysProvider>(EVENTS.MEDIA)
   .addAnswer('I received a media image/video', async (ctx, { provider }) => {
     const localPath = await provider.saveFile(ctx, {path:'...'})
     //console.log(localPath)
@@ -62,7 +62,7 @@ To save the media file you must invoke the saveFile function from the provider y
   const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
   const { BaileysProvider } = require('@bot-whatsapp/bot')
   
-  const welcomeFlow = addKeyword(EVENTS.MEDIA)
+  const mediaFlow = addKeyword(EVENTS.MEDIA)
   .addAnswer('I received a media image/video', async (ctx, { provider }) => {
     const localPath = await provider.saveFile(ctx, {path:'...'})
     //console.log(localPath)
@@ -74,17 +74,17 @@ To save the media file you must invoke the saveFile function from the provider y
 
 ## Received Document {{ tag: 'DOCUMENT'  }}
 
-When a user sends a "text" message that does not exist in a keyword of another flow, the WELCOME event will be triggered by default, which is the default event.
+When a user sends a document, DOCUMENT event will be triggered by default, which is the default event.
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
   
-  const welcomeFlow = addKeyword(EVENTS.WELCOME).addAnswer('Message hello')
+  const documentFlow = addKeyword(EVENTS.DOCUMENT).addAnswer("Wow! I'm sorry I can't read this document right now")
 ```
 ```js {{ title: 'app.js' }}
   const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
   
-  const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('Message hello')
+  const documentFlow = addKeyword(EVENTS.DOCUMENT).addAnswer("Wow! I'm sorry I can't read this document right now")
 ```
 </CodeGroup>
 
@@ -147,16 +147,16 @@ export default addKeyword(EVENTS.LOCATION).addAnswer("I have received your locat
 
 ## Received Voice Note {{ tag: 'VOICE_NOTE' }}
 
-When a user sends a "text" message that does not exist in a keyword of another flow, the WELCOME event will be triggered by default, which is the default event.
+When a user sends a "text" message that does not exist in a keyword on another flow, the WELCOME event will be triggered by default, which is the default event.
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
   
-  const welcomeFlow = addKeyword(EVENTS.WELCOME).addAnswer('Message hello')
+  const voiceNoteFlow = addKeyword(EVENTS.VOICE_NOTE).addAnswer('Give me a second to hear you!')
 ```
 ```js {{ title: 'app.js' }}
   const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
   
-  const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('Message hello')
+  const voiceNoteFlow = addKeyword(EVENTS.VOICE_NOTE).addAnswer('Give me a second to hear you!')
 ```
 </CodeGroup>
