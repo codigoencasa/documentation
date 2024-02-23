@@ -13,6 +13,7 @@ In the following example is stablished a conversation flow that received the key
 then the chatbot will send a message using `addAnswer` with the text 'Hi, welcome to my amazing shop, how can I help you?'
 and 'The shop offers: shoes, shirts, pants, and hats'.
 
+
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { addKeyword } from '@bot-whatsapp/bot';
@@ -29,6 +30,16 @@ and 'The shop offers: shoes, shirts, pants, and hats'.
       .addAnswer(['The shop has: ', 'shoes, shirts, pants, and hats'])
 ```
 </CodeGroup>
+
+
+```mermaid
+flowchart LR
+   id1(("user")) -- say (hello/hi) -->  id2(("Bot")) -- Hi, welcome to my amazing shop, how can I help you? --> id3(("Bot"))  -- The shop has:, shoes, shirts, pants, and hats  --> id4(("user"))
+   style id1 fill:#ffa69e,stroke:#f79256,stroke-width:0px
+   style id2 fill:#1dd3b0,stroke:#248277,stroke-width:0px
+   style id3 fill:#1dd3b0,stroke:#248277,stroke-width:0px
+   style id4 fill:#ffa69e,stroke:#f79256,stroke-width:0px
+```
 
 <Note>
 The addKeywords function also has a number of properiedaes that will help you solve different use cases.
@@ -198,12 +209,13 @@ When using callback functions in an addAnswers the operation prioritizes the sen
 
 ```mermaid
 flowchart LR
-   id1["user"] -- say (hello) -->  id2["Bot"] -- Hi!, Do you know 4+4? --> id3["Bot"]  -- Total: 8 --> id4["user"]
-   style id1 fill:#ffa69e,stroke:#f79256,stroke-width:2px
-   style id2 fill:#1dd3b0,stroke:#248277,stroke-width:2px
-   style id3 fill:#1dd3b0,stroke:#248277,stroke-width:2px
-   style id4 fill:#ffa69e,stroke:#f79256,stroke-width:2px
+   id1(("user")) -- say (hello) -->  id2(("Bot")) -- Hi!, Do you know 4+4? --> id3(("Bot"))  -- Total: 8 --> id4(("user"))
+   style id1 fill:#ffa69e,stroke:#f79256,stroke-width:0px
+   style id2 fill:#1dd3b0,stroke:#248277,stroke-width:0px
+   style id3 fill:#1dd3b0,stroke:#248277,stroke-width:0px
+   style id4 fill:#ffa69e,stroke:#f79256,stroke-width:0px
 ```
+
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
