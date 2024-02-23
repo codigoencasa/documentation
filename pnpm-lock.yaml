@@ -78,8 +78,8 @@ dependencies:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
   recma-nextjs-static-props:
-    specifier: ^1.0.0
-    version: 1.0.0
+    specifier: ^2.0.0
+    version: 2.0.0
   rehype-mdx-title:
     specifier: ^2.0.0
     version: 2.0.0
@@ -5496,6 +5496,14 @@ packages:
       is-reference: 3.0.2
     dev: false
 
+  /periscopic@4.0.2:
+    resolution: {integrity: sha512-sqpQDUy8vgB7ycLkendSKS6HnVz1Rneoc3Rc+ZBUCe2pbqlVuCC5vF52l0NJ1aiMg/r1qfYF9/myz8CZeI2rjA==}
+    dependencies:
+      '@types/estree': 1.0.5
+      is-reference: 3.0.2
+      zimmerframe: 1.1.2
+    dev: false
+
   /picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
 
@@ -5809,13 +5817,12 @@ packages:
       picomatch: 2.3.1
     dev: false
 
-  /recma-nextjs-static-props@1.0.0:
-    resolution: {integrity: sha512-szo+rOZFU6mR0YWZi3e3dSqcEQU+E0f7GIyfMfntHeJccH1s9ODP0HWUeK7No0lcY1smRCcC43JrpoekzuX4Aw==}
-    engines: {node: '>=14.0.0'}
+  /recma-nextjs-static-props@2.0.0:
+    resolution: {integrity: sha512-Q72YZ8EyUF87mqzO/FE2MQNvSHBgpENoiUwJzO3NABmtMdVxGEZNVMHL70TFsz6SJEFMBFqmjx3io3whbLRyhg==}
     dependencies:
       '@types/estree': 1.0.5
-      periscopic: 3.1.0
-      unified: 10.1.2
+      periscopic: 4.0.2
+      unified: 11.0.4
     dev: false
 
   /reflect.getprototypeof@1.0.5:
@@ -7119,6 +7126,10 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zimmerframe@1.1.2:
+    resolution: {integrity: sha512-rAbqEGa8ovJy4pyBxZM70hg4pE6gDgaQ0Sl9M3enG3I0d6H4XSAM3GeNGLKnsBpuijUow064sf7ww1nutC5/3w==}
+    dev: false
 
   /zustand@4.5.0(react@18.2.0):
     resolution: {integrity: sha512-zlVFqS5TQ21nwijjhJlx4f9iGrXSL0o/+Dpy4txAP22miJ8Ti6c1Ol1RLNN98BMib83lmDH/2KmLwaNXpjrO1A==}
