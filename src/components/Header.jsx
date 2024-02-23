@@ -13,11 +13,12 @@ import { useMobileNavigationStore } from '@/components/MobileNavigation'
 import { ModeToggle } from '@/components/ModeToggle'
 import { MobileSearch, Search } from '@/components/Search'
 
-function TopLevelNavItem({ href, children }) {
+function TopLevelNavItem({ href, children, target }) {
   return (
     <li>
       <Link
         href={href}
+        target={target ?? '_self'}
         className="text-sm leading-5 transition text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
       >
         {children}
@@ -69,7 +70,8 @@ export const Header = forwardRef(function Header({ className }, ref) {
         <nav className="hidden md:block">
           <ul role="list" className="flex items-center gap-8">
             <TopLevelNavItem href="/">Documentation</TopLevelNavItem>
-            <TopLevelNavItem href="/">Support</TopLevelNavItem>
+            <TopLevelNavItem href="/">Community</TopLevelNavItem>
+            <TopLevelNavItem target='_blank' href="https://app.codigoencasa.com/courses/curso-chatbot-whatsapp?refCode=LEIFER">Course</TopLevelNavItem>
           </ul>
         </nav>
         <div className="hidden md:block md:h-5 md:w-px md:bg-zinc-900/10 md:dark:bg-white/15" />

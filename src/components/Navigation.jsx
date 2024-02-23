@@ -161,7 +161,7 @@ function NavigationGroup({ group, className }) {
                       transition: { duration: 0.15 },
                     }}
                   >
-                    {sections.map((section) => (
+                    {sections.filter((s) => !s?.not).map((section) => (
                       <li key={section.id}>
                         <NavLink
                           href={`${link.href}#${section.id}`}
@@ -201,6 +201,8 @@ export const navigation = [
       { title: 'Add Functions', href: '/add-functions' },
       { title: 'Context', href: '/context' },
       { title: 'Methods', href: '/methods' },
+      { title: 'Databases', href: '/databases' },
+      { title: 'Providers', href: '/providers' },
     ],
   },
   {
