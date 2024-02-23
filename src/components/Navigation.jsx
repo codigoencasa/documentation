@@ -201,6 +201,8 @@ export const navigation = [
       { title: 'Add Functions', href: '/add-functions' },
       { title: 'Context', href: '/context' },
       { title: 'Methods', href: '/methods' },
+      { title: 'Databases', href: '/databases' },
+      { title: 'Providers', href: '/providers' },
     ],
   },
   {
