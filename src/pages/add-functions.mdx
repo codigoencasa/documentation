@@ -40,6 +40,7 @@ flowchart LR
    style id3 fill:#1dd3b0,stroke:#248277,stroke-width:0px
    style id4 fill:#ffa69e,stroke:#f79256,stroke-width:0px
 ```
+---
 
 <Note>
 The addKeywords function also has a number of properiedaes that will help you solve different use cases.
@@ -207,14 +208,7 @@ The chatbot can send a message with a delay, just add the `addAnswer` function w
 
 When using callback functions in an addAnswers the operation prioritizes the sending of the message and then the execution of the function.
 
-```mermaid
-flowchart LR
-   id1(("user")) -- say (hello) -->  id2(("Bot")) -- Hi!, Do you know 4+4? --> id3(("Bot"))  -- Total: 8 --> id4(("user"))
-   style id1 fill:#ffa69e,stroke:#f79256,stroke-width:0px
-   style id2 fill:#1dd3b0,stroke:#248277,stroke-width:0px
-   style id3 fill:#1dd3b0,stroke:#248277,stroke-width:0px
-   style id4 fill:#ffa69e,stroke:#f79256,stroke-width:0px
-```
+
 
 
 <CodeGroup>
@@ -235,6 +229,18 @@ flowchart LR
 ``` 
 </CodeGroup>
 
+```mermaid
+flowchart TB
+   id1(("user")) -- say (hello) -->  
+   id2(("Bot")) -- Hi!, Do you know 4+4? --> 
+   id3(("Bot"))  -- Total: 8 --> 
+   id4(("user"))
+   
+   style id1 fill:#ffa69e,stroke:#f79256,stroke-width:0px
+   style id2 fill:#1dd3b0,stroke:#248277,stroke-width:0px
+   style id3 fill:#1dd3b0,stroke:#248277,stroke-width:0px
+   style id4 fill:#ffa69e,stroke:#f79256,stroke-width:0px
+```
 
 ---
 
@@ -267,6 +273,7 @@ In the folowing example you can see how you can trigger a function when the user
       })
 ```
 </CodeGroup>
+
 
 You can use the `addAction` function with `capture` as you can see in the example below
 
