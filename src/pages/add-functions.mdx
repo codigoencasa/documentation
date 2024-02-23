@@ -1,6 +1,7 @@
 export const description =
   'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
 
+
 ## addKeyword
 
 This function is imported from *@bot-whastapp/bot*, allows to start a conversation based on the given settings.
@@ -29,6 +30,11 @@ and 'The shop offers: shoes, shirts, pants, and hats'.
 ```
 </CodeGroup>
 
+<Note>
+The addKeywords function also has a number of properiedaes that will help you solve different use cases.
+Some of these functions are: [regex](/add-functions#regex), [sensitive](/add-functions#sensitive)
+</Note>
+
 The conversation flow can be limited to a specific __keyword__, in example the word 'purchase' to trigger the next dialog
 
 <CodeGroup>
@@ -46,7 +52,8 @@ The conversation flow can be limited to a specific __keyword__, in example the w
 ```
 </CodeGroup>
 
-### Regex
+
+## Regex {{ not:'true'}} 
 
 The chatbot supports regex validation, in the following example an object is passed as the second parameter to the `addKeyword` function, the object has a property `regex` set to `true` and the __keywords__ property is a regex pattern.
 
@@ -71,7 +78,7 @@ The chatbot supports regex validation, in the following example an object is pas
 ```
 </CodeGroup>
 
-### Sensitive
+## Sensitive {{ not:'true'}} 
 
 The chatbot detects an specific keyword in any part of a message, but passing the `sensitive` property as `true` the chatbot will trigger the dialog if the user write down the exact same __keyword__.
 Please follow the next example:
@@ -117,7 +124,13 @@ then the chatbot will send a message using `addAnswer` with the text __'Hi, welc
 ``` 
 </CodeGroup>
 
-### Send consecutive messages
+<Note>
+There are different settings for sending messages, some functions such as sending files, images, video, delays, line breaks:
+[line breaks](/add-functions#send-consecutive-messages), [consecutive](/add-functions#send-consecutive-messages), [delay](/add-functions#message-with-delay)
+, [callback](/add-functions#message-with-callback)
+</Note>
+
+## Send consecutive messages {{ not:'true'}} 
 
 The chatbot can send multiple messages just adding the `addAnswer` function one after another.
 In the following example the chatbot will send (3) messages __'Hi'__, __'Welcome to my amazing shop'__ and __'how can I help you?'__ in that order.
@@ -141,7 +154,7 @@ In the following example the chatbot will send (3) messages __'Hi'__, __'Welcome
 ```
 </CodeGroup>
 
-### Send message with line breaks
+## Send message with line breaks {{ not:'true'}} 
 
 Whenever you need to send a message with line breaks, you can use an array of string as you can see in the following example.
 
@@ -160,7 +173,7 @@ Whenever you need to send a message with line breaks, you can use an array of st
 ``` 
 </CodeGroup>
 
-### Message with delay
+## Message with delay {{ not:'true'}} 
 
 The chatbot can send a message with a delay, just add the `addAnswer` function with the `delay` property set to the amount of milliseconds you want to wait before sending the message.
 
@@ -170,6 +183,37 @@ The chatbot can send a message with a delay, just add the `addAnswer` function w
 
   const mainFlow = addKeyword('hello')
       .addAnswer('This message will after 2 seconds', { delay: 2000 })
+```
+```js {{ title: 'app.js' }}
+  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+
+  const mainFlow = addKeyword('hello')
+      .addAnswer('This message will after 2 seconds', { delay: 2000 })
+``` 
+</CodeGroup>
+
+## Message with callback {{ not:'true'}} 
+
+When using callback functions in an addAnswers the operation prioritizes the sending of the message and then the execution of the function.
+
+```mermaid
+flowchart LR
+   id1["user"] -- say (hello) -->  id2["Bot"] -- Hi!, Do you know 4+4? --> id3["Bot"]  -- Total: 8 --> id4["user"]
+   style id1 fill:#ffa69e,stroke:#f79256,stroke-width:2px
+   style id2 fill:#1dd3b0,stroke:#248277,stroke-width:2px
+   style id3 fill:#1dd3b0,stroke:#248277,stroke-width:2px
+   style id4 fill:#ffa69e,stroke:#f79256,stroke-width:2px
+```
+
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+
+  const mainFlow = addKeyword('hello')
+      .addAnswer('Hi!, Do you know 4+4?', null, async (_, {flowDynamic}) => {
+          const sum = 4 + 4
+          await flowDynamic(`Total: ${sum}`)
+      })
 ```
 ```js {{ title: 'app.js' }}
   import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
@@ -275,7 +319,6 @@ If you have any questions, please let us know.
 </CodeGroup>
 
 <Note>
-<h4 style={{ color: 'white' }}>Tip</h4>
 The `addAction` function is a powerful tool to trigger specific actions when the user sends a message with a specific keyword,
 so we strongly recommend to use it for more complex logic than just sending a message to the user.
 </Note>
