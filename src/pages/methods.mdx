@@ -10,6 +10,8 @@ Flow A: In charge of collecting user data.
 Flow B: Responsible for generating a record in the database.
 but both flows are independent files
 
+__Remember__ that the state is independent per conversation between user and bot. 
+
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { createFlow, MemoryDB, createProvider } from '@bot-whatsapp/bot';
@@ -69,36 +71,144 @@ but both flows are independent files
 ```
 </CodeGroup>
 
+Each conversation history with the user is totally independent, in this way we avoid mixing conversations.
+
+
+ <RowCenter>
+
+  <Col>
+  
 ```mermaid
 flowchart LR
-    subgraph flowA
-        direction TB
-        top1[state] --> bottom1[addAnswer]
-    end
-    subgraph flowB
-        direction TB
-        top2[state] --> bottom2[addAnswer]
-    end
-    %% ^ These subgraphs are identical, except for the links to them:
+    subgraph sub1[Conversation User A]
+      style sub1 fill:#e2eafc,stroke:#ccdbfd,stroke-width:2px
+      subgraph flowA
+          direction TB
+          top1[state] --> bottom1[addAnswer]
+      end
+      subgraph flowB
+          direction TB
+          top2[state] --> bottom2[addAnswer]
+      end
+      %% ^ These subgraphs are identical, except for the links to them:
 
-    %% Link *to* flowA: flowA direction is maintained
-    state --> flowA
-    %% Link *within* flowB:
-    %% flowB inherits the direction of the top-level graph (LR)
-    state ---> top2
+      %% Link *to* flowA: flowA direction is maintained
+      state --> flowA
+      %% Link *within* flowB:
+      %% flowB inherits the direction of the top-level graph (LR)
+      state ---> top2
+    end
+
 ```
+  </Col>
+
+  <Col>
+```mermaid
+flowchart LR
+    subgraph sub2[Conversation User B]
+      style sub2 fill:##fdf8e1,stroke:##ffffef,stroke-width:2px
+      subgraph flowA
+          direction TB
+          top1[state] --> bottom1[addAnswer]
+      end
+      subgraph flowB
+          direction TB
+          top2[state] --> bottom2[addAnswer]
+      end
+      %% ^ These subgraphs are identical, except for the links to them:
+
+      %% Link *to* flowA: flowA direction is maintained
+      state --> flowA
+      %% Link *within* flowB:
+      %% flowB inherits the direction of the top-level graph (LR)
+      state ---> top2
+    end
+```
+  </Col>
+
+
+</RowCenter>
+
 
 <Warning>
 It is important to understand that the state is volatile, it does not permeate anywhere. If you are worried about the performance level, you can see it [here](https://github.com/codigoencasa/bot-whatsapp/blob/d8eb94cae36fb233f5283c8d44c6c0307d26a978/packages/bot/src/context/stateClass.ts#L7), but I'll save you time by telling you that it is a [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
 </Warning>
 
-The state has several functionalities, add, update, clean you can see an example of how to use them below.
+---
+
+## GlobalState
+
+Very similar to [state](/methods#state) there is another method called GlobalState to share a global state of the bot between different flows. The main use for this method is to share data that can change and that every conversation between bot and user can access.
+
+Below you can see a practical example where we use the globalState to use it as a switch to allow or disallow the bot to respond no matter who writes to it.
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { createFlow, MemoryDB, createProvider } from '@bot-whatsapp/bot';
+  // ...
+  import flowWelcome from './flows/flow-welcome'
+  import flowOnOff from './flows/flow-on-off'
+
+  const main = async () => {
+
+      const adapterDB = new MemoryDB()
+      const adapterFlow = createFlow([flowWelcome, flowOnOff])
+      const adapterProvider = createProvider(BaileysProvider)
+
+      adapterProvider.initHttpServer(3000)
+
+      await createBot({
+          flow: adapterFlow,
+          provider: adapterProvider,
+          database: adapterDB,
+      })
+  }
+```
+```ts {{ title: 'flow-on-off.ts' }}
+  import { addKeyword, addAction } from '@bot-whatsapp/bot';
+
+  const flowOnOff = addKeyword('turnOffBot')
+    .addAction(async (ctx, { globalState, flowDynamic, endFlow }) => {
+      const offOrOn = !globalState.get<boolean>('enable')
+      await globalState.update({ enable: offOrOn })
+
+      if(!offOrOn){
+        return endFlow(`Bot is: OFF`)
+      }
+      await flowDynamic(`Bot is: ON`)
+    })
+    .addAnswer('message...')
+
+  export default flowOnOff
+
+```
+```ts {{ title: 'flow-welcome.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowWelcome = addKeyword('hi')
+    .addAction(async (_, { globalState, endFlow }) => {
+      const offOrOn = !globalState.get<boolean>('enable')
+      if(!offOrOn) return endFlow()
+    })
+    .addAnswer('Welcome to...')
+
+  export default flowWelcome
+
+```
+</CodeGroup>
+
+---
+
+## State/GlobalState Options {{ not:'true' }}
+
+Both methods such as state and global estate contain similar options and funcinalides, which depending on the use case can be very useful. 
 
 ## Clear {{ not:'true' }}
 
 <Row>
   <Col>
-    This endpoint allows you to delete attachments. Note: This will permanently delete the file.
+This method allows the state to be cleaned either globally or independently. It technically clears the Map.
+
+Available in: __state__, __globalState__
   </Col>
   <Col sticky>
     <CodeGroup>
@@ -106,8 +216,8 @@ The state has several functionalities, add, update, clean you can see an example
     .addAnswer('..', null, async (_, { state }) => {
       state.clear()
     })
-    .addAction(async (_, { state }) => {
-      state.clear()
+    .addAction(async (_, { globalState }) => {
+      globalState.clear()
     })
     ```
     </CodeGroup>
@@ -119,16 +229,21 @@ The state has several functionalities, add, update, clean you can see an example
 
 <Row>
   <Col>
-    This endpoint allows you to delete attachments. Note: This will permanently delete the file.
+To add or update a value in the state we have available the update method. This method receives an object which if the value does not exist creates it and returns a new object with all the values.
+It is important to understand that it is a promise to avoid rare behavior by adding the `await`
+
+Available in: __state__, __globalState__
   </Col>
   <Col sticky>
     <CodeGroup>
     ```ts
     .addAnswer('..', null, async (_, { state }) => {
-      state.clear()
+      await state.update({name:'Joe', age:'33'})
+      await state.update({email:'test@test.com'})
     })
-    .addAction(async (_, { state }) => {
-      state.clear()
+    .addAction(async (_, { globalState }) => {
+      await globalState.update({name:'Joe', age:'33'})
+      await globalState.update({email:'test@test.com'})
     })
     ```
     </CodeGroup>
@@ -136,11 +251,15 @@ The state has several functionalities, add, update, clean you can see an example
   </Col>
 </Row>
 
+
+
 ## Get {{ not:'true' }}
 
 <Row>
   <Col>
-    This endpoint allows you to delete attachments. Note: This will permanently delete the file.
+When we need to retrieve the state values we can do it individually by calling by the property name as follows.
+
+Available in: __state__, __globalState__
   </Col>
   <Col sticky>
     <CodeGroup>
@@ -148,8 +267,8 @@ The state has several functionalities, add, update, clean you can see an example
     .addAnswer('..', null, async (_, { state }) => {
       state.get('propertyName')
     })
-    .addAction(async (_, { state }) => {
-     state.get('propertyName')
+    .addAction(async (_, { globalState }) => {
+      globalState.get('propertyName')
     })
     ```
     </CodeGroup>
@@ -161,7 +280,9 @@ The state has several functionalities, add, update, clean you can see an example
 
 <Row>
   <Col>
-    This endpoint allows you to delete attachments. Note: This will permanently delete the file.
+Another way to retrieve the entire state object belonging to a user-independent conversation is by using getMyState
+
+Available in: __state__
   </Col>
   <Col sticky>
     <CodeGroup>
@@ -169,20 +290,186 @@ The state has several functionalities, add, update, clean you can see an example
     .addAnswer('..', null, async (_, { state }) => {
       state.getMyState()
     })
-    .addAction(async (_, { state }) => {
-     state.getMyState()
+    ```
+    </CodeGroup>
+  </Col>
+</Row>
+
+## GetAllState {{ not:'true' }}
+
+<Row>
+  <Col>
+When we are working with the globalState and we want to retrieve all the properties object with their respective values you can use getAllState
+
+Available in: __globalState__
+  </Col>
+  <Col sticky>
+    <CodeGroup>
+    ```ts
+    .addAnswer('..', null, async (_, { globalState }) => {
+      globalState.getAllState()
     })
     ```
     </CodeGroup>
-
   </Col>
 </Row>
 
 ---
 
-## flowDynamic
+## FlowDynamic
 
-The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
+Many times you will need to send messages coming from an API call or dynamic data from data base or from processes. In this case you should use flowDynamic.
+
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { createFlow, MemoryDB, createProvider } from '@bot-whatsapp/bot';
+  // ...
+  import flowRegister from './flows/flow-register'
+
+  const main = async () => {
+
+      const adapterDB = new MemoryDB()
+      const adapterFlow = createFlow([flowRegister])
+      const adapterProvider = createProvider(BaileysProvider)
+
+      adapterProvider.initHttpServer(3000)
+
+      await createBot({
+          flow: adapterFlow,
+          provider: adapterProvider,
+          database: adapterDB,
+      })
+  }
+```
+```ts {{ title: 'flow-register.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowRegister = addKeyword('register')
+    .addAnswer('What is your name?', { capture: true }, async (ctx, { flowDynamic }) => {
+      const responseName = ctx.body
+      //.... db.insert({name:responseName})
+      await flowDynamic(`Thanks for register ${responseName}`)
+    })
+
+  export default flowRegister
+```
+```ts {{ title: 'flow-list.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowProducts = addKeyword('products')
+    .addAction( async (_, { flowDynamic }) => {
+      const dataAPI = await fetch('http://your-api.example.com/products')
+      const data = await dataAPI.json() as {name:string, photo:string}[]
+      const parseDataToFlow = data.map(item => ({body:`Item: ${item.name}`, media:item.photo}))
+      await flowDynamic(parseDataToFlow)
+    })
+
+  export default flowProducts
+```
+</CodeGroup>
+
+<Error>
+It is NOT recommended to send many messages in a row because the [provider](/concepts#provider) may determine that it is spam. 
+</Error>
+
+If you want to send a list of products it is recommended to send a few products between 4 to 8 and you can ask the user what category of products and other details to filter and be able to respond with the ideal product list.
+
+---
+
+## FlowDynamic Options {{ not: 'true' }}
+
+<Row>
+  <Col>
+
+    This endpoint allows you to send a new message to one of your conversations.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="conversation_id" type="string">
+        Unique identifier for the conversation the message belongs to.
+      </Property>
+      <Property name="message" type="string">
+        The message content.
+      </Property>
+    </Properties>
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="attachments" type="array">
+        An array of attachment objects associated with the message.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/messages">
+
+    ```bash {{ title: 'cURL' }}
+    curl https://api.protocol.chat/v1/messages \
+      -H "Authorization: Bearer {token}" \
+      -d conversation_id="xgQQXg3hrtjh7AvZ" \
+      -d message="You’re what the French call ‘les incompetents.’"
+    ```
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.messages.send({
+      conversation_id: 'xgQQXg3hrtjh7AvZ',
+      message: 'You’re what the French call ‘les incompetents.’',
+    })
+    ```
+
+    ```python
+    from protocol_api import ApiClient
+
+    client = ApiClient(token)
+
+    client.messages.send(
+      conversation_id="xgQQXg3hrtjh7AvZ",
+      message="You’re what the French call ‘les incompetents.’",
+    )
+    ```
+
+    ```php
+    $client = new \Protocol\ApiClient($token);
+
+    $client->messages->send([
+      'conversation_id' => 'xgQQXg3hrtjh7AvZ',
+      'message' => 'You’re what the French call ‘les incompetents.’',
+    ]);
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "gWqY86BMFRiH5o11",
+      "conversation_id": "xgQQXg3hrtjh7AvZ",
+      "contact": {
+        "id": "inEIRvzjC6YLMX3o",
+        "username": "LinnieMcCallister",
+        "phone_number": "1-800-759-3000",
+        "avatar_url": "https://assets.protocol.chat/avatars/linnie.jpg",
+        "last_active_at": 705103200,
+        "created_at": 692233200
+      },
+      "message": "You’re what the French call ‘les incompetents.’",
+      "reactions": [],
+      "attachments": [],
+      "read_at": null,
+      "created_at": 692233200,
+      "updated_at": null
+    }
+    ```
+
+  </Col>
+</Row>
 
 ---
 
