@@ -316,9 +316,160 @@ Available in: __globalState__
 
 ---
 
-## flowDynamic
+## FlowDynamic
 
-The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
+Many times you will need to send messages coming from an API call or dynamic data from data base or from processes. In this case you should use flowDynamic.
+
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { createFlow, MemoryDB, createProvider } from '@bot-whatsapp/bot';
+  // ...
+  import flowRegister from './flows/flow-register'
+
+  const main = async () => {
+
+      const adapterDB = new MemoryDB()
+      const adapterFlow = createFlow([flowRegister])
+      const adapterProvider = createProvider(BaileysProvider)
+
+      adapterProvider.initHttpServer(3000)
+
+      await createBot({
+          flow: adapterFlow,
+          provider: adapterProvider,
+          database: adapterDB,
+      })
+  }
+```
+```ts {{ title: 'flow-register.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowRegister = addKeyword('register')
+    .addAnswer('What is your name?', { capture: true }, async (ctx, { flowDynamic }) => {
+      const responseName = ctx.body
+      //.... db.insert({name:responseName})
+      await flowDynamic(`Thanks for register ${responseName}`)
+    })
+
+  export default flowRegister
+```
+```ts {{ title: 'flow-list.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowProducts = addKeyword('products')
+    .addAction( async (_, { flowDynamic }) => {
+      const dataAPI = await fetch('http://your-api.example.com/products')
+      const data = await dataAPI.json() as {name:string, photo:string}[]
+      const parseDataToFlow = data.map(item => ({body:`Item: ${item.name}`, media:item.photo}))
+      await flowDynamic(parseDataToFlow)
+    })
+
+  export default flowProducts
+```
+</CodeGroup>
+
+<Error>
+It is NOT recommended to send many messages in a row because the [provider](/concepts#provider) may determine that it is spam. 
+</Error>
+
+If you want to send a list of products it is recommended to send a few products between 4 to 8 and you can ask the user what category of products and other details to filter and be able to respond with the ideal product list.
+
+---
+
+## FlowDynamic Options {{ not: 'true' }}
+
+<Row>
+  <Col>
+
+    This endpoint allows you to send a new message to one of your conversations.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="conversation_id" type="string">
+        Unique identifier for the conversation the message belongs to.
+      </Property>
+      <Property name="message" type="string">
+        The message content.
+      </Property>
+    </Properties>
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="attachments" type="array">
+        An array of attachment objects associated with the message.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/messages">
+
+    ```bash {{ title: 'cURL' }}
+    curl https://api.protocol.chat/v1/messages \
+      -H "Authorization: Bearer {token}" \
+      -d conversation_id="xgQQXg3hrtjh7AvZ" \
+      -d message="You’re what the French call ‘les incompetents.’"
+    ```
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.messages.send({
+      conversation_id: 'xgQQXg3hrtjh7AvZ',
+      message: 'You’re what the French call ‘les incompetents.’',
+    })
+    ```
+
+    ```python
+    from protocol_api import ApiClient
+
+    client = ApiClient(token)
+
+    client.messages.send(
+      conversation_id="xgQQXg3hrtjh7AvZ",
+      message="You’re what the French call ‘les incompetents.’",
+    )
+    ```
+
+    ```php
+    $client = new \Protocol\ApiClient($token);
+
+    $client->messages->send([
+      'conversation_id' => 'xgQQXg3hrtjh7AvZ',
+      'message' => 'You’re what the French call ‘les incompetents.’',
+    ]);
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "gWqY86BMFRiH5o11",
+      "conversation_id": "xgQQXg3hrtjh7AvZ",
+      "contact": {
+        "id": "inEIRvzjC6YLMX3o",
+        "username": "LinnieMcCallister",
+        "phone_number": "1-800-759-3000",
+        "avatar_url": "https://assets.protocol.chat/avatars/linnie.jpg",
+        "last_active_at": 705103200,
+        "created_at": 692233200
+      },
+      "message": "You’re what the French call ‘les incompetents.’",
+      "reactions": [],
+      "attachments": [],
+      "read_at": null,
+      "created_at": 692233200,
+      "updated_at": null
+    }
+    ```
+
+  </Col>
+</Row>
 
 ---
 
