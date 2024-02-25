@@ -75,7 +75,6 @@ Each conversation history with the user is totally independent, in this way we a
 
 
  <RowCenter>
-
   <Col>
   
 ```mermaid
@@ -126,7 +125,6 @@ flowchart LR
 ```
   </Col>
 
-
 </RowCenter>
 
 
@@ -141,6 +139,7 @@ It is important to understand that the state is volatile, it does not permeate a
 Very similar to [state](/methods#state) there is another method called GlobalState to share a global state of the bot between different flows. The main use for this method is to share data that can change and that every conversation between bot and user can access.
 
 Below you can see a practical example where we use the globalState to use it as a switch to allow or disallow the bot to respond no matter who writes to it.
+
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { createFlow, MemoryDB, createProvider } from '@bot-whatsapp/bot';
@@ -318,40 +317,35 @@ Available in: __globalState__
 
 ## FlowDynamic
 
-Many times you will need to send messages coming from an API call or dynamic data from data base or from processes. In this case you should use flowDynamic.
+Many times you will need to send messages coming from an API call or dynamic data from data base or from processes. In this case you should use `flowDynamic`.
 
 <CodeGroup>
-```ts {{ title: 'app.ts' }}
-  import { createFlow, MemoryDB, createProvider } from '@bot-whatsapp/bot';
-  // ...
-  import flowRegister from './flows/flow-register'
-
-  const main = async () => {
-
-      const adapterDB = new MemoryDB()
-      const adapterFlow = createFlow([flowRegister])
-      const adapterProvider = createProvider(BaileysProvider)
-
-      adapterProvider.initHttpServer(3000)
-
-      await createBot({
-          flow: adapterFlow,
-          provider: adapterProvider,
-          database: adapterDB,
-      })
-  }
-```
-```ts {{ title: 'flow-register.ts' }}
+```ts {{ title: 'flow-standalone.ts' }}
   import { addKeyword } from '@bot-whatsapp/bot';
 
-  const flowRegister = addKeyword('register')
+  const flowStandAlone = addKeyword('register')
     .addAnswer('What is your name?', { capture: true }, async (ctx, { flowDynamic }) => {
       const responseName = ctx.body
       //.... db.insert({name:responseName})
       await flowDynamic(`Thanks for register ${responseName}`)
     })
 
-  export default flowRegister
+  export default flowStandAlone
+```
+```ts {{ title: 'flow-multiline.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowStandAlone = addKeyword('register')
+    .addAnswer('Hello!', null, async (ctx, { flowDynamic }) => {
+      await flowDynamic(
+        [
+          `How are you?`,
+          `I'm fine`
+        ]
+      )
+    })
+
+  export default flowStandAlone
 ```
 ```ts {{ title: 'flow-list.ts' }}
   import { addKeyword } from '@bot-whatsapp/bot';
@@ -366,6 +360,7 @@ Many times you will need to send messages coming from an API call or dynamic dat
 
   export default flowProducts
 ```
+
 </CodeGroup>
 
 <Error>
@@ -381,114 +376,212 @@ If you want to send a list of products it is recommended to send a few products 
 <Row>
   <Col>
 
-    This endpoint allows you to send a new message to one of your conversations.
-
-    ### Required attributes
-
     <Properties>
-      <Property name="conversation_id" type="string">
-        Unique identifier for the conversation the message belongs to.
+      <Property name="body" type="string">
+You can send a message inside an object using the body property. It is ideal when you need to send a message apart from the message to send a media or to place a delay.
       </Property>
-      <Property name="message" type="string">
-        The message content.
+      <Property name="delay" type="number">
+This is the number of milliseconds that will elapse before the message is sent.
+      </Property>
+      <Property name="media" type="string">
+The url or local path of the file to send, must be a text string and if it is a URL it must be public.
       </Property>
     </Properties>
 
-    ### Optional attributes
-
-    <Properties>
-      <Property name="attachments" type="array">
-        An array of attachment objects associated with the message.
-      </Property>
-    </Properties>
 
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="POST" label="/v1/messages">
+    <CodeGroup>
+    ```ts
+const flow = addKeyword('register')
+    .addAction(async (_, { flowDynamic }) => {
 
-    ```bash {{ title: 'cURL' }}
-    curl https://api.protocol.chat/v1/messages \
-      -H "Authorization: Bearer {token}" \
-      -d conversation_id="xgQQXg3hrtjh7AvZ" \
-      -d message="You’re what the French call ‘les incompetents.’"
-    ```
+      await flowDynamic([{ body: `Thanks  ${responseName}` }])
 
-    ```js
-    import ApiClient from '@example/protocol-api'
+      await flowDynamic([{ 
+        body: `message with 2 seconds delay`,
+        delay: 2000 
+       }])
 
-    const client = new ApiClient(token)
+      await flowDynamic([{ 
+        body: `Look at this`,
+        media: `https://i.imgur.com/0HpzsEm.png` 
+      }])
 
-    await client.messages.send({
-      conversation_id: 'xgQQXg3hrtjh7AvZ',
-      message: 'You’re what the French call ‘les incompetents.’',
+      await flowDynamic([{ 
+        body: `Look at this`,
+        media: join('assets','file.pdf') 
+      }])
+
     })
     ```
 
-    ```python
-    from protocol_api import ApiClient
-
-    client = ApiClient(token)
-
-    client.messages.send(
-      conversation_id="xgQQXg3hrtjh7AvZ",
-      message="You’re what the French call ‘les incompetents.’",
-    )
-    ```
-
-    ```php
-    $client = new \Protocol\ApiClient($token);
-
-    $client->messages->send([
-      'conversation_id' => 'xgQQXg3hrtjh7AvZ',
-      'message' => 'You’re what the French call ‘les incompetents.’',
-    ]);
-    ```
-
     </CodeGroup>
-
-    ```json {{ title: 'Response' }}
-    {
-      "id": "gWqY86BMFRiH5o11",
-      "conversation_id": "xgQQXg3hrtjh7AvZ",
-      "contact": {
-        "id": "inEIRvzjC6YLMX3o",
-        "username": "LinnieMcCallister",
-        "phone_number": "1-800-759-3000",
-        "avatar_url": "https://assets.protocol.chat/avatars/linnie.jpg",
-        "last_active_at": 705103200,
-        "created_at": 692233200
-      },
-      "message": "You’re what the French call ‘les incompetents.’",
-      "reactions": [],
-      "attachments": [],
-      "read_at": null,
-      "created_at": 692233200,
-      "updated_at": null
-    }
-    ```
 
   </Col>
 </Row>
 
 ---
 
-## fallBack
+## FallBack
 
-The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
+The fallBack() function is a fundamental resource within a bot's interaction flow, used to handle invalid or unexpected responses from the user. When a user provides a message that does not match any keyword or expected response, the bot can invoke the fallBack() function to repeat the last message and wait for a valid response.
+
+To integrate the fallBack() function into the bot interaction flow, it is used within the [addAnswer()](/add-functions#add-answer) or [addAction()](/add-functions#add-action) method. Within this method, a condition is set that verifies whether the user's response is valid or not. In case the response does not meet the expected criteria, fallBack() is called to repeat the last message and request a valid response. For example:
+
+<CodeGroup>
+
+```ts {{ title: 'flow-validate-email-custom-error.ts' }}
+import { addKeyword } from '@bot-whatsapp/bot';
+
+const flowEmailRegister = addKeyword('hello')
+  .addAnswer('What is your email?', {capture:true}, (ctx, { fallBack }) => {
+    if (!ctx.body.includes('@')) {
+      return fallBack(`Ups! is not a valid email`);
+    } else {
+      // db.insert({email:ctx.body})
+    }
+  });
+```
+```ts {{ title: 'flow-validate-email-default-error.ts' }}
+import { addKeyword } from '@bot-whatsapp/bot';
+
+const flowEmailRegister = addKeyword('hello')
+  .addAnswer('What is your email?', {capture:true}, (ctx, { fallBack }) => {
+    if (!ctx.body.includes('@')) {
+      return fallBack(); //repeat the last question What is your email?
+    } else {
+      // db.insert({email:ctx.body})
+    }
+  });
+```
+
+</CodeGroup>
 
 ---
 
-## endFlow
+## EndFlow
 
-The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
+The endFlow function is used in chat applications or conversational user interfaces to end a flow of interaction with the user. Imagine a scenario where you are collecting information from a user in several steps, such as their name, email address and phone number, and at each step the user has the option to cancel the current operation.
+
+By using endFlow, you can provide the user with an easy way to cancel the transaction at any time. For example, you could present a button or command that the user can activate to indicate that they wish to stop the current process. Once endFlow is triggered, the interaction flow is terminated and a final message can be displayed to the user, informing them that the request has been canceled.
+
+In summary, endFlow improves the user experience by providing a clear and easy-to-use exit in case they decide to abandon the process at any stage of the interaction flow. This helps ensure a smoother and more satisfying user experience in conversational applications.
+
+
+```ts {{ title: 'flow-validate-email-custom-error.ts' }}
+const flowRegister = addKeyword(['Hi'])
+  .addAnswer(
+    ['Hello!', 'To submit the form I need some data...', 'Write your *Name*'],
+    { capture: true },
+
+    async (ctx, { flowDynamic, endFlow, state }) => {
+      if (ctx.body === 'cancel') {
+        return endFlow(`Your request has been canceled`);
+      }
+      await state.update({name:ctx.body})
+      return flowDynamic(`Nice to meet you *${ctx.body}*, let's continue...`);
+    }
+  )
+  .addAnswer(
+    ['I also need your last names'],
+    { capture: true },
+
+    async (ctx, { flowDynamic, endFlow, state }) => {
+      if (ctx.body === 'cancel') {
+        return endFlow();
+      }
+      await state.update({lastName:ctx.body})
+      return flowDynamic(`Perfect *${ctx.body}*, finally...`);
+    }
+  )
+```
+
 
 ---
 
-## gotoFlow
+## GotoFlow
 
-The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
+The `gotoFlow` function allows the smooth transition between different interaction flows in a conversational application. This method is useful when you need to separate the interaction logic into different flows and direct the user from one flow to another according to certain conditions or events.
 
+For example, suppose that in a virtual assistant application you have one flow for registered users and another for unregistered users. With `gotoFlow`, it is possible to direct a newly registered user from the unregistered user flow to the registered user flow, or vice versa, providing a personalized and consistent experience for each type of user.
+
+In the code provided, it is shown how to use `gotoFlow` to direct the user to the corresponding flow according to their registration status. This helps to modularize the application logic and facilitates the management of multiple conversation flows.
+
+<CodeGroup>
+
+```ts {{ title: 'flow-welcome.ts' }}
+  import { addKeyword, EVENTS } from '@bot-whatsapp/bot';
+
+  const flowWelcome = addKeyword('hi')
+    .addAnswer('Welcome!', null, async (ctx, { gotoFlow }) => {
+        // db.get(...)
+        const userRegistered = true;
+
+        if (userRegistered) return gotoFlow(flowRegistered);
+
+        return gotoFlow(flowUserNotRegistered);
+    });
+  export default flowWelcome
+```
+```ts {{ title: 'flow-a.ts' }}
+  import { addKeyword, EVENTS } from '@bot-whatsapp/bot';
+
+  const flowA = addKeyword(EVENTS.ACTION)
+      .addAction(async (_, { flowDynamic }) => {
+          const mockUser = "Leifer";
+          await flowDynamic(`Hello ${mockUser}! Welcome back.`);
+      });
+  export default flowA
+```
+```ts {{ title: 'flow-b.ts' }}
+  import { addKeyword, EVENTS } from '@bot-whatsapp/bot';
+
+  const flowB = addKeyword(EVENTS.ACTION)
+    .addAnswer(`It's your first time here! What's your email address?`, 
+      { capture: true }, async (_, { flowDynamic, gotoFlow }) => {
+        await flowDynamic('¡We have registered you! Welcome to');
+        return gotoFlow(flowRegistered);
+    });
+  export default flowB
+```
+```ts {{ title: 'app.ts' }}
+  import { createFlow, MemoryDB, createProvider } from '@bot-whatsapp/bot';
+  // ...
+  import flowWelcome from './flows/flow-welcome'
+  import flowA from './flows/flow-a'
+  import flowB from './flows/flow-b'
+
+  const main = async () => {
+
+      const adapterDB = new MemoryDB()
+      const adapterFlow = createFlow([flowWelcome, flowA, flowB])
+      const adapterProvider = createProvider(BaileysProvider)
+
+      adapterProvider.initHttpServer(3000)
+
+      await createBot({
+          flow: adapterFlow,
+          provider: adapterProvider,
+          database: adapterDB,
+      })
+  }
+```
+</CodeGroup>
+
+<Error>
+It is important to note that the implementation of gotoFlow must have a return before
+</Error>
+
+
+
+```mermaid
+flowchart TB
+    flowWelcome[flow-welcome.ts] -->|Inicia flow-a| flowA[flow-a.ts]
+    flowWelcome -->|Inicia flow-b| flowB[flow-b.ts]
+
+```
 ---
 
 ## Blacklist
