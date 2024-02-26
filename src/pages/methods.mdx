@@ -197,6 +197,58 @@ Below you can see a practical example where we use the globalState to use it as 
 ```
 </CodeGroup>
 
+
+```mermaid
+flowchart LR
+    subgraph sub0[GlobalState]
+      subgraph sub1[Conversation User A]
+        style sub1 fill:#e2eafc,stroke:#ccdbfd,stroke-width:2px
+        subgraph flowA
+            direction TB
+            top1[stateA] -.-> bottom1[addAnswer]
+        end
+        subgraph flowB
+            direction TB
+            top2[stateA] -.-> bottom2[addAnswer]
+        end
+        %% ^ These subgraphs are identical, except for the links to them:
+
+        %% Link *to* flowA: flowA direction is maintained
+        stateA -.-> top1
+        %% Link *within* flowB:
+        %% flowB inherits the direction of the top-level graph (LR)
+        stateA -.-> top2
+      end
+
+      subgraph sub2[Conversation User B]
+        style sub2 fill:#e2eafc,stroke:#ccdbfd,stroke-width:2px
+        subgraph flowA1
+            direction TB
+            top3[stateB] -.-> bottom3[addAnswer]
+        end
+        subgraph flowB1
+            direction TB
+            top4[stateB] -.-> bottom4[addAnswer]
+        end
+        %% ^ These subgraphs are identical, except for the links to them:
+
+        %% Link *to* flowA1: flowA1 direction is maintained
+        stateB -.-> top3
+        %% Link *within* flowB1:
+        %% flowB1 inherits the direction of the top-level graph (LR)
+        stateB -.-> top4
+      end
+
+        globalState --> bottom1
+        globalState --> bottom2
+        globalState --> bottom3
+        globalState --> bottom4
+
+        style globalState fill:#ffccd5,stroke:#c9184a,stroke-width:2px
+    end
+
+```
+
 ---
 
 ## State/GlobalState Options {{ not:'true' }}
@@ -588,7 +640,59 @@ flowchart TB
 
 ## Blacklist
 
-The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
+Many times we will need to add or manage a list of nuemers that we do not want to interact with our bot. For them there is a blacklist that contains a series of methods to add, remove and review numbers.
+Imagine a case where you want to talk to a contact without the intervention of the bot. You could use this mechanism
+
+<CodeGroup>
+
+```ts {{ title: 'http-mute.ts' }}
+    const flowMain = addKeyword<BaileysProvider>(EVENTS.WELCOME)
+        .addAction(async (_, { flowDynamic}) => {
+            await flowDynamic('Hola buenas!!')
+        })
+
+    await createBot({
+        database: new MemoryDB(),
+        flow: createFlow([flowMain]),
+        provider: createProvider(BaileysProvider),
+    })
+
+    adapterProvider.initHttpServer(3001)
+    adapterProvider.http.server.post('/mute-number', handleCtx(async (bot, req, res) => {
+        await bot.blacklist.add(`340000000`) // added to blacklist
+        res.end('ok number muted')
+    }))
+```
+```ts {{ title: 'flow-mute.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowMute = addKeyword('hi')
+      .addAction(async (ctx, { flowDynamic, blacklist }) => {
+          // const dataFromDb = db.findOne({from:ctx.from}) simualte db query
+          const dataFromDb = {muted:true}
+          if(dataFromDb.muted) {
+            blacklist.add(ctx.from)
+            await flowDynamic(`${ctx.from}! added to blacklist`);
+          } else {
+            blacklist.remove(ctx.from)
+            await flowDynamic(`${ctx.from}! removed from blacklist`);
+          }
+  
+      });
+  export default flowMute
+```
+```ts {{ title: 'flow-check-if.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowCheckIf = addKeyword('hi')
+      .addAction(async (ctx, { flowDynamic, blacklist }) => {
+          const dataCheck = blacklist.checkIf(ctx.from)
+          await flowDynamic(`Muted: ${dataCheck}`);
+  
+      });
+  export default flowCheckIf
+```
+</CodeGroup>
 
 ---
 
