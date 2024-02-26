@@ -641,6 +641,59 @@ flowchart TB
 ## Blacklist
 
 Many times we will need to add or manage a list of nuemers that we do not want to interact with our bot. For them there is a blacklist that contains a series of methods to add, remove and review numbers.
+Imagine a case where you want to talk to a contact without the intervention of the bot. You could use this mechanism
+
+<CodeGroup>
+
+```ts {{ title: 'http-mute.ts' }}
+    const flowMain = addKeyword<BaileysProvider>(EVENTS.WELCOME)
+        .addAction(async (_, { flowDynamic}) => {
+            await flowDynamic('Hola buenas!!')
+        })
+
+    await createBot({
+        database: new MemoryDB(),
+        flow: createFlow([flowMain]),
+        provider: createProvider(BaileysProvider),
+    })
+
+    adapterProvider.initHttpServer(3001)
+    adapterProvider.http.server.post('/mute-number', handleCtx(async (bot, req, res) => {
+        await bot.blacklist.add(`340000000`) // added to blacklist
+        res.end('ok number muted')
+    }))
+```
+```ts {{ title: 'flow-mute.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowMute = addKeyword('hi')
+      .addAction(async (ctx, { flowDynamic, blacklist }) => {
+          // const dataFromDb = db.findOne({from:ctx.from}) simualte db query
+          const dataFromDb = {muted:true}
+          if(dataFromDb.muted) {
+            blacklist.add(ctx.from)
+            await flowDynamic(`${ctx.from}! added to blacklist`);
+          } else {
+            blacklist.remove(ctx.from)
+            await flowDynamic(`${ctx.from}! removed from blacklist`);
+          }
+  
+      });
+  export default flowMute
+```
+```ts {{ title: 'flow-check-if.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowCheckIf = addKeyword('hi')
+      .addAction(async (ctx, { flowDynamic, blacklist }) => {
+          const dataCheck = blacklist.checkIf(ctx.from)
+          await flowDynamic(`Muted: ${dataCheck}`);
+  
+      });
+  export default flowCheckIf
+```
+</CodeGroup>
+
 ---
 
 ## idle
