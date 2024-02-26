@@ -16,6 +16,25 @@ const withMDX = nextMDX({
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'github.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static-cdn.jtvnw.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+      },
+    ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
