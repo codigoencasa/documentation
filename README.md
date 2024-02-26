@@ -21,6 +21,25 @@ yarn dev
 
 Finally, open [http://localhost:3000](http://localhost:3000) in your browser to view the website.
 
+__CREATE YOUR FIRTS PAGE DOCUMENTATION__
+Into src/pages create or edit the pages in whick you work
+
+don´t forget export a const description into your mdx page and the title'page
+
+it must looks like:
+
+```mdx
+export const description = 'YOUR_DESCRIPTION_HERE'
+
+# YOUR_TITLE_HERE
+
+...
+
+SOME WHEREVER ELSE
+
+```
+
+
 ## Customizing
 
 You can start editing this template by modifying the files in the `/src` folder. The site will auto-update as you edit these files.

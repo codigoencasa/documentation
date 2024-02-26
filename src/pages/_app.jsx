@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }) {
         {router.pathname === '/' ? (
           <title>API Reference</title>
         ) : (
-          <title>{`${pageProps.title} - API Reference`}</title>
+          <title>{`${pageProps?.title || 'Documentation'} - API Reference`}</title>
         )}
         <meta name="description" content={pageProps.description} />
       </Head>

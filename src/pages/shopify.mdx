@@ -1,4 +1,6 @@
-# How to implement a Shopify plugin for your virtual shop
+export const description = "Learn how to implement your own Shopify bot to assist your store's customers and take care of sales"
+
+# Shopify
 
 <Note>
 If you need help to generate your Shopify API key you can visit these resources [Shopify Api Key](https://www.shopify.com/partners/blog/17056443-how-to-generate-a-shopify-api-token)
@@ -6,16 +8,9 @@ If you need help to generate your Shopify API key you can visit these resources 
 
 To integrate the plugin into your other flows, you need to install the library:
 
-<CodeGroup>
-
-```bash {{ title: 'pnpm' }}
-    pnpm install @builderbot-plugins/shopify
-```
 ```bash {{ title: 'npm' }}
     npm install @builderbot-plugins/shopify
 ```
-</CodeGroup>
-
 
 ```typescript
     import 'dotenv/config'
@@ -45,6 +40,103 @@ To integrate the plugin into your other flows, you need to install the library:
     main()
 ```
 
+## SmartFlows
+
+Okay, a smartflow is nothing more than a flow like we know, it's just that this one has something that makes it special!
+
+That something is the ability to communicate with AI to understand what the user is trying to tell us.
+
+To add a smartflow, follow the code I show you below
+
+```ts
+
+    /* stuff code */
+
+    const byeFlow = addKeyword('bye').addAnswer('bye, i hope see you soon');
+
+    const smartFlowBye = {
+        name: 'BYE_FLOW',
+        description: [
+            "I'm an expert in goodbyes,",
+            "I'm the right person to respond when the user says bye or is saying goodbye."
+        ].join(' '),
+        flow: byeFlow
+    }
+
+    const { flow } = await createShopifyFlow({
+        modelName: 'gpt-3.5-turbo-16k',
+        openApiKey: "YOUR_OPEN_API_KEY_HERE",
+        shopifyApiKey: "YOUR_SHOPIFY_API_KEY_HERE",
+        shopifyDomain: "YOUR_SHOPIFY_DOMAIN_HERE",
+        flows: [smartFlowBye]
+    })
+
+
+    await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow(flows)
+    })
+
+```
+The bot's response should be something like this.
+
+![ByeFlow](https://imgur.com/eCafkEH.jpg)
+
+## NormalFlows
+
+Sometimes we just need a common flow to provide immediate and controlled responses. In this case, let's simply add the flow to trigger an action when the user says thank you.
+
+```ts
+    const gratefullFlow = addKeyword('/thanks/', 
+    { sensitive: false, regex: true }).addAnswer("Thank you for trusting our store ❤️");
+
+
+    const flows = flow.concat(gratefullFlow)
+
+    const { flow } = await createShopifyFlow({
+        modelName: 'gpt-3.5-turbo-16k',
+        openApiKey: "YOUR_OPEN_API_KEY_HERE",
+        shopifyApiKey: "YOUR_SHOPIFY_API_KEY_HERE",
+        shopifyDomain: "YOUR_SHOPIFY_DOMAIN_HERE"
+    })
+
+    await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow(flows)
+    })
+```
+
+![normalFlow](https://imgur.com/8USmljn.jpg)
+
+## Accuracy
+__ACCURACY FROM PLUGIN__
+
+The plugin was subjected to various conversational tests, ranging from direct questions to more conversational ones.
+
+here somethings examples
+
+![pricing](https://imgur.com/Hqg2iKe.jpg)
+![image](https://imgur.com/XWixElU.jpg)
+![colors](https://imgur.com/wfdYgQf.jpg)
+
+The plugin has a 97% of preccision when the conversation is not ambiguous
+
+The plugin has a 96% accuracy when the conversation is unambiguous. This means it is as accurate as the question itself.
+This does not diminish its potential.
+
+TODO:
+
+- [ ] Improve history conversation.
+
+- [ ] Manage ambiguous question in same flow.
+
+- [ ] Improve answer triguers by agents.
+
+- [ ] Dynamic language spoken by the user.
+
+## References
 __REFERENCE:__\
 [Shopify pluggin](https://github.com/codigoencasa/bot-plugins/tree/feature/shopify/packages/shopify)\
 [Telegram provider](https://github.com/codigoencasa/bot-plugins/tree/feature/shopify/packages/telegram)
