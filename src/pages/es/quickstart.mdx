@@ -1,0 +1,171 @@
+import { Resources } from '@/components/Resources'
+
+export const description =
+  'This guide will get you all set up and ready to use the Protocol API. We’ll cover how to get started an API client and how to make your first API request.'
+
+# Quickstart
+
+In this example we can see the basis of a simple bot which responds to the keywords sent by a user, the words are: `info, hello, hi`. You can see how to create the bot and implement the [flows](/concepts#flow).
+
+<CodeGroup>
+```ts {{ title: 'main.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+/** send static messages */
+const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+
+/** send dynamic message from db or other sources */
+const infoFlow = addKeyword<BaileysProvider, MemoryDB>('info')
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+    })
+
+/** send media files */
+const mediaFlow = addKeyword<BaileysProvider, MemoryDB>('image')
+    .addAnswer(`Send Image A`, { media: 'https://i.imgur.com/AsvWfUX.png' })
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+        await flowDynamic(
+            [
+                {
+                    body: 'Send Image B',
+                    media: 'https://i.imgur.com/w0RtKnN.png'
+                }
+            ]
+        )
+    })
+
+/** initialization bot */
+const main = async () => {
+
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow, infoFlow, mediaFlow])
+    const adapterProvider = createProvider(BaileysProvider)
+
+    adapterProvider.initHttpServer(3000)
+
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+
+```
+
+```js {{ title: 'main.js' }}
+const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@bot-whatsapp/bot')
+const { BaileysProvider } = require('@bot-whatsapp/bot')
+
+/** send static messages */
+const welcomeFlow = addKeyword(['hello', 'hi']).addAnswer('Ey! welcome')
+
+/** send dynamic message from db or other sources */
+const infoFlow = addKeyword('info')
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+    })
+
+/** send media files */
+const mediaFlow = addKeyword('image')
+    .addAnswer(`Send Image A`, { media: 'https://i.imgur.com/AsvWfUX.png' })
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+        await flowDynamic(
+            [
+                {
+                    body: 'Send Image B',
+                    media: 'https://i.imgur.com/w0RtKnN.png'
+                }
+            ]
+        )
+    })
+
+/** initialization bot */
+const main = async () => {
+
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow, infoFlow])
+    const adapterProvider = createProvider(BaileysProvider)
+
+    adapterProvider.initHttpServer(3000)
+
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+
+```
+</CodeGroup>
+
+---
+
+## Install
+
+Creating a bot is as simple as running the following command and following the instructions
+<Note>
+  Prerequisites to consider before using this tool, [Node](https://nodejs.org/en) v20 or higher and [Git](https://git-scm.com/download)
+</Note>
+
+
+<CodeGroup>
+```bash {{ title: 'pnpm' }}
+pnpm create bot-whatsapp@latest
+```
+
+```bash {{ title: 'npm' }}
+npm create bot-whatsapp@latest
+```
+</CodeGroup>
+
+Use the space key to select and the enter key to confirm. The CLI performs a preliminary check of the Node and operating system version, informing you if it meets the requirements or providing you with relevant information. In addition to generating a base project for you to simply start up
+
+<video className="rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10" autoPlay loop muted src="https://bot-whatsapp.netlify.app/videos/console.webm"></video>
+
+---
+
+## Requirements
+
+
+Make sure you have installed Node version 20 or higher, below you can see an example to check the version of node you are using.
+
+```bash
+node -v
+v20.10.0
+```
+
+<div className="not-prose aling-block">
+  <Button
+    href="https://nodejs.org/en"
+    variant="text"
+    target="_blank"
+    arrow="right"
+    children="Download node from its official website"
+  />
+</div>
+
+It is recommended to have GIT installed for proper operation. If you are using Linux or MacOc you probably already have GIT installed by default.
+
+```bash
+git -v
+git version XXXX
+```
+
+<div className="not-prose aling-block">
+  <Button
+    href="https://git-scm.com/downloads"
+    variant="text"
+    target="_blank"
+    arrow="right"
+    children="Download GIT from its official website"
+  />
+</div>
+
+<Resources />
