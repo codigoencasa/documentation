@@ -218,6 +218,7 @@ export const navigation = [
   {
     title: 'Plugins',
     links: [
+      { title: 'Contributing', href: '/plugins-contributing' },
       { title: 'Telegram', href: '/telegram' },
       { title: 'Shopify', href: '/shopify' },
       { title: 'Agents', href: '/agentsOpenAi' },

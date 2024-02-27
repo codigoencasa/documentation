@@ -1,21 +1,18 @@
-# How to implement Telegram as a provider?
+export const description = 'Telegram is a user-friendly provider, in this article you will learn how to integrate your Telegram bots with the library.'
+
+# Telegram
 
 <Note>
 Create your first Telegram bot if you don't have one yet [create your firts Telegram bot](https://core.telegram.org/bots/tutorial "Create your firts Telegra bot")
 </Note>
 
-To implement a chatbot on Telegram, you need to install the library `@builderbot-plugins/telegram` run this command in your console
+To implement a chatbot on Telegram, you need to install the library `@builderbot-plugins/telegram`
 
-<CodeGroup>
+## Install
 
-```bash {{ title: 'pnpm' }}
-    pnpm install @builderbot-plugins/telegram
-```
 ```bash {{ title: 'npm' }}
     npm install @builderbot-plugins/telegram
 ```
-</CodeGroup>
-
 
 ```typescript
     import { createBot, MemoryDB, createProvider, addKeyword, createFlow, EVENTS } from '@bot-whatsapp/bot'
@@ -38,10 +35,36 @@ To implement a chatbot on Telegram, you need to install the library `@builderbot
     }
     main()
 ```
+When running the Telegram provider, you should see something like this:
 
-This plugin, like the default providers, extends from the __Providerclass__ and integrates with the `bot-whatsapp` library through the __createProvider function__.
+![loaded](https://imgur.com/38pH9Ad.png)
 
-This provider, like the default providers, also exposes a function to create webhooks if needed. For this, you need to instantiate the function that exposes a __Polka__ server in which you need to declare the __handleCtx callback__ to handle the entire context of your chatbot.
+## Flows
+Create your first flow with Telegram.
+
+```ts
+    /* code stuff */
+
+    const provider = createProvider(TelegramProvider, {
+            token: 'YOUR_TOKEN_HERE'
+    })
+    const welcome = addKeyword(EVENTS.WELCOME).addAnswer('Hi, Welcome to Telegram!');
+
+    await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow([welcome])
+    })
+
+    /* code stuff */
+```
+![flow](https://imgur.com/VC3NvtD.png)
+
+It seems like magic, right!
+
+## Webhook
+
+Alright, let's continue. If you need to expose a port or an API for listening to send messages, you can do it as follows.
 
 ```typescript
     import 'dotenv/config'
@@ -56,14 +79,12 @@ This provider, like the default providers, also exposes a function to create web
         })
 
         provider.initHttpServer(9000)
-            .http.server.post('/webhook', handleCtx(({
-                sendMessage
-                }, req, res) => {
-                    sendMessage(req.body.chatId, req.body.message)
+            .http.server.post('/webhook', handleCtx((null, req, res) => {
+                    console.log('I am function what doing someting')
                     res.end('ok')
             }))
         
-        const welcomeFlow = addKeyword('hola').addAnswer('hola amigo!')
+        const welcomeFlow = addKeyword('Hi!!').addAnswer('Hi!, friend.')
 
         await createBot({
             database: new MemoryDB(),
@@ -75,3 +96,10 @@ This provider, like the default providers, also exposes a function to create web
 
     main()
 ```
+
+here some screens from the example above
+
+![Imgur](https://imgur.com/JgXOUZw.png)
+![Imgur](https://imgur.com/4uRkIrg.png)
+![Imgur](https://imgur.com/7XFKtUc.png)
+![Imgur](https://imgur.com/2zOp2GR.png)
