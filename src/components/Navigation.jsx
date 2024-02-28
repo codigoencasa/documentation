@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
@@ -110,6 +110,8 @@ function ActivePageMarker({ group, pathname }) {
 }
 
 function NavigationGroup({ group, className }) {
+  const route = useRouter()
+  const [locale] = useState(route.route.slice(0,3))
   // If this is the mobile navigation then we always render the initial
   // state, so that the state does not change during the close animation.
   // The state will still update when we re-open (re-render) the navigation.
@@ -168,7 +170,7 @@ function NavigationGroup({ group, className }) {
                     {sections.filter((s) => !s?.not).map((section) => (
                       <li key={section.id}>
                         <NavLink
-                          href={`${link.href}#${section.id}`}
+                          href={`/${locale}${link.href}#${section.id}`}
                           tag={section.tag}
                           isAnchorLink
                         >
