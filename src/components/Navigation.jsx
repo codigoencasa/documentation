@@ -51,6 +51,10 @@ function NavLink({ href, tag, active, isAnchorLink = false, children }) {
   )
 }
 
+function parseLocation({link ,pathname}){
+  return link === pathname.slice(3)
+}
+
 function VisibleSectionHighlight({ group, pathname }) {
   let [sections, visibleSections] = useInitialValue(
     [
@@ -72,7 +76,7 @@ function VisibleSectionHighlight({ group, pathname }) {
     ? Math.max(1, visibleSections.length) * itemHeight
     : itemHeight
   let top =
-    group.links.findIndex((link) => link.href === pathname) * itemHeight +
+    group.links.findIndex((link) => parseLocation({link:link.href, pathname})) * itemHeight +
     firstVisibleSectionIndex * itemHeight
 
   return (
@@ -90,7 +94,7 @@ function VisibleSectionHighlight({ group, pathname }) {
 function ActivePageMarker({ group, pathname }) {
   let itemHeight = remToPx(2)
   let offset = remToPx(0.25)
-  let activePageIndex = group.links.findIndex((link) => link.href === pathname)
+  let activePageIndex = group.links.findIndex((link) => parseLocation({link:link.href, pathname}))
   let top = offset + activePageIndex * itemHeight
 
   return (
@@ -116,7 +120,7 @@ function NavigationGroup({ group, className }) {
   )
 
   let isActiveGroup =
-    group.links.findIndex((link) => link.href === router.pathname) !== -1
+    group.links.findIndex((link) => parseLocation({link:link.href, pathname:router.pathname})) !== -1
 
   return (
     <li className={clsx('relative mt-6', className)}>
@@ -144,11 +148,11 @@ function NavigationGroup({ group, className }) {
         <ul role="list" className="border-l border-transparent">
           {group.links.map((link) => (
             <motion.li key={link.href} layout="position" className="relative">
-              <NavLink href={link.href} active={link.href === router.pathname}>
+              <NavLink href={link.href} active={parseLocation({link:link.href, pathname:router.pathname})}>
                 {link.title}
               </NavLink>
               <AnimatePresence mode="popLayout" initial={false}>
-                {link.href === router.pathname && sections.length > 0 && (
+                {parseLocation({link:link.href, pathname:router.pathname}) && sections.length > 0 && (
                   <motion.ul
                     role="list"
                     initial={{ opacity: 0 }}
