@@ -18,8 +18,9 @@ export async function middleware(req) {
 
     if (languageDefault || !isValid) {
         const locale = 'en'
+        const parseNewUrl = `/${locale}${req.nextUrl.pathname}${req.nextUrl.search}`.replace('//', '/')
         return NextResponse.redirect(
-            new URL(`/${locale}${req.nextUrl.pathname}${req.nextUrl.search}`, req.url)
+            new URL(parseNewUrl, req.url)
         )
     }
 

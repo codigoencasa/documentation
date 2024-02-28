@@ -170,7 +170,7 @@ function NavigationGroup({ group, className }) {
                     {sections.filter((s) => !s?.not).map((section) => (
                       <li key={section.id}>
                         <NavLink
-                          href={`/${locale}${link.href}#${section.id}`}
+                          href={`${locale}${link.href}#${section.id}`}
                           tag={section.tag}
                           isAnchorLink
                         >
