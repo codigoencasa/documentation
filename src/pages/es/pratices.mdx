@@ -1,0 +1,224 @@
+export const description =
+  'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
+
+# Practices
+
+The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
+
+---
+
+## Conversational history {{ tag: 'state'  }}
+
+Often, we will need to manage conversations and keep the context in a memory called `state` which is volatile and accessible from any function executed in a stream.
+
+<CodeGroup>
+```ts 
+  const welcomeFlow = addKeyword(['hello'])
+      .addAnswer(
+          "¿What's your name?",
+          {capture: true},
+          async (ctx, { flowDynamic, state }) => {
+              await state.update({ name: ctx.body })
+              await flowDynamic('Thanks for giving me your name!')
+          }
+      )
+      .addAnswer(
+          '¿How old are you?',
+           {capture: true},
+          async (ctx, { flowDynamic, state }) => {
+              const name = state.get('name')
+              await state.update({ age: ctx.body })
+              await flowDynamic(`Thanks for sharing your age! ${name}`)
+          }
+      )
+      .addAnswer('Here is your data:', null, async (_, { flowDynamic, state }) => {
+          const myState = state.getMyState()
+          await flowDynamic(`Name: ${myState.name} Age: ${myState.age}`)
+      })
+```
+</CodeGroup>
+
+
+---
+
+## Dynamic Messages {{ tag: 'flowDynamic'  }}
+
+In other occasions we need to send messages in a dynamic way of data that can be variable, below you can see an example of how you should do it and how you should NOT do it.
+
+<Error>
+ ❌ Avoid it this, does not work because addAnswer serializes the content at the start of execution.
+</Error>
+
+```ts
+let name = ''
+
+const flow = addKeyword('hello')
+    .addAnswer(`What is your name?`, { capture: true }, async (ctx) => {
+        name = ctx.body
+    })
+    .addAnswer(`Your name is: ${name}`)
+```
+<Note>
+If you want to send a dynamic message use flowDynamic.
+</Note>
+
+```ts
+const flow = addKeyword('hello')
+    .addAnswer(`What is your name?`, { capture: true }, async (ctx, { state }) => {
+        await state.update({ name: ctx.body })
+    })
+    .addAction(async (ctx, { state, flowDynamic }) => {
+        const name = state.get('name')
+        await flowDynamic(`Your name is: ${name}`)
+    })
+```
+
+---
+
+## Send File
+
+When you want to send an image, audio, file or any other file you can do it this way. It is __important__ to note that the URL must be __publicly accessible__.
+
+```ts
+const flow = addKeyword('hello')
+    .addAnswer(`Send image from URL`, 
+        { media: 'https://i.imgur.com/0HpzsEm.png' }
+    )
+    .addAnswer(`Send video from URL`, 
+        { media: 'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4' }
+    )
+    .addAnswer(`Send file from URL`, 
+        { media: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' }
+    )
+```
+
+Other ways to use when the route is coming from a dynamic data source
+
+```ts
+const flow = addKeyword('hello')
+    .addAction(async (_,{flowDynamic}) => {
+        // ...db get source...
+        await flowDynamic([
+            {body:'This is an image', media:'https://i.imgur.com/0HpzsEm.png'}
+        ])
+        await flowDynamic([
+            {body:'This is a video', media:'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4'}
+        ])
+    })
+
+```
+
+If you need to send a file that is stored locally you can do that too. The use of `join` is recommended to ensure correct directory concatenation.
+
+```ts
+const flow = addKeyword('hello')
+    .addAction(async (_,{flowDynamic}) => {
+        const pathLocal = join('assets','doc.pdf')
+        // pathLocal = c:/doc.pdf
+        await flowDynamic([
+            {body:'This is a video', media: pathLocal }
+        ])
+    })
+
+```
+
+---
+
+## Switch to another flow {{ tag: 'gotoFlow'  }}
+
+If you want to divert a conversational flow to another logic flow based on a response input you can do it in this way:
+
+```ts
+
+const flowToA = addKeyword(EVENTS.ACTION).addAnswer('Here we have Option A!')
+const flowToB = addKeyword(EVENTS.ACTION).addAnswer('Here we have Option B!')
+const flowToC = addKeyword(EVENTS.ACTION).addAnswer('Here we have Option C!')
+
+const flowDefault = addKeyword(EVENTS.ACTION).addAnswer("We don't have that Option 🤔")
+
+const flow = addKeyword('order')
+    .addAnswer(
+        [
+            `Which one is the best option for you?`,
+            `Type **A**`,
+            `Type **B**`,
+            `Type **C**`,
+        ], 
+        { capture: true }
+    )
+    .addAnswer(`Thanks for you answer`,async (ctx, {gotoFlow})=> {
+        const userAnswer = ctx.body
+        if(userAnswer === 'A'){
+            return gotoFlow(flowToA)
+        } 
+        if(userAnswer === 'B'){
+            return gotoFlow(flowToB)
+        } 
+        if(userAnswer === 'C'){
+            return gotoFlow(flowToC)
+        } 
+        return gotoFlow(flowDefault)
+
+    })
+    .addAnswer(`this message will not be sent`)
+```
+
+<Error>
+ ❌ This does not work, the invocation of the gotoFlow function must necessarily include a return.
+</Error>
+
+```ts
+
+//...Previous code...
+    ....addAnswer(`Thanks for you answer`,async (ctx, {gotoFlow})=> {
+        gotoFlow(flowToA)
+
+    })
+    .addAnswer(`this message will not be sent`)
+```
+
+<Note>
+ This does work
+</Note>
+
+```ts
+
+//...Previous code...
+    ....addAnswer(`Thanks for you answer`,async (ctx, {gotoFlow})=> {
+        return gotoFlow(flowToA)
+
+    })
+    .addAnswer(`this message will not be sent`)
+```
+
+---
+
+## Turn off bot a certain user {{ tag: 'state'  }}
+
+Sometimes we will need to turn off the bot for a certain user, so that we can have a conversation with the client without the bot interfering.
+
+```ts
+const flow = addKeyword<BaileysProvider>('magic keyword')
+  .addAction(async (_, { state, endFlow }) => {
+      const botOffForThisUser = state.get<boolean>('botOffForThisUser')
+      if(botOffForThisUser) return endFlow()
+  })
+  .addAnswer('Hello!')
+```
+
+---
+
+## Turn off for everyone {{ tag: 'state'  }}
+
+Sometimes we will need to disable the bot for all people, without the need to shut down the server or stop the script.
+
+```ts
+const flow = addKeyword<BaileysProvider>('botoff')
+  .addAction(async (_, { globalState, endFlow }) => {
+      const botOffForEveryOne = globalState.get<boolean>('botOffForEveryOne')
+      if(botOffForEveryOne) return endFlow()
+  })
+  .addAnswer('Hello!')
+```
+
+---

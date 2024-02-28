@@ -1,3 +1,5 @@
+import { Contributors } from '@/components/Contributors'
+
 export const description =
   'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
 
@@ -77,55 +79,51 @@ Each conversation history with the user is totally independent, in this way we a
 
 
  <RowCenter>
-  <Col>
   
 ```mermaid
 flowchart LR
-    subgraph sub1[Conversation User A]
-      style sub1 fill:#e2eafc,stroke:#ccdbfd,stroke-width:2px
-      subgraph flowA
+    subgraph subState1[Conversation User A]
+      style subState1 fill:#e2eafc,stroke:#ccdbfd,stroke-width:2px
+      subgraph flowStateA
           direction TB
-          top1[state] --> bottom1[addAnswer]
+          topState1[state] --> bottom1[addAnswer]
       end
-      subgraph flowB
+      subgraph flowStateB
           direction TB
-          top2[state] --> bottom2[addAnswer]
+          topState2[state] --> bottom2[addAnswer]
       end
       %% ^ These subgraphs are identical, except for the links to them:
 
-      %% Link *to* flowA: flowA direction is maintained
-      state --> flowA
-      %% Link *within* flowB:
-      %% flowB inherits the direction of the top-level graph (LR)
-      state ---> top2
+      %% Link *to* flowStateA: flowStateA direction is maintained
+      state --> flowStateA
+      %% Link *within* flowStateB:
+      %% flowStateB inherits the direction of the top-level graph (LR)
+      state ---> topState2
     end
 
 ```
-  </Col>
 
-  <Col>
 ```mermaid
 flowchart LR
-    subgraph sub2[Conversation User B]
-      style sub2 fill:##fdf8e1,stroke:##ffffef,stroke-width:2px
-      subgraph flowA
+    subgraph subState2[Conversation User B]
+      style subState2 fill:##fdf8e1,stroke:##ffffef,stroke-width:2px
+      subgraph flowState2A
           direction TB
-          top1[state] --> bottom1[addAnswer]
+          topState21[state] --> bottom1[addAnswer]
       end
-      subgraph flowB
+      subgraph flowState2B
           direction TB
-          top2[state] --> bottom2[addAnswer]
+          topState22[state] --> bottom2[addAnswer]
       end
       %% ^ These subgraphs are identical, except for the links to them:
 
-      %% Link *to* flowA: flowA direction is maintained
-      state --> flowA
-      %% Link *within* flowB:
-      %% flowB inherits the direction of the top-level graph (LR)
-      state ---> top2
+      %% Link *to* flowState2A: flowState2A direction is maintained
+      state --> flowState2A
+      %% Link *within* flowState2B:
+      %% flowState2B inherits the direction of the top-level graph (LR)
+      state ---> topState22
     end
 ```
-  </Col>
 
 </RowCenter>
 
@@ -696,8 +694,4 @@ Imagine a case where you want to talk to a contact without the intervention of t
 
 ---
 
-## idle
-
-The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
-
----
+<Contributors users={['leifermendez']} />
