@@ -11,7 +11,6 @@ const LanguageSelector = () => {
         const newLocale = event.target.value;
         const path = pathname.split('/').at(2)
 
-        console.log(newLocale, locale, newLocale !== locale)
         if (newLocale !== locale) {
             setLocale(newLocale);
             router.push(`/${newLocale}/${path}`);
