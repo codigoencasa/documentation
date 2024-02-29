@@ -199,7 +199,7 @@ export const navigation = [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
       { title: 'Concepts', href: '/concepts' },
-      { title: 'Uses cases', href: '/pratices' },
+      { title: 'Uses cases', href: '/uses-cases' },
       { title: 'Events', href: '/events' },
       { title: 'Errors', href: '/errors' },
     ],

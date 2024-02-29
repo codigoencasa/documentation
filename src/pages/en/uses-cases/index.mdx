@@ -7,6 +7,46 @@ The library is based on three key components for its correct functioning: the Fl
 
 ---
 
+## My first bot
+
+The following code represents the quick use of a bot that when you type the word `hi`, greets you with a welcome message and asks you for your name and then returns a funny image
+
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hi'])
+    .addAnswer('Ey! welcome')
+    .addAnswer('Your name is?', { capture: true }, async (ctx, { flowDynamic }) => {
+        await flowDynamic([`nice! ${ctx.body}`,'I will send you a funny image'])
+    })
+    .addAction(async(_ , {flowDynamic}) => {
+        const dataApi = await fetch(`https://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true`)
+        const [imageUrl] = await dataApi.json()
+        await flowDynamic([{body:'😜', media: imageUrl}])
+    })
+
+
+const main = async () => {
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(BaileysProvider)
+
+    adapterProvider.initHttpServer(3000)
+
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+```
+
+
+---
+
 ## Conversational history {{ tag: 'state'  }}
 
 Often, we will need to manage conversations and keep the context in a memory called `state` which is volatile and accessible from any function executed in a stream.

@@ -7,6 +7,11 @@ export const description =
 
 The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
 
+```mermaid
+flowchart LR
+    a{Flow}-->b[(Database)]-->c(((Provider)))
+```
+
 ---
 
 ## Flow
@@ -39,6 +44,17 @@ addKeyword('hello').addAnswer('Ey! welcome')
 // Example with multi keywords
 addKeyword(['hello','hi']).addAnswer('Ey! welcome')
 ```
+
+For a quick understanding of the operation we have prepared a basic example of how to implement
+
+<div className="not-prose aling-block">
+  <Button
+    href="/pratices"
+    variant="text"
+    arrow="right"
+    children="View more examples"
+  />
+</div>
 
 ---
 

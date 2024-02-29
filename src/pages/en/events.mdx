@@ -100,8 +100,7 @@ When your chatbot needs to access a user's location, it's important to ensure th
 
 The received location context will look something like this in console:
 
-<CodeGroup>
-```js {{title: 'terminal'}}
+```bash
 ctx:  {
   ...
   message: Message {
@@ -116,9 +115,7 @@ ctx:  {
   name: 'yeyodev 👨🏾‍💻',
   from: '593000000000'
 }
-
 ```
-</CodeGroup>
 
 This will output the user's latitude and longitude in the console, allowing you to effectively utilize the location data for your chatbot's functionality.
 
@@ -128,15 +125,17 @@ To access the location data, you can use the following approach:
 ```ts {{ title: 'location.flow.ts' }}
 import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
 
-export default addKeyword(EVENTS.LOCATION).addAnswer("I have received your location!", null, async (ctx) => {
+export default addKeyword(EVENTS.LOCATION)
+.addAnswer("I have received your location!", null, async (ctx) => {
   const userLatitude = ctx.message.locationMessage.degreesLatitude;
   const userLongitude = ctx.message.locationMessage.degreesLongitude;
 })
 ```
 ```js {{ title: 'location.flow.js' }}
-import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
+const { EVENTS, addKeyword } = require("@bot-whatsapp/bot");
 
-export default addKeyword(EVENTS.LOCATION).addAnswer("I have received your location!", null, async (ctx) => {
+export default addKeyword(EVENTS.LOCATION)
+.addAnswer("I have received your location!", null, async (ctx) => {
   const userLatitude = ctx.message.locationMessage.degreesLatitude;
   const userLongitude = ctx.message.locationMessage.degreesLongitude;
 })
