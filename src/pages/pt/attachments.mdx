@@ -1,0 +1,360 @@
+export const description =
+'Nesta página, vamos nos aprofundar nos diferentes endpoints de anexos que você pode usar para gerenciar anexos programaticamente.'
+
+# Anexos
+
+Anexos são como você compartilha coisas no protocolo-eles permitem que você envie todos os tipos de arquivos para seus contatos e grupos. Nesta página, vamos nos aprofundar nos diferentes endpoints de anexos que você pode usar para gerenciar anexos programaticamente. Veremos como consultar, fazer upload, atualizar e excluir anexos. {{ className: 'lead'}}
+
+## O modelo de apego
+
+O modelo de anexo contém todas as informações sobre os arquivos que você envia para seus contatos e grupos, incluindo o nome, o tipo e o tamanho.
+
+### Properties
+
+<Properties>
+<Property name= " id " type="string">
+Identificador exclusivo para o anexo.
+</Property>
+<Property name=" message_id " type="string">
+Identificador exclusivo da mensagem associada ao anexo.
+</Property>
+<Property name=" filename " type="string">
+O nome do arquivo para o anexo.
+</Property>
+<Property name=" file_url " type="string">
+A URL do arquivo anexado.
+</Property>
+<Property name=" file_type " type="string">
+O tipo MIME do arquivo anexado.
+</Property>
+<Property name=" file_size"type="integer">
+O tamanho do arquivo do anexo em bytes.
+</Property>
+<Property name=" created_at " type="timestamp">
+Timestamp de quando o anexo foi criado.
+</Property>
+</Properties>
+
+---
+
+## Listar todos os anexos {{ tag: 'GET', label: '/ v1/attachments'}}
+
+<Row>
+<Col>
+
+Esse endpoint permite que você recupere uma lista paginada de todos os seus anexos (em uma conversa, se um ID de conversa for fornecido). Por padrão, são exibidos no máximo dez anexos por página.
+
+### Atributos opcionais
+
+<Properties>
+<Property name=" conversation_id " type="string">
+Limite para anexos de uma determinada conversa.
+</Property>
+<Property name= "limit" type="integer">
+Limite o número de anexos retornados.
+</Property>
+</Properties>
+
+</Col>
+<Col sticky>
+
+<CodeGroup title=" Request " tag="GET" label="/v1/attachments">
+
+```bash {{ title: 'cURL'}}
+curl-G https://api.protocolo.chat/v1/anexos \
+- H "autorização: portador {token}" \
+- d conversation_id="xgQQXg3hrtjh7AvZ" \
+- d Limite=10
+```
+
+```js
+import ApiClient from '@example/protocol-api'
+
+const client = novo ApiClient(token)
+
+aguardar cliente.anexos.list()
+```
+
+```python
+from protocol_api import ApiClient
+
+cliente = ApiClient(token)
+
+cliente.anexos.list()
+```
+
+```php
+$ client = new \ Protocol\ApiClient ($token);
+
+$client->attachments->list();
+```
+
+</CodeGroup>
+
+```json {{ title: 'Response'}}
+{
+"has_more": false,
+"data": [
+{
+"id": "Nc6yKKMpcxiiFxp6",
+"message_id": "LoPsJaMcPBuFNjg1",
+"filename": "Invoice_room_service__Plaza_Hotel.pdf",
+"file_url": "https://assets.protocolo.chat/anexos/nota fiscal_room_service__ Plaza_Hotel.pdf",
+"file_type": "application/pdf",
+"file_size": 21352,
+"created_at": 692233200
+},
+{
+"id": "hSIhXBhNe8X1d8Et"
+// ...
+}
+]
+}
+```
+
+</Col>
+</Row>
+
+---
+
+## Criar um anexo {{ tag: 'POST', label: '/ v1/attachments'}}
+
+<Row>
+<Col>
+
+Esse endpoint permite que você carregue um novo anexo em uma conversa. Consulte os exemplos de código para saber como enviar o arquivo para a API de Protocolo.
+
+### Atributos obrigatórios
+
+<Properties>
+<Property name=" file " type="string">
+O arquivo que você deseja adicionar como anexo.
+</Property>
+</Properties>
+
+</Col>
+<Col sticky>
+
+<CodeGroup title=" Request " tag=" POST " label="/v1/attachments">
+
+```bash {{ title: 'cURL'}}
+curl https://api.protocolo.chat/v1/anexos \
+- H "autorização: portador {token}" \
+- F file="../ Nota fiscal_room_service__ Plaza_Hotel.pdf"
+```
+
+```js
+import ApiClient from '@example/protocol-api'
+
+const client = novo ApiClient(token)
+
+aguardar cliente.anexos.create({ file })
+```
+
+```python
+from protocol_api import ApiClient
+
+cliente = ApiClient(token)
+
+cliente.anexos.create(file=Arquivo)
+```
+
+```php
+$ client = new \ Protocol\ApiClient ($token);
+
+$client - >attachments - >create([
+'file' => $file,
+]);
+```
+
+</CodeGroup>
+
+```json {{ title: 'Response'}}
+{
+"id": "Nc6yKKMpcxiiFxp6",
+"message_id": "LoPsJaMcPBuFNjg1",
+"filename": "Invoice_room_service__Plaza_Hotel.pdf",
+"file_url": "https://assets.protocolo.chat/anexos/nota fiscal_room_service__ Plaza_Hotel.pdf",
+"file_type": "application/pdf",
+"file_size": 21352,
+"created_at": 692233200
+}
+```
+
+</Col>
+</Row>
+
+---
+
+## Retrieve an attachment {{ tag: 'GET', label: '/ v1/attachments/: id'}}
+
+<Row>
+<Col>
+
+Esse endpoint permite que você recupere um anexo fornecendo o ID do anexo. Consulte [a lista] (#the-attachment-model) na parte superior desta página para ver quais Properties estão incluídas nos objetos de anexo.
+
+</Col>
+<Col sticky>
+
+<CodeGroup title=" Request " tag="GET" label="/v1/attachments/Nc6yKKMpcxiiFxp6">
+
+```bash {{ title: 'cURL'}}
+curl https://api.protocolo.chat/v1/anexos/Nc6yKKMpcxiiFxp6 \
+- H "autorização: portador {token}"
+```
+
+```js
+import ApiClient from '@example/protocol-api'
+
+const client = novo ApiClient(token)
+
+aguardar cliente.anexos.get ('Nc6yKKMpcxiiFxp6')
+```
+
+```python
+from protocol_api import ApiClient
+
+cliente = ApiClient(token)
+
+cliente.anexos.get ("Nc6yKKMpcxiiFxp6")
+```
+
+```php
+$ client = new \ Protocol\ApiClient ($token);
+
+$client - >attachments - >get ('Nc6yKKMpcxiiFxp6');
+```
+
+</CodeGroup>
+
+```json {{ title: 'Response'}}
+{
+"id": "Nc6yKKMpcxiiFxp6",
+"message_id": "LoPsJaMcPBuFNjg1",
+"filename": "Invoice_room_service__Plaza_Hotel.pdf",
+"file_url": "https://assets.protocolo.chat/anexos/nota fiscal_room_service__ Plaza_Hotel.pdf",
+"file_type": "application/pdf",
+"file_size": 21352,
+"created_at": 692233200
+}
+```
+
+</Col>
+</Row>
+
+---
+
+## Atualizar um anexo {{ tag: 'PUT', label: '/ v1/attachments/: id'}}
+
+<Row>
+<Col>
+
+Esse endpoint permite que você execute uma atualização em um anexo. Atualmente, o único tipo de atualização suportado é a alteração do nome do arquivo.
+
+### Atributos opcionais
+
+<Properties>
+<Property name=" filename " type="string">
+O novo nome de arquivo para o anexo.
+</Property>
+</Properties>
+
+</Col>
+<Col sticky>
+
+<CodeGroup title=" Request " tag="PUT" label="/v1/attachments/Nc6yKKMpcxiiFxp6">
+
+```bash {{ title: 'cURL'}}
+curl-X PUT https://api.protocolo.chat/v1/anexos/Nc6yKKMpcxiiFxp6 \
+- H "autorização: portador {token}" \
+- d filename= " Nota Fiscal_room_service__Plaza_Hotel_atualizado.pdf"
+```
+
+```js
+import ApiClient from '@example/protocol-api'
+
+const client = novo ApiClient(token)
+
+aguardar cliente.anexos.update ('Nc6yKKMpcxiiFxp6', {
+filename: 'Invoice_room_service__Plaza_Hotel_atualizado.pdf',
+})
+```
+
+```python
+from protocol_api import ApiClient
+
+cliente = ApiClient(token)
+
+cliente.anexos.update ("Nc6yKKMpcxiiFxp6", filename= " Invoice_room_service__Plaza_Hotel_atualizado.pdf")
+```
+
+```php
+$ client = new \ Protocol\ApiClient ($token);
+
+$client - >attachments - >update ('Nc6yKKMpcxiiFxp6', [
+'filename' => ' Invoice_room_service__ Plaza_Hotel_atualizado.pdf',
+]);
+```
+
+</CodeGroup>
+
+```json {{ title: 'Response'}}
+{
+"id": "Nc6yKKMpcxiiFxp6",
+"message_id": "LoPsJaMcPBuFNjg1",
+"filename": "Invoice_room_service__Plaza_Hotel.pdf",
+"file_url": "https://assets.protocolo.chat/anexos/nota fiscal_room_service__ Plaza_Hotel_atualizado.pdf",
+"file_type": "application/pdf",
+"file_size": 21352,
+"created_at": 692233200
+}
+```
+
+</Col>
+</Row>
+
+---
+
+## Delete an attachment {{ tag: 'DELETE', label: '/ v1/attachments/: id'}}
+
+<Row>
+<Col>
+
+Este endpoint permite que você exclua anexos. Observação: isso excluirá permanentemente o arquivo.
+
+</Col>
+<Col sticky>
+
+<CodeGroup title=" Request " tag="DELETE" label="/v1/attachments/Nc6yKKMpcxiiFxp6">
+
+```bash {{ title: 'cURL'}}
+curl-X DELETE https://api.protocolo.chat/v1/anexos/Nc6yKKMpcxiiFxp6 \
+- H "autorização: portador {token}"
+```
+
+```js
+import ApiClient from '@example/protocol-api'
+
+const client = novo ApiClient(token)
+
+aguardar cliente.anexos.delete ('Nc6yKKMpcxiiFxp6')
+```
+
+```python
+from protocol_api import ApiClient
+
+cliente = ApiClient(token)
+
+cliente.anexos.delete("Nc6yKKMpcxiiFxp6")
+```
+
+```php
+$ client = new \ Protocol\ApiClient ($token);
+
+$client - >attachments - >delete ('Nc6yKKMpcxiiFxp6');
+```
+
+</CodeGroup>
+
+</Col>
+</Row>

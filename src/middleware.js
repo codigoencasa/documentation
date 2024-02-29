@@ -13,15 +13,13 @@ export async function middleware(req) {
 
     const parseLanguageDefault = `${req.nextUrl.pathname}`.split('/')[1]
     const languageDefault = !parseLanguageDefault.length
-    const listLanguages = ['en', 'es', 'pt']
+    const listLanguages = ['en', 'pt']
     const isValid = listLanguages.includes(parseLanguageDefault)
 
     if (languageDefault || !isValid) {
-        const locale = 'en'
         return NextResponse.redirect(
-            new URL(`/${locale}${req.nextUrl.pathname}${req.nextUrl.search}`, req.url)
+            new URL(`/${listLanguages[0]}${req.nextUrl.pathname}${req.nextUrl.search}`, req.url)
         )
     }
-
-    return
+    return;
 }

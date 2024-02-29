@@ -1,0 +1,109 @@
+import { Guides } from '@/components/Guides'
+import { Resources } from '@/components/Resources'
+import { HeroPattern } from '@/components/HeroPattern'
+import { Sponsors } from '@/components/Sponsors'
+
+export const description = 'Com essa biblioteca, você pode configurar respostas automatizadas para perguntas frequentes, receber e responder a mensagens de forma automatizada e rastrear as interações com os clientes. Além disso, nosso Chatbot se integra facilmente a outros sistemas e ferramentas que você já está usando na sua empresa.'
+
+export const sections = [
+]
+
+<HeroPattern />
+
+# Documentação
+
+Esta é uma estrutura __free__ e de código aberto com uma maneira intuitiva e extensível de criar chatbot e aplicativos inteligentes que se conectam a diferentes canais de comunicação, como __[Whatsapp](http://ir_a_un_recurso_o_blog)__, __[Telegram](http://ir_a_un_recurso_o_blog)__ e outros.
+Criamos uma estrutura intuitiva para que você possa ter seu primeiro chatbot em minutos.
+
+
+## Início rápido
+Para instalar rapidamente com o seguinte comando
+
+<CodeGroup>
+```bash {{ title: 'pnpm' }}
+pnpm create bot-whatsapp@latest
+```
+
+```bash {{ title: 'npm' }}
+npm create bot-whatsapp@latest
+```
+</CodeGroup>
+
+---
+
+## Exemplo rápido {{ anchor: false }}
+
+Neste exemplo, podemos ver a base de um bot simples que responde às palavras-chave enviadas por um usuário, as palavras são: `info, hello, hi`. Você pode ver como criar o bot e implementar os [fluxos](/concepts#flow).
+
+<CodeGroup>
+```ts {{ title: 'main.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+/** enviar mensagens estáticas */
+const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+
+/** enviar mensagem dinâmica do banco de dados ou de outras fontes */
+const infoFlow = addKeyword<BaileysProvider, MemoryDB>('info')
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+    })
+
+
+/** bot de inicialização */
+const main = async () => {
+
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow, infoFlow])
+    const adapterProvider = createProvider(BaileysProvider)
+
+    adapterProvider.initHttpServer(3000)
+
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+
+```
+
+```js {{ title: 'main.js' }}
+const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@bot-whatsapp/bot')
+const { BaileysProvider } = require('@bot-whatsapp/bot')
+
+/** enviar mensagens estáticas */
+const welcomeFlow = addKeyword(['hello', 'hi']).addAnswer('Ey! welcome')
+
+/** enviar mensagem dinâmica do banco de dados ou de outras fontes */
+const infoFlow = addKeyword('info')
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+    })
+
+/** bot de inicialização */
+const main = async () => {
+
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow, infoFlow])
+    const adapterProvider = createProvider(BaileysProvider)
+
+    adapterProvider.initHttpServer(3000)
+
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+
+```
+</CodeGroup>
+
+<Guides />
+
+<Resources />
