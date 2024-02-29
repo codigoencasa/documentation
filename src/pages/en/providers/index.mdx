@@ -19,28 +19,29 @@ Whatsapp: [Meta](providers#meta), [Twilio](providers#twilio), [Baileys](provider
 flowchart LR
       subgraph sub1[ ]
         style sub1 fill:#e2eafc,stroke:#ccdbfd,stroke-width:2px
-        subgraph wsProvider[Provider Zone]
+        subgraph wsProvider[BOT]
             direction TB
             top1["flows"] -.-> bottom1[addAnswer]
         end
         User -.-> top1
         bottom1 -.-> user
       end
-        zn1((Twilio))
-        zn2((Meta))
-        zn3((Telegram))
-        zn4((custom provider))
+        zn1(((Twilio)))
+        zn2(((Meta)))
+        zn3(((Telegram)))
+        zn4(((custom)))
 
-        wsProvider --> C{Decision}
+        wsProvider --> C(((Provider)))
         C --> zn1
         C --> zn2
         C --> zn3
         C --> zn4
 
-        style zn1 fill:#ffccd5,stroke:#ff758f,stroke-width:1px
-        style zn2 fill:#ffccd5,stroke:#ff758f,stroke-width:1px
-        style zn3 fill:#ffccd5,stroke:#ff758f,stroke-width:1px
-        style zn4 fill:#ffccd5,stroke:#ff758f,stroke-width:1px
+        style C fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
+        style zn1 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
+        style zn2 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
+        style zn3 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
+        style zn4 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
 
 ```
 

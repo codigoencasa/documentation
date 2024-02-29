@@ -5,13 +5,14 @@ export const description =
 
 # Databases
 
-Providers are in charge of providing the communication bridge between your bot and __whatsapp__, __telegram__ or custom provider.
+Just as providers can be easily exchanged between adapters, we can do the same with the database. Now the important thing to understand is how it works.
+The main purpose of the database inside the bot is to provide the bot with a record of the different events that have occurred between different conversations.
 
-You can change your provider very easily without affecting the logic of your bot. 
-It is as simple as implementing the connector of the provider of your choice. At the moment we have integrations with more than four suppliers.
+Many people use it as a chat history (in fact, it can also be used for that purpose), but you may find strange data in your logs because it stores not only messages, but also events.
+
 
 <Warning>
-Whatsapp: [Meta](providers#meta), [Twilio](providers#twilio), [Baileys](providers#baileys), [WPPConnect](providers#wpp-connect), [Venom](providers#venom). [Telegram](/plugins/telegram)
+Connectors: [MemoryDB](databases#memory-db), [Json](databases#json), [Mongo](databases#mongo), [MySQL](databases#my-sql), [Postgres](databases#postgres)
 </Warning>
 
 
@@ -19,122 +20,117 @@ Whatsapp: [Meta](providers#meta), [Twilio](providers#twilio), [Baileys](provider
 flowchart LR
       subgraph sub1[ ]
         style sub1 fill:#e2eafc,stroke:#ccdbfd,stroke-width:2px
-        subgraph wsProvider[Provider Zone]
+        subgraph wsProvider[BOT]
             direction TB
             top1["flows"] -.-> bottom1[addAnswer]
         end
         User -.-> top1
         bottom1 -.-> user
       end
-        zn1((Twilio))
-        zn2((Meta))
-        zn3((Telegram))
-        zn4((custom provider))
+        zn1[(MemoryDB)]
+        zn2[(Json)]
+        zn3[(Mongo)]
+        zn4[(Custom)]
 
-        wsProvider --> C{Decision}
+        wsProvider --> C[(Database)]
         C --> zn1
         C --> zn2
         C --> zn3
         C --> zn4
 
-        style zn1 fill:#ffccd5,stroke:#ff758f,stroke-width:1px
-        style zn2 fill:#ffccd5,stroke:#ff758f,stroke-width:1px
-        style zn3 fill:#ffccd5,stroke:#ff758f,stroke-width:1px
-        style zn4 fill:#ffccd5,stroke:#ff758f,stroke-width:1px
+        style C fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
+        style zn1 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
+        style zn2 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
+        style zn3 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
+        style zn4 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
+    
 
 ```
 
-Each provider may need to adjust access keys, settings, among other properties that are usually passed as an object in the `createProvider` function.
-
+Each database may need to adjust the access keys, configuration, among other properties that will be implemented as configuration of the implemented class. 
 <CodeGroup>
-```ts {{ title: 'meta-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { MetaProvider } from '@bot-whatsapp/provider-meta';
+```ts {{ title: 'memory-database.ts' }}
+import { MemoryDB } from "@bot-whatsapp/bot";
 
-export type IProvider = typeof MetaProvider
-export const adapterProvider = createProvider(MetaProvider, {
-    jwtToken: 'jwtToken',
-    numberId: 'numberId',
-    verifyToken: 'verifyToken',
-    version: 'v16.0',
+export type IDatabase = typeof MemoryDB
+export const adapterDB = new MemoryDB();
+```
+
+```ts {{ title: 'json-database.ts' }}
+import { JsonFileDB } from '@bot-whatsapp/database-json';
+
+export type IDatabase = typeof JsonFileDB
+export const adapterDB = new JsonFileDB({ filename: 'db.json' });
+```
+
+```ts {{ title: 'mongo-database.ts' }}
+import { MongoDB } from '@bot-whatsapp/database-mongo'
+
+export type IDatabase = typeof MongoDB
+export const adapterDB = new MongoDB({
+    dbUri: MONGO_DB_URI,
+    dbName: MONGO_DB_NAME,
 })
 ```
 
-```ts {{ title: 'twilio-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { TwilioProvider } from '@bot-whatsapp/provider-twilio';
+```ts {{ title: 'mysql-database.ts' }}
+import { MysqlDB } from '@bot-whatsapp/database-mysql'
 
-export type IProvider = typeof TwilioProvider
-export const adapterProvider = createProvider(TwilioProvider, {
-    accountSid: 'YOUR_ACCOUNT_SID',
-    authToken: 'YOUR_ACCOUNT_TOKEN',
-    vendorNumber: '+14155238886',
-    publicUrl: "public_url", //optional
-});
+export type IDatabase = typeof MysqlDB
+export const adapterDB = new MysqlDB({
+    host: MYSQL_DB_HOST,
+    user: MYSQL_DB_USER,
+    database: MYSQL_DB_NAME,
+    password: MYSQL_DB_PASSWORD,
+})
 ```
 
-```ts {{ title: 'baileys-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys';
+```ts {{ title: 'postgres-database.ts' }}
+import { PostgreSQLDB } from '@bot-whatsapp/database-postgres'
 
-export type IProvider = typeof BaileysProvider
-export const adapterProvider = createProvider(BaileysProvider)
-```
-
-```ts {{ title: 'venom-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { VenomProvider } from '@bot-whatsapp/provider-venom';
-
-export type IProvider = typeof VenomProvider
-export const adapterProvider = createProvider(VenomProvider)
-```
-
-```ts {{ title: 'wppconnect-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { WPPConnectProvider } from '@bot-whatsapp/provider-wppconnect';
-
-export type IProvider = typeof WPPConnectProvider
-export const adapterProvider = createProvider(WPPConnectProvider)
+export type IDatabase = typeof PostgreSQLDB
+export const adapterDB = new PostgreSQLDB({
+    host: POSTGRES_DB_HOST,
+    user: POSTGRES_DB_USER,
+    database: POSTGRES_DB_NAME,
+    password: POSTGRES_DB_PASSWORD,
+    port: +POSTGRES_DB_PORT,
+})
 ```
 
 </CodeGroup>
 
-Below you will find more information about each of these providers.
+Below you will find more information about each of these databases.
 
 ---
 
-## MemoryDB
+## Memory
 
 The [WhatsApp Business Platform](https://business.whatsapp.com/products/business-platform) enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service notifications or purchase updates, offer them a personalized level of service, and provide support through the channel of their choice.
 
 <Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information](/providers/meta)
+Remember that the following requirements must be met in order to implement the meta provider to production. [More information](/databases/memory)
 </Warning>
 
 <CodeGroup>
-```ts {{ title: 'meta-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { MetaProvider } from '@bot-whatsapp/provider-meta';
+```ts {{ title: 'memory-database.ts' }}
+import { MemoryDB } from "@bot-whatsapp/bot";
 
-export type IProvider = typeof MetaProvider
-export const adapterProvider = createProvider(MetaProvider, {
-    jwtToken: 'jwtToken',
-    numberId: 'numberId',
-    verifyToken: 'verifyToken',
-    version: 'v16.0',
-})
+export type IDatabase = typeof MemoryDB
+export const adapterDB = new MemoryDB();
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword } from '@bot-whatsapp/bot'
 import { IProvider, adapterProvider } from './meta-provider';
+import { IDatabase, adapterDB } from './memory-database';
 
-const welcomeFlow = addKeyword<IProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+const welcomeFlow = addKeyword<IProvider, IDatabase>(['hello', 'hi']).addAnswer('Ey! welcome')
 
 const main = async () => {
     await createBot({
         flow: createFlow([welcomeFlow]),
         provider: adapterProvider,
-        database: new MemoryDB()
+        database: adapterDB
     })
 }
 
@@ -153,29 +149,24 @@ Remember that the following requirements must be met in order to implement the m
 </Warning>
 
 <CodeGroup>
-```ts {{ title: 'twilio-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { TwilioProvider } from '@bot-whatsapp/provider-twilio';
+```ts {{ title: 'json-database.ts' }}
+import { JsonFileDB } from '@bot-whatsapp/database-json';
 
-export type IProvider = typeof TwilioProvider
-export const adapterProvider = createProvider(TwilioProvider, {
-    accountSid: 'YOUR_ACCOUNT_SID',
-    authToken: 'YOUR_ACCOUNT_TOKEN',
-    vendorNumber: '+14155238886',
-    publicUrl: "public_url", //optional
-});
+export type IDatabase = typeof JsonFileDB
+export const adapterDB = new JsonFileDB({ filename: 'db.json' });
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword } from '@bot-whatsapp/bot'
+import { IDatabase, adapterDB } from './json-database';
 import { IProvider, adapterProvider } from './twilio-provider';
 
-const welcomeFlow = addKeyword<IProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+const welcomeFlow = addKeyword<IProvider, IDatabase>(['hello', 'hi']).addAnswer('Ey! welcome')
 
 const main = async () => {
     await createBot({
         flow: createFlow([welcomeFlow]),
         provider: adapterProvider,
-        database: new MemoryDB()
+        database: adapterDB
     })
 }
 
@@ -197,39 +188,27 @@ Remember that the following requirements must be met in order to implement the m
 </Warning>
 
 <CodeGroup>
-```ts {{ title: 'baileys-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys';
+```ts {{ title: 'mongo-database.ts' }}
+import { MongoDB } from '@bot-whatsapp/database-mongo'
 
-export type IProvider = typeof BaileysProvider
-export const adapterProvider = createProvider(BaileysProvider)
-
-```
-```ts {{ title: 'baileys-provider-extend.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys';
-
-export type IProvider = typeof BaileysProvider
-export const adapterProvider = createProvider(BaileysProvider, {
-        browser: ['Ubuntu', 'Chrome', '20.0.04'],
-        gifPlayback: true,
-        name: 'botname',
-        phoneNumber: '88888',
-        useBaileysStore: true,
-        usePairingCode: true
+export type IDatabase = typeof MongoDB
+export const adapterDB = new MongoDB({
+    dbUri: MONGO_DB_URI,
+    dbName: MONGO_DB_NAME,
 })
 ```
 ```ts {{ title: 'app.ts' }}
 import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
 import { IProvider, adapterProvider } from './baileys-provider';
+import { IDatabase, adapterDB } from './mongo-database';
 
-const welcomeFlow = addKeyword<IProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+const welcomeFlow = addKeyword<IProvider, IDatabase>(['hello', 'hi']).addAnswer('Ey! welcome')
 
 const main = async () => {
     await createBot({
         flow: createFlow([welcomeFlow]),
         provider: adapterProvider,
-        database: new MemoryDB()
+        database: adapterDB
     })
 }
 
@@ -252,34 +231,29 @@ Remember that the following requirements must be met in order to implement the m
 </Warning>
 
 <CodeGroup>
-```ts {{ title: 'venom-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { VenomProvider } from '@bot-whatsapp/provider-venom';
+```ts {{ title: 'mysql-database.ts' }}
+import { MysqlDB } from '@bot-whatsapp/database-mysql'
 
-export type IProvider = typeof VenomProvider
-export const adapterProvider = createProvider(VenomProvider)
-```
-```ts {{ title: 'venom-provider-extend.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { VenomProvider } from '@bot-whatsapp/provider-venom';
-
-export type IProvider = typeof VenomProvider
-export const adapterProvider = createProvider(VenomProvider, {
-        gifPlayback:true,
-        name:'botname'
+export type IDatabase = typeof MysqlDB
+export const adapterDB = new MysqlDB({
+    host: MYSQL_DB_HOST,
+    user: MYSQL_DB_USER,
+    database: MYSQL_DB_NAME,
+    password: MYSQL_DB_PASSWORD,
 })
 ```
 ```ts {{ title: 'app.ts' }}
 import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
 import { IProvider, adapterProvider } from './venom-provider';
+import { IDatabase, adapterDB } from './mysql-database';
 
-const welcomeFlow = addKeyword<IProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+const welcomeFlow = addKeyword<IProvider, IDatabase>(['hello', 'hi']).addAnswer('Ey! welcome')
 
 const main = async () => {
     await createBot({
         flow: createFlow([welcomeFlow]),
         provider: adapterProvider,
-        database: new MemoryDB()
+        database: adapterDB
     })
 }
 
@@ -301,33 +275,30 @@ Remember that the following requirements must be met in order to implement the m
 </Warning>
 
 <CodeGroup>
-```ts {{ title: 'wppconnect-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { WPPConnectProvider } from '@bot-whatsapp/provider-wppconnect';
+```ts {{ title: 'postgres-database.ts' }}
+import { PostgreSQLDB } from '@bot-whatsapp/database-postgres'
 
-export type IProvider = typeof WPPConnectProvider
-export const adapterProvider = createProvider(WPPConnectProvider)
-```
-```ts {{ title: 'wppconnect-provider-extend.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { WPPConnectProvider } from '@bot-whatsapp/provider-wppconnect';
-
-export type IProvider = typeof WPPConnectProvider
-export const adapterProvider = createProvider(WPPConnectProviderClass, {
-        name:'botname'
+export type IDatabase = typeof PostgreSQLDB
+export const adapterDB = new PostgreSQLDB({
+    host: POSTGRES_DB_HOST,
+    user: POSTGRES_DB_USER,
+    database: POSTGRES_DB_NAME,
+    password: POSTGRES_DB_PASSWORD,
+    port: +POSTGRES_DB_PORT,
 })
 ```
 ```ts {{ title: 'app.ts' }}
 import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
 import { IProvider, adapterProvider } from './wppconnect-provider';
+import { IDatabase, adapterDB } from './postgres-database';
 
-const welcomeFlow = addKeyword<IProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+const welcomeFlow = addKeyword<IProvider, IDatabase>(['hello', 'hi']).addAnswer('Ey! welcome')
 
 const main = async () => {
     await createBot({
         flow: createFlow([welcomeFlow]),
         provider: adapterProvider,
-        database: new MemoryDB()
+        database: adapterDB
     })
 }
 
