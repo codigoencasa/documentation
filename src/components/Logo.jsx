@@ -6,7 +6,7 @@ export function Logo(props) {
     <div className='flex gap-2'>
       <Image src={logoBot} alt="Logo" width={30} unoptimized />
       <div className='grid place-content-center'>
-        <h4 className='font-bold'>ChatBot</h4>
+        <h4 className='font-bold dark:text-white text-zinc-900'>ChatBot</h4>
       </div>
     </div>
   );
