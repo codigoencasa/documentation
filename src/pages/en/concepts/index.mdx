@@ -1,3 +1,5 @@
+import { Contributors } from '@/components/Contributors'
+
 export const description =
   'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
 
@@ -42,8 +44,10 @@ addKeyword(['hello','hi']).addAnswer('Ey! welcome')
 
 ## Provider
 
-Refers to creating structured sequences of interactions, as in building conversation flows. Two key methods are addKeyword and addAnswer, which allow keywords to be associated with specific responses, providing options for customizing the conversation flow.
+It is a key piece used to deliver the message to the chosen supplier. In a case you are building a bot for whatsapp you should use an adapter like __Meta__, __Twilio__, __Baileys__, etc or even if you want to connect to Telegram.
 
+
+<CodeGroup>
 ```ts {{ title: 'app.ts' }}
 import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
 import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
@@ -102,13 +106,26 @@ const main = async () => {
 
 main()
 ```
+</CodeGroup>
+
+<div className="not-prose aling-block">
+  <Button
+    href="/providers"
+    variant="text"
+    arrow="right"
+    children="More information about the providers "
+  />
+</div>
 
 ---
 
 ## Database
 
-Refers to creating structured sequences of interactions, as in building conversation flows. Two key methods are addKeyword and addAnswer, which allow keywords to be associated with specific responses, providing options for customizing the conversation flow.
+Just as providers can be easily exchanged between adapters, we can do the same with the database. Now the important thing to understand is how it works. The main purpose of the database inside the bot is to provide the bot with a record of the different events that have occurred between different conversations.
 
+It is ready to implement adapters from [Mongo](/databases#mongo), [MySQL](/databases#my-sql), [Postgres](/databases#postgres), among others.
+
+<CodeGroup>
 ```ts {{ title: 'app.ts' }}
 import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
 import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
@@ -167,3 +184,17 @@ const main = async () => {
 
 main()
 ```
+</CodeGroup>
+
+<div className="not-prose aling-block">
+  <Button
+    href="/providers"
+    variant="text"
+    arrow="right"
+    children="More information about the providers "
+  />
+</div>
+
+----
+
+<Contributors users={['leifermendez']} />
