@@ -9,6 +9,7 @@ import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
 import { useSectionStore } from '@/components/SectionProvider'
 import { Tag } from '@/components/Tag'
 import { remToPx } from '@/lib/remToPx'
+import { usePathname } from 'next/navigation'
 
 function useInitialValue(value, condition = true) {
   let initialValue = useRef(value).current
@@ -119,6 +120,9 @@ function NavigationGroup({ group, className }) {
     isInsideMobileNavigation
   )
 
+  const pathname = usePathname()
+  const lang = pathname.split('/').filter(Boolean)[0]
+
   let isActiveGroup =
     group.links.findIndex((link) => parseLocation({link:link.href, pathname:router.pathname})) !== -1
 
@@ -148,7 +152,7 @@ function NavigationGroup({ group, className }) {
         <ul role="list" className="border-l border-transparent">
           {group.links.map((link) => (
             <motion.li key={link.href} layout="position" className="relative">
-              <NavLink href={link.href} active={parseLocation({link:link.href, pathname:router.pathname})}>
+              <NavLink href={lang ? `/${lang}${link.href}` : link.href} active={parseLocation({link:link.href, pathname:router.pathname})}>
                 {link.title}
               </NavLink>
               <AnimatePresence mode="popLayout" initial={false}>
@@ -168,7 +172,7 @@ function NavigationGroup({ group, className }) {
                     {sections.filter((s) => !s?.not).map((section) => (
                       <li key={section.id}>
                         <NavLink
-                          href={`${link.href}#${section.id}`}
+                          href={`${lang ? `/${lang}${link.href}` : link.href}#${section.id}`}
                           tag={section.tag}
                           isAnchorLink
                         >

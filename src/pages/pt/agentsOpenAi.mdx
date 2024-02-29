@@ -1,13 +1,13 @@
-# OpenAi Plugin
+# Plug-in OpenAi
 
 
 <Note>
-Before you start, you must make sure to have an API key from [OpenAI](https://platform.openai.com)
+Antes de começar, você deve se certificar de que tem uma chave de API da [OpenAI] (https://platform.openai.com)
 </Note>
 
-## Install
+## Instalação
 
-Install the library to make use of OpenAI:
+Instale a biblioteca para usar o OpenAI:
 
 ```bash {{ title: 'npm' }}
     npm install @builderbot-plugins/openai-agents
@@ -20,12 +20,12 @@ Install the library to make use of OpenAI:
     import BaileysProvider from "@bot-whatsapp/provider/baileys";
     import MockAdapter from "@bot-whatsapp/database/mock";
 
-    /** ... other flows importations */
+    /** ... outras importações de fluxos */
 
     import { EmployeesClass } from "@builderbot-plugins/openai-agents";
 
     /**
-     * PLugin Configuration
+     * Configuração do PLugin
      */
 
     const emplyeeInstace = new EmployeesClass({
@@ -36,35 +36,35 @@ Install the library to make use of OpenAI:
 
     emplyeeInstace.employees([
         {
-            name: "SALES_AGENT", // NAME OF YOUR AGENT
-            description: // DESCRIPTION OF YOUR AGENT AND WHAT IT WILL DO
-                "I'm Rob, the friendly salesperson in charge of assisting you if you intend to buy or are interested in any product. My responses are brief.",
-            flow: YOUR_FLOW_HERE, // YOUR FLOW IMPLEMENTATION
+            name: "SALES_AGENT", // NOME DO SEU AGENTE
+            description: // DESCRIÇÃO DE SEU AGENTE E O QUE ELE FARÁ
+                "Eu sou Rob, o vendedor amigável encarregado de ajudá-lo caso pretenda comprar ou esteja interessado em algum produto. Minhas respostas são breves.",
+            flow: YOUR_FLOW_HERE, // SUA IMPLEMENTAÇÃO DE FLUXO
         },
         {
-            name: "EXPERT_AGENT",
+            nome: "EXPERT_AGENT",
             description:
-                "Hello, my name is Leifer. I am the specialized person in charge of resolving your doubts about our chatbot course, which is developed with Node.js and JavaScript. This course is designed to facilitate sales automation in your business. I will provide concise and direct answers to maximize your understanding."
+                "Olá, meu nome é Leifer. Sou a pessoa especializada encarregada de solucionar suas dúvidas sobre nosso curso de chatbot, que é desenvolvido com Node.js e JavaScript. Esse curso foi criado para facilitar a automação de vendas em sua empresa. Fornecerei respostas concisas e diretas para maximizar sua compreensão."
             flow: expertoFlow,
         }
     ])
 
 
     /**
-     * ENTRY POINT! 
-     * THIS NOT USE AI FOR MANAGE EVENTS
-     * WELCOME FLOW OR FIRTS FLOW
+     * PONTO DE ENTRADA! 
+     * ISSO NÃO USA AI PARA GERENCIAR EVENTOS
+     * FLUXO DE BOAS-VINDAS OU PRIMEIRO FLUXO
      */
     const welcomeFlow = addKeyword(EVENTS.WELCOME).addAction(async (ctx, ctxFn) => {
         const {state} = ctxFn
         const pluginAi = ctxFn.extensions.employeesAddon
 
-        /** This function is the one that does the job */
-        /** Determine the flow and retrieva an employee object */
+        /** Essa função é a que faz o trabalho */
+        /** Determinar o fluxo e recuperar um objeto de funcionário */
         const employeeDeterminated = await pluginAi.determine(ctx.body)
 
         if(!employeeDeterminated?.employee){
-            return ctxFn.flowDynamic("Oops, I'm sorry, I don't understand. How can I help you?")
+            return ctxFn.flowDynamic("Oops, desculpe, não entendi. Como posso ajudá-lo?")
         }
         state.update({answer:employeeDeterminated.answer})
         pluginAi.gotoFlow(employeeDeterminated.employee, ctxFn)
@@ -73,7 +73,7 @@ Install the library to make use of OpenAI:
     const expertFlow = addKeyword(EVENTS.ACTION)
         .addAction(async (_, {state, flowDynamic}) =>{
             const currentState = state.getMyState()
-            return flowDynamic(currentState.answer) /** here come the answer by OpenAi pluggin */
+            return flowDynamic(currentState.answer) /** aqui vem a resposta do plug-in OpenAi */
         })
 
 
@@ -83,14 +83,14 @@ Install the library to make use of OpenAI:
         const adapterFlow = createFlow([
             welcomeFlow,
             expertFlow
-            /** ... other flows */
+            /** ... outros fluxos */
         ]);
         
         const adapterProvider = createProvider(BaileysProvider);
 
         const configBot = {
-            flow: adapterFlow,
-            provider: adapterProvider,
+            flow adapterFlow,
+            provedor: adapterProvider,
             database: adapterDB,
         }
 

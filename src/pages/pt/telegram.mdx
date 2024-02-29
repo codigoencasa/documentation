@@ -1,14 +1,14 @@
-export const description = 'Telegram is a user-friendly provider, in this article you will learn how to integrate your Telegram bots with the library.'
+export const description = 'O Telegram é um provedor fácil de usar. Neste artigo, você aprenderá a integrar seus bots do Telegram à biblioteca'
 
 # Telegram
 
 <Note>
-Create your first Telegram bot if you don't have one yet [create your firts Telegram bot](https://core.telegram.org/bots/tutorial "Create your firts Telegra bot")
+Crie seu primeiro bot do Telegram se você ainda não tiver um [crie seu primeiro bot do Telegram](https://core.telegram.org/bots/tutorial "Crie seu primeiro bot do Telegra")
 </Note>
 
-To implement a chatbot on Telegram, you need to install the library `@builderbot-plugins/telegram`
+Para implementar um chatbot no Telegram, você precisa instalar a biblioteca `@builderbot-plugins/telegram`
 
-## Install
+## Instalar
 
 ```bash {{ title: 'npm' }}
     npm install @builderbot-plugins/telegram
@@ -35,20 +35,20 @@ To implement a chatbot on Telegram, you need to install the library `@builderbot
     }
     main()
 ```
-When running the Telegram provider, you should see something like this:
+Ao executar o provedor do Telegram, você deverá ver algo parecido com isto:
 
 ![loaded](https://imgur.com/38pH9Ad.png)
 
-## Flows
-Create your first flow with Telegram.
+## Fluxos
+Crie seu primeiro fluxo com o Telegram.
 
 ```ts
-    /* code stuff */
+    /* coisas de código */
 
     const provider = createProvider(TelegramProvider, {
             token: 'YOUR_TOKEN_HERE'
     })
-    const welcome = addKeyword(EVENTS.WELCOME).addAnswer('Hi, Welcome to Telegram!');
+    const welcome = addKeyword(EVENTS.WELCOME).addAnswer('Olá, bem-vindo ao Telegram!');
 
     await createBot({
         database: new MemoryDB(),
@@ -56,15 +56,15 @@ Create your first flow with Telegram.
         flow: createFlow([welcome])
     })
 
-    /* code stuff */
+    /* coisas de código */
 ```
 ![flow](https://imgur.com/VC3NvtD.png)
 
-It seems like magic, right!
+Parece mágica, certo!
 
 ## Webhook
 
-Alright, let's continue. If you need to expose a port or an API for listening to send messages, you can do it as follows.
+Muito bem, vamos continuar. Se precisar expor uma porta ou uma API para ouvir o envio de mensagens, você pode fazer isso da seguinte forma.
 
 ```typescript
     import 'dotenv/config'
@@ -78,9 +78,9 @@ Alright, let's continue. If you need to expose a port or an API for listening to
             token: "YOUR_TELEGRAM_TOKEN_HERE"
         })
 
-        provider.initHttpServer(9000)
+        provedor.initHttpServer(9000)
             .http.server.post('/webhook', handleCtx((null, req, res) => {
-                    console.log('I am function what doing someting')
+                    console.log('Eu sou a função que está fazendo alguma coisa')
                     res.end('ok')
             }))
         
@@ -97,7 +97,7 @@ Alright, let's continue. If you need to expose a port or an API for listening to
     main()
 ```
 
-here some screens from the example above
+Aqui estão algumas telas do exemplo acima
 
 ![Imgur](https://imgur.com/JgXOUZw.png)
 ![Imgur](https://imgur.com/4uRkIrg.png)

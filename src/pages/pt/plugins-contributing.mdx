@@ -1,0 +1,111 @@
+export const description = 'contribuindo conosco, participe e codifique lado a lado uma grande comunidade'
+
+# Contribuindo
+
+## 👋 !Seja bem vindo!
+
+Ficamos felizes que você tenha interesse em contribuir com o nosso projeto! Aqui você encontra todas as informações necessárias para começar a colaborar. Você pode contribuir de diversas formas, seja atualizando a documentação, melhorando o código, revisando pendências no [issues](https://github.com/codigoencasa/bot-plugins/issues), ou ainda fazendo aportes financeiros, que serão utilizados para diversos fins relacionados ao desenvolvimento e manutenção do projeto. Você pode ver mais detalhes sobre como fazer contribuições financeiras [aqui](https://opencollective.com/bot-whatsapp).
+
+A principal linguagem que usamos neste projeto é o TypeScript, que nos permite manter um código legível e escalável.
+
+##  Perguntas Frequentes
+
+Aqui estão algumas respostas para perguntas frequentes que podem surgir ao contribuir com o projeto:
+
+- **O que é Lerna?** Você pode encontrar uma explicação neste [vídeo](https://share.vidyard.com/watch/n3HLai7q4kj2yZHL35e3bo).
+- **Como faço commits de forma eficaz?** Aqui está um [vídeo](https://share.vidyard.com/watch/KjqJ5v2dgdAMdVZeLpJZix) que mostra como fazer.
+- **Quais são os nossos canais de comunicação?** Você pode participar da nossa comunidade no [Discord](https://link.codigoencasa.com/DISCORD).
+
+------
+
+##  Requisitos:
+
+Antes de começar a contribuir com o projeto, certifique-se de ter as seguintes ferramentas instaladas:
+
+- **Nó.js**: versão 18 ou superior. Você pode baixar o Node em [aqui](https://nodejs.org/es/download/).
+- **pnpm**: Gerenciador de pacotes. Você pode instalá-lo seguindo as instruções [aqui](https://pnpm.io/cli/install).
+- **VSCode**: editor de código que recomendamos, pois possui plugins úteis.
+- **Commits convencionais**: plugin VSCode que ajuda a criar commits semânticos, seguindo as melhores práticas. Você pode instalá-lo a partir de [here](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits&ssr=false#overview).
+
+##  Get Starter
+
+### Faça um garfo
+
+Antes de começar a trabalhar no projeto, faça um fork para sua própria conta do GitHub. Isso permitirá que você trabalhe em sua própria cópia do repositório. Clique no seguinte link para bifurcar: [aqui](https://github.com/codigoencasa/bot-plugins/fork).
+
+### Clone o repositório (do seu fork)
+
+Depois de bifurcar o projeto, clone sua própria cópia do repositório usando o seguinte comando em seu terminal:
+
+```bash
+git clone https://github.com/TU_USERNAME/bot-plugins
+```
+
+##  Dependências instalam
+
+Vá para a pasta do projeto e execute os seguintes comandos para instalar as dependências necessárias:
+
+```bash
+cd bot-plugins
+pnpm install
+pnpm run build
+```
+
+------
+
+##  Criar uma nova integração
+
+Para criar uma nova integração, execute o seguinte comando em seu terminal:
+
+```bash
+pnpm run create.package <package_name>
+```
+
+------
+
+##  compile (build)
+
+Para compilar a aplicação, execute o seguinte comando em seu terminal. Isso irá gerar um diretório dist dentro dos pacotes monorepo.
+
+```bash
+npx lerna run build --scope=<package_name>
+```
+
+##  testa ambientes
+
+Depois de executar a compilação e tudo estiver correto, execute o seguinte comando em seu terminal:
+
+```bash
+pnpm run copy.lib
+```
+
+Este comando copiará os arquivos necessários para a pasta base_app. Certifique-se de ter executado anteriormente npm install dentro da pasta `base_app`. Em seguida, a partir da raiz do seu diretório, execute:
+
+```bash
+pnpm run copy.lib
+```
+
+Para iniciar o assistente, execute:
+
+```bash
+npm run dev
+```
+
+Deve funcionar sem problemas.
+
+##  Teste de ponta a ponta (E2E)
+
+Todas as alterações feitas devem passar nos testes` end-to-end'. Esses testes são executados com o seguinte comando:
+
+```bash
+pnpm run test
+```
+
+Certifique-se de ter uma pasta de teste e arquivos com o `.teste.extensão ts 'para seus 'testes'.
+
+> **OBS:** caso encontre informações que poderiam ser melhoradas neste documento ou algum erro ortográfico que atrapalhe o entendimento, deixe uma mensagem em algum dos canais listados abaixo.
+
+- [Discórdia](https://link.codigoencasa.com/DISCORD)
+- [Twitter](https://twitter.com/leifermendez)
+- [YouTube](https://www.youtube.com/watch?v=5lEMCeWEJ8o&list=PL_WGMLcL4jzWPhdhcUyhbFU6bC0oJd2BR)
+- [Telegrama](https://t.me/leifermendez)

@@ -1,0 +1,169 @@
+export const description =
+  'Neste guia, falaremos sobre o que acontece quando algo dá errado enquanto você trabalha com a API.'
+
+# Conceitos
+
+A Biblioteca é baseada em três componentes-chave para o seu correto funcionamento: o Flow, encarregado de construir o contexto da conversa e oferecer uma interface amigável ao Desenvolvedor; o Provider, que atua como um conector permitindo alternar facilmente entre provedores do WhatsApp sem o risco de afetar outras partes do bot; e o banco de dados, que alinhado a essa filosofia do conector, facilita a alteração da camada de persistência de dados sem a necessidade de reescrever o fluxo de trabalho.
+
+---
+
+## Flow
+
+Refere-se à criação de sequências estruturadas de interações, como na construção de fluxos de conversação. Dois métodos principais são addKeyword e addAnswer, que permitem que palavras-chave sejam associadas a respostas específicas, fornecendo opções para personalizar o fluxo da conversa.
+
+<CodeGroup>
+```ts {{ title:' app.ts'}}
+import { addKeyword } from '@bot-whatsapp/bot'
+
+addKeyword(['Olá','oi']).addAnswer('Ey! bem-vindo')
+```
+
+```js {{ title: 'app.js'}}
+const { addKeyword } = require ('@bot-whatsapp/bot') 
+
+addKeyword(['Olá','oi']).addAnswer('Ey! bem-vindo')
+```
+</CodeGroup>
+
+
+
+Alguns exemplos de como usar o addKeyword no qual você pode colocar o __keyword__ ou uma lista de __keywords__ que será usada para iniciar um fluxo conversacional
+
+
+```ts
+// Exemplo com palavra-chave única
+addKeyword('hello').addAnswer('Ey! bem-vindo')
+
+// Exemplo com multi palavras-chave
+addKeyword(['Olá','oi']).addAnswer('Ey! bem-vindo')
+```
+
+---
+
+## Provedor
+
+Refere-se à criação de sequências estruturadas de interações, como na construção de fluxos de conversação. Dois métodos principais são addKeyword e addAnswer, que permitem que palavras-chave sejam associadas a respostas específicas, fornecendo opções para personalizar o fluxo da conversa.
+
+```ts {{ title:' app.ts'}}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+// ...código de coisas...
+
+const main = async () => {
+    
+    await createBot ({
+        database: new MemoryDB(),
+        provedor: createProvider(BaileysProvider),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
+
+```ts {{ title: 'provedor.wppconnect.ts'}}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { WPPConnectProviderClass } from '@bot-whatsapp/provider-wppconnect'
+
+// ...código de coisas...
+
+const main = async () => {
+    
+    await createBot ({
+        database: new MemoryDB(),
+        provedor: createProvider(WPPConnectProviderClass),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
+
+```ts {{ title: 'provedor.meta.ts'}}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { MetaProvider } from '@bot-whatsapp/provider-meta'
+
+// ...código de coisas...
+
+const main = async () => {
+    
+    await createBot ({
+        database: new MemoryDB(),
+        provedor: createProvider(MetaProvider, {
+              jwtToken: 'jwtToken',
+              numberId: 'numberId',
+              verifyToken: 'verifyToken',
+              versão: 'v16. 0',
+        }),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
+
+---
+
+## Database
+
+Refere-se à criação de sequências estruturadas de interações, como na construção de fluxos de conversação. Dois métodos principais são addKeyword e addAnswer, que permitem que palavras-chave sejam associadas a respostas específicas, fornecendo opções para personalizar o fluxo da conversa.
+
+```ts {{ title:' app.ts'}}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+// ...código de coisas...
+
+const main = async () => {
+    
+    await createBot ({
+        database: new MemoryDB(),
+        provedor: createProvider(BaileysProvider),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
+
+```ts {{ title: 'provedor.wppconnect.ts'}}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { WPPConnectProviderClass } from '@bot-whatsapp/provider-wppconnect'
+
+// ...código de coisas...
+
+const main = async () => {
+    
+    await createBot ({
+        database: new MemoryDB(),
+        provedor: createProvider(WPPConnectProviderClass),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
+
+```ts {{ title: 'provedor.meta.ts'}}
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+import { MetaProvider } from '@bot-whatsapp/provider-meta'
+
+// ...código de coisas...
+
+const main = async () => {
+    
+    await createBot ({
+        database: new MemoryDB(),
+        provedor: createProvider(MetaProvider, {
+              jwtToken: 'jwtToken',
+              numberId: 'numberId',
+              verifyToken: 'verifyToken',
+              versão: 'v16. 0',
+        }),
+        flow: createFlow([flowDemo])
+    })
+}
+
+main()
+```
