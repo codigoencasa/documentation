@@ -12,6 +12,7 @@ import {
 import { useMobileNavigationStore } from '@/components/MobileNavigation'
 import { ModeToggle } from '@/components/ModeToggle'
 import { MobileSearch, Search } from '@/components/Search'
+import LanguageSelector from './LanguajeSelector'
 
 function TopLevelNavItem({ href, children, target }) {
   return (
@@ -75,7 +76,8 @@ export const Header = forwardRef(function Header({ className }, ref) {
           </ul>
         </nav>
         <div className="hidden md:block md:h-5 md:w-px md:bg-zinc-900/10 md:dark:bg-white/15" />
-        <div className="flex gap-4">
+        <div className="flex gap-2 items-center justify-content-end">
+          <LanguageSelector />
           <MobileSearch />
           <ModeToggle />
         </div>
