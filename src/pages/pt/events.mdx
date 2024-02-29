@@ -1,0 +1,162 @@
+export const description =
+'Neste guia, falaremos sobre o que acontece quando algo dá errado enquanto você trabalha com a API.'
+
+# Eventos
+
+Às vezes os usuários enviam mensagens como uma imagem, vídeo ou mensagens de localização especial, entre outras, para esse caso existem eventos.
+
+---
+
+## Default {{ tag: 'WELCOME'}}
+
+Quando um usuário envia uma mensagem de "texto" que não existe em uma palavra-chave em outro fluxo, o evento de boas-vindas será acionado por padrão, que é o evento padrão.
+<CodeGroup>
+```ts {{ title:' app.ts'}}
+import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+
+const welcomeFlow = addKeyword(EVENTS.VIDEO).addAnswer('mensagem Olá')
+```
+```js {{ title:' app.js'}}
+const { addKeyword, EVENTS } = require ('@bot-whatsapp/bot')
+
+const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('mensagem Olá')
+```
+</CodeGroup>
+
+
+---
+
+## Imagem ou vídeo recebido {{ tag: 'media'}}
+
+Quando um usuário envia uma imagem ou vídeo, o evento de media será acionado por padrão, que é o evento padrão.
+
+<CodeGroup>
+```ts {{ title:' app.ts'}}
+import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+
+const mediaFlow = addKeyword(EVENTS.MEDIA).addAnswer('recebi uma imagem/vídeo de media')
+```
+```js {{ title: 'app.js'}}
+const { addKeyword, EVENTS } = require ('@bot-whatsapp/bot')
+
+const mediaFlow = addKeyword(EVENTS.MEDIA).addAnswer('recebi uma imagem/vídeo de media')
+```
+</CodeGroup>
+
+<Note>
+Para salvar o arquivo de media, você deve invocar a função saveFile do provedor que está usando.
+</Note>
+
+<CodeGroup>
+```ts {{ title:' app.ts'}}
+import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+const mediaFlow = addKeyword<BaileysProvider>(eventos.media)
+.addAnswer('recebi uma imagem/vídeo de media', async (ctx, { provider }) => {
+const localPath = await provider.saveFile(ctx, {path:'...'})
+// console.log (localPath)
+})
+```
+```js {{ title:' app.js'}}
+const { addKeyword, EVENTS } = require ('@bot-whatsapp/bot')
+const { BaileysProvider } = require ('@bot-whatsapp/bot')
+
+const mediaFlow = addKeyword(EVENTS.MEDIA)
+.addAnswer('recebi uma imagem/vídeo de media', async (ctx, { provider }) => {
+const localPath = await provider.saveFile(ctx, {path:'...'})
+// console.log (localPath)
+})
+```
+</CodeGroup>
+
+---
+
+## Documento recebido {{ tag: 'documento' }}
+
+Quando um usuário envia um documento, DOCUMENT event será acionado por padrão, que é o evento padrão.
+<CodeGroup>
+```ts {{ title:' app.ts'}}
+import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+
+const documentFlow = addKeyword(EVENTS.DOCUMENT).addAnswer("Uau! Me desculpe, não consigo ler este documento agora")
+```
+```js {{ title: 'app.js'}}
+const { addKeyword, EVENTS } = require ('@bot-whatsapp/bot')
+
+const documentFlow = addKeyword(EVENTS.DOCUMENT).addAnswer("Uau! Me desculpe, não consigo ler este documento agora")
+```
+</CodeGroup>
+
+---
+
+## Local recebido {{ tag: 'local'}}
+
+<Note>
+Localização deve ser enviada via WhatsApp, ainda não permite links de localização de aplicativos externos
+</Note>
+
+Quando Seu chatbot precisa acessar a localização de um usuário, é importante garantir que a localização seja enviada diretamente do aplicativo WhatsApp para ter resultados. Uma vez que o lugar é recebido, você pode executar um log do console do ctx para ver os detalhes do lugar recebido.
+
+O contexto de local recebido será algo como isto no console:
+
+<CodeGroup>
+```js {{title: 'terminal'}}
+ctx: {
+...
+message: Message {
+locationMessage: LocationMessage {
+grauslatitude: -2.1462137699127197,
+grauslongitude: -79,88981628417969,
+nome: 'Doutor Miguel Angel jij Psorn Teran',
+endereço: 'Doutor Miguel Angel jij Psorn Teran, Guayaquil, Equador',
+},
+},
+corpo: '_ evento_local__0d5c9f57-0909-44a1-995f-902f9df3b21f',
+nome: 'yeyodev❷',
+de: '593000000000'
+}
+
+```
+</CodeGroup>
+
+Isso exibirá a latitude e longitude do usuário no console, permitindo que você utilize efetivamente os dados de localização para a funcionalidade do seu chatbot.
+
+Para acessar os dados de localização, você pode usar a seguinte abordagem:
+
+<CodeGroup>
+```ts {{ title:' location.flow.ts'}}
+import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
+
+export default addKeyword(EVENTS.LOCALIZATION).addAnswer("recebi sua localização!", null, async (ctx) => {
+const userLatitude = ctx.mensagem.locationMessage.grauslatitude;
+const userLongitude = ctx.mensagem.locationMessage.grauslongitude;
+})
+```
+```js {{ title:' location.flow.js'}}
+import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
+
+export default addKeyword(EVENTS.LOCALIZATION).addAnswer("recebi sua localização!", null, async (ctx) => {
+const userLatitude = ctx.mensagem.locationMessage.grauslatitude;
+const userLongitude = ctx.mensagem.locationMessage.grauslongitude;
+})
+```
+</CodeGroup>
+
+---
+
+## Nota de voz recebida {{ tag: 'VOICE_NOTE'}}
+
+Quando um usuário envia uma mensagem de "texto" que não existe em uma palavra-chave em outro fluxo, o evento de boas-vindas será acionado por padrão, que é o evento padrão.
+<CodeGroup>
+```ts {{ title:' app.ts'}}
+import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+
+const voiceNoteFlow = addKeyword(eventos.VOICE_NOTE).addAnswer('Dá-me um segundo para te ouvir!')
+```
+```js {{ title: 'app.js'}}
+const { addKeyword, EVENTS } = require ('@bot-whatsapp/bot')
+
+const voiceNoteFlow = addKeyword(eventos.VOICE_NOTE).addAnswer('Dá-me um segundo para te ouvir!')
+```
+</CodeGroup>

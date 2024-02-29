@@ -9,6 +9,7 @@ import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
 import { useSectionStore } from '@/components/SectionProvider'
 import { Tag } from '@/components/Tag'
 import { remToPx } from '@/lib/remToPx'
+import { usePathname } from 'next/navigation'
 
 function useInitialValue(value, condition = true) {
   let initialValue = useRef(value).current
@@ -120,6 +121,8 @@ function NavigationGroup({ group, className }) {
     [useRouter(), useSectionStore((s) => s.sections)],
     isInsideMobileNavigation
   )
+
+  const pathname = usePathname()
 
   let isActiveGroup =
     group.links.findIndex((link) => parseLocation({link:link.href, pathname:router.pathname})) !== -1

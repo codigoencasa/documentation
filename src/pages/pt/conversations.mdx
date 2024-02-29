@@ -1,0 +1,48 @@
+export const description =
+'Nesta página, vamos nos aprofundar nos diferentes endpoints de conversa que você pode usar para gerenciar conversas programaticamente.'
+
+# Conversas
+
+As conversas são uma parte essencial do Protocolo — são os contêineres para as mensagens entre você, seus contatos e grupos. Nesta página, vamos nos aprofundar nos diferentes endpoints de conversa que você pode usar para gerenciar conversas programaticamente. Veremos como consultar, criar, atualizar e Excluir conversas. {{ className: 'lead'}}
+
+## O modelo de conversação
+
+O modelo de conversa contém todas as informações sobre as conversas entre você e seus contatos. Além disso, as conversas também podem ser baseadas em grupo com mais de um contato, podem ter uma mensagem fixada e podem ser silenciadas.
+
+### Propriedades
+
+<Properties>
+<Property name= " id " type="string">
+Identificador exclusivo para a conversa.
+</Property>
+<Property name=" contact_id " type="string">
+Identificador exclusivo para o outro contato na conversa.
+</Property>
+<Property name=" group_id " type="string">
+Identificador exclusivo do grupo ao qual a conversa pertence.
+</Property>
+<Property name=" pinned_message_id "type= "string">
+Identificador exclusivo da mensagem fixada.
+</Property>
+<Property name=" is_pinned " type="boolean">
+Se a conversa foi fixada ou não.
+</Property>
+<Property name=" is_muted " type="boolean">
+Se a conversa foi silenciada ou não.
+</Property>
+<Property name=" last_active_at " type="timestamp">
+Carimbo de data/hora de quando a conversa esteve ativa pela última vez.
+</Property>
+<Property name=" last_opened_at"type="timestamp">
+Timestamp de quando a conversa foi aberta pela última vez pelo autenticado
+usuário.
+</Property>
+<Property name=" created_at " type="timestamp">
+Timestamp de quando a conversa foi criada.
+</Property>
+<Property name=" archived_at " type="timestamp">
+Timestamp de quando a conversa foi arquivada.
+</Property>
+</Properties>
+
+---

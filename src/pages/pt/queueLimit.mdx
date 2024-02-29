@@ -1,0 +1,34 @@
+export const description = 'Implementar filas de mensagens para melhorar o gerenciamento de recursos'
+
+# Fila
+
+## Como implementar e gerenciar o limite da fila
+
+
+Para aumentar o limite de alta simultaneidade no chatbot, será necessário adicionar a extensão da fila à constante que contém as extensions e, em seguida, inseri-la na função createBot. Essa configuração deve ser feita no arquivo do ponto de entrada principal que contém "createBot"
+
+```bash {{ title: 'app.ts' }}
+const main = async () => {
+
+    await createBot({
+        database: new MemoryDB(),
+        provedor: createProvider(BaileysProvider),
+        flow: createFlow([...])
+    }, {
+        queue: {
+            timeout: 20000,
+            concurrencyLimit: 50
+        }
+    })
+}
+```
+----
+<Properties>
+  <Property name="timeout" type="number">
+ Número de milissegundos usado como duração máxima para a execução de uma função assíncrona. __default 20000__
+  </Property>
+  <Property name="concurrencyLimit" type="number">
+ Número de processos paralelos que podem ser executados ao mesmo tempo. __default 15__
+  </Property>
+
+</Properties>

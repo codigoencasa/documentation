@@ -1,0 +1,194 @@
+export const description = 'Neste guia, falaremos sobre o que acontece quando algo dá errado enquanto você trabalha com a API.'
+
+# Práticas
+
+A biblioteca baseia-se em três componentes fundamentais para o seu correcto funcionamento: o Flow, encarregado de construir o contexto da conversa e de oferecer uma interface amigável ao programador; o provedor, que atua como um conector que permite alternar facilmente entre os provedores do WhatsApp sem o risco de afetar outras partes do bot; e o banco de dados, que está de acordo com essa filosofia de conector, facilita a alteração da camada de persistência de dados sem a necessidade de reescrever o fluxo de trabalho.
+
+---
+
+## Histórico de conversação {{ tag: 'state'  }}
+
+Muitas vezes, precisaremos gerenciar conversas e manter o contexto em uma memória chamada `state` que é volátil e acessível a partir de qualquer função executada em um stream.
+
+
+```ts 
+  const welcomeFlow = addKeyword(['olá'])
+      .addAction(
+          "Qual é o seu nome?",
+          {captura: true},
+          async (ctx, { flowDynamic, state }) => {
+              await state.update({ nome: ctx.body })
+              esperar flowDynamic ('Obrigado por me dar o seu nome!')
+          }
+      )
+      .addAction(
+          'Quantos anos você tem?',
+           {captura: true},
+          async (ctx, { flowDynamic, state }) => {
+              const name = state.get('nome')
+              await state.update({ age: ctx.body })
+              await flowDynamic(`Obrigado por compartilhar sua idade! ${name}`)
+          }
+      )
+      .addAction('Aqui estão seus dados:', null, async (_, { flowDynamic, state }) => {
+          const myState = state.getMyState()
+          await flowDynamic(`Nome: ${myState.name} Idade: ${myState.age}`)
+      })
+```
+
+
+
+---
+
+## Mensagens Dinâmicas {{ tag: 'flowDynamic'  }}
+
+Em outras ocasiões, precisamos enviar mensagens de forma dinâmica de dados que podem ser variáveis, abaixo você pode ver um exemplo de como você deve fazê-lo e como você não deve fazê-lo.
+
+<Error>
+ ❌ Evite isso, não funciona porque addAnswer serializa o conteúdo no início da execução.
+</Error>
+
+```ts
+const nome = ''
+
+const flow = addKeyword('olá')
+    .addAction(`Qual é o seu nome? `, { capture: true }, async (ctx) => {
+        nome = ctx.body
+    })
+    .addAnswer(`Seu nome é: ${name}`)
+```
+<Note>
+Se voce quiser enviar uma mensagem dinamico use flowDynamic
+</Note>
+
+```ts
+const flow = addKeyword('olá')
+    .addAction(`Qual é o seu nome? `, { capture: true }, async (ctx, { state }) => {
+        await state.update({ nome: ctx.body })
+    })
+    .addAction(async (ctx, { state, flowDynamic }) => {
+        const name = state.get('nome')
+        await flowDynamic(`Seu nome é: ${name}`)
+    })
+```
+
+---
+
+## Enviar arquivo
+
+Quando você deseja enviar uma imagem, áudio, arquivo ou qualquer outro arquivo, você pode fazê-lo desta forma. É __important___ notar que a URL deve ser ___publicamente accessible__.
+
+```ts
+const flow = addKeyword('olá')
+    .addAction(`Enviar imagem de URL`, 
+        { media: 'https://i.imgur.com/0HpzsEm.png' }
+    )
+    .addAction(`Enviar vídeo de URL`, 
+        { media: 'https://media.giphy.com/media/KWKwdBC2ODWlQ8kgt/giphy.mp4' }
+    )
+    .addAction(`Enviar arquivo de URL`, 
+        { media: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' }
+    )
+```
+
+Outras maneiras de usar quando a rota vem de uma fonte de dados dinâmica
+
+```ts
+const flow = addKeyword('olá')
+    .addAction(async (_,{flowDynamic}) => {
+        // ...db obter fonte...
+        await flowDynamic([Tradução
+            {body:'Esta é uma imagem', media:'https://i.imgur.com/0HpzsEm.png'}
+        ])
+        await flowDynamic([Tradução
+            {body:'Este é um vídeo', media:'https://media.giphy.com/media/KWKwdBC2ODWlQ8kgt/giphy.mp4'}
+        ])
+    })
+
+```
+Se precisar de enviar um ficheiro que esteja armazenado localmente, também o poderá fazer. A utilização de `join` é recomendada para garantir a concatenação correcta do directório.
+
+```ts
+const flow = addKeyword('olá')
+    .addAction(async (_,{flowDynamic}) => {
+        const pathLocal = join('assets','doc.pdf')
+        // pathLocal = c:/doc.pdf
+        await flowDynamic([Tradução
+            {body:'Este é um vídeo', media: pathLocal }
+        ])
+    })
+
+```
+
+---
+
+## Mudar para outro fluxo {{ tag: 'gotoFlow'  }}
+
+Se quiser desviar um fluxo de conversação para outro fluxo lógico baseado numa entrada de resposta, poderá fazê-lo da seguinte forma:
+
+```ts
+
+const flowToA = addKeyword(EVENTS.ACTION).addAnswer('Aqui temos a opção A!')
+const flowToB = addKeyword(EVENTS.ACTION).addAnswer('Aqui temos a opção B!')
+const flowToC = addKeyword(EVENTS.ACTION).addAnswer('Aqui temos a opção C!')
+
+const flowDefault = addKeyword(EVENTS.ACTION).addAnswer("Não temos essa opção 🤔")
+
+const flow = addKeyword('ordem')
+    .addAction(
+        [
+            `Qual é a melhor opção para você? `,
+            `Tipo **A**`,
+            `Tipo **B**`,
+            `Tipo **C**`,
+        ], 
+        { captura: true }
+    )
+    .addAction(`Obrigado por responder`,async (ctx, {gotoFlow})=> {
+        const userAnswer = ctx.body
+        if(userAnswer === 'A'){
+            return gotoFlow(flowToA)
+        } 
+        if(userAnswer === 'B'){
+            return gotoFlow(flowToB)
+        } 
+        if(userAnswer === 'C'){
+            return gotoFlow(flowToC)
+        } 
+        return gotoFlow(flowDefault)
+
+    })
+    .addAnswer(`esta mensagem não será enviada`)
+```
+
+---
+
+## Desative o bot de um determinado usuário {{ tag: 'state'  }}
+
+Às vezes, precisaremos desligar o bot para um determinado usuário, para que possamos conversar com o cliente sem que o bot interfira.
+
+```ts
+const flow = addKeyword<BaileysProvider>('palavra-chave mágica')
+  .addAction(async (_, { state, endFlow }) => {
+      const botOffForThisUser = state.get<boolean>('botOffForThisUser')
+      if(botOffForThisUser) retorna endFlow()
+  })
+  .addAnswer('Olá!')
+```
+
+---
+
+## Desativar para todos {{ tag: 'state'  }}
+
+Às vezes precisaremos desativar o bot para todas as pessoas, sem a necessidade de desligar o servidor ou parar o script.
+
+```ts
+const flow = addKeyword<BaileysProvider>('botoff')
+  .addAction(async (_, { globalState, endFlow }) => {
+      const botOffForEveryOne = globalState.get<boolean>('botOffForEveryOne')
+      if(botOffForEveryOne) return endFlow()
+  })
+  .addAnswer('Olá!')
+```
+
+---

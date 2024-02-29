@@ -13,7 +13,7 @@ export async function middleware(req) {
 
     const parseLanguageDefault = `${req.nextUrl.pathname}`.split('/')[1]
     const languageDefault = !parseLanguageDefault.length
-    const listLanguages = ['en', 'es', 'pt']
+    const listLanguages = ['en', 'pt', 'es']
     const isValid = listLanguages.includes(parseLanguageDefault)
 
     if (languageDefault || !isValid) {
@@ -23,6 +23,5 @@ export async function middleware(req) {
             new URL(parseNewUrl, req.url)
         )
     }
-
-    return
+    return;
 }
