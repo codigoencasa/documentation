@@ -147,7 +147,7 @@ export function Resources() {
       <Heading level={2} id="resources">
         Resources
       </Heading>
-      <div className="not-prose mt-4 grid grid-cols-1 gap-8 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="not-prose mt-4 grid grid-cols-1 gap-8 border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-4">
         {resources.map((resource) => (
           <Resource key={resource.href} resource={resource} />
         ))}

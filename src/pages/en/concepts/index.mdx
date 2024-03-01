@@ -1,4 +1,6 @@
 import { Contributors } from '@/components/Contributors'
+import { Guides } from '@/components/Guides'
+import { Resources } from '@/components/Resources'
 
 export const description =
   'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
@@ -49,7 +51,7 @@ For a quick understanding of the operation we have prepared a basic example of h
 
 <div className="not-prose aling-block">
   <Button
-    href="/pratices"
+    href="/uses-cases"
     variant="text"
     arrow="right"
     children="View more examples"
@@ -204,13 +206,17 @@ main()
 
 <div className="not-prose aling-block">
   <Button
-    href="/providers"
+    href="/databases"
     variant="text"
     arrow="right"
-    children="More information about the providers "
+    children="More information about the databases "
   />
 </div>
 
 ----
+
+<Guides />
+
+<Resources />
 
 <Contributors users={['leifermendez']} />

@@ -199,9 +199,8 @@ export const navigation = [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
       { title: 'Concepts', href: '/concepts' },
-      { title: 'Uses cases', href: '/uses-cases' },
+      { title: 'Examples', href: '/uses-cases' },
       { title: 'Events', href: '/events' },
-      { title: 'Errors', href: '/errors' },
     ],
   },
   {
@@ -217,20 +216,19 @@ export const navigation = [
   {
     title: 'Showcases',
     links: [
-      { title: 'Conversations', href: '/conversations' },
-      { title: 'Messages', href: '/messages' },
-      { title: 'Groups', href: '/groups' },
-      { title: 'Attachments', href: '/attachments' },
-      { title: 'Queue limit', href: '/queueLimit' },
+      { title: 'Queue limit', href: '/showcases/queue-limit' },
+      { title: 'Child Flows', href: '/showcases/childs-gotoflow' },
+      { title: 'Modularize', href: '/showcases/modularize' },
+      { title: 'API Use', href: '/showcases/api-use' },
     ],
   },
   {
     title: 'Plugins',
     links: [
-      { title: 'Contributing', href: '/plugins-contributing' },
-      { title: 'Telegram', href: '/telegram' },
-      { title: 'Shopify', href: '/shopify' },
-      { title: 'Agents', href: '/agentsOpenAi' },
+      { title: 'Contributing', href: '/plugins' },
+      { title: 'Telegram', href: '/plugins/telegram' },
+      { title: 'Shopify', href: '/plugins/shopify' },
+      { title: 'Agents', href: '/plugins/agentsOpenAi' },
     ],
   },
 ]

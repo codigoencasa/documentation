@@ -1,0 +1,65 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+# ❌ How to work with gotoFlow?
+
+Next we will share an example of how to make use of a logic applied in a bot which must divert the execution of logic depending on actions taken by the user or determined by a function.
+
+`working...`
+
+
+```ts {{ title: 'app.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  // Create main flow
+  const mainFlow = addKeyword(['Hello', 'Hi'])
+    .addAction(async (_, { fowDynamic }) => {
+        return flowDynamic('Hi, this is Luis, how can I help you?');
+    });
+
+  // Create a product request flow
+  const productRequestFlow = addKeyword(['product'])
+    .addAction(async (_, { fowDynamic }) => {
+        return flowDynamic('Great! What do you want to buy?');
+    })
+
+  // Create support flow
+  const suportFlow = addKeyword(['Hello', 'Hi'])
+    .addAction(async (_, { fowDynamic }) => {
+        return flowDynamic('Hi, may you describe your issue?');
+    });
+
+  // Create another request flow
+  const anotherRequestFlow = addKeyword(['request'])
+    .addAction(async (_, { fowDynamic }) => {
+      return flowDynamic('Please specify the request you want to make');
+    });
+
+  // Create help flow
+  const helpFlow = addKeyword(['help'])
+    .addAction({ capture: true }, async (ctx, { fowDynamic }) => {
+      const option = parseInt(ctx.body);
+      switch (option) {
+        case 1:
+          return flowDynamic('You can buy a product by typing the word "product"');
+        case 2:
+          return flowDynamic('You can request a service by typing the word "request"');
+        case 3:
+          return flowDynamic('You can ask for support by typing the word "support"');
+        default:
+          return flowDynamic('I did not understand your request');
+      }
+    });
+
+  // Create bot and add flows
+  const bot = createBot([mainFlow, productRequestFlow, suportFlow, anotherRequestFlow, helpFlow]);
+```
+
+---
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez','lualreye']} />
