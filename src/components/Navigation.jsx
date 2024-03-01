@@ -219,6 +219,7 @@ export const navigation = [
       { title: 'Queue limit', href: '/showcases/queue-limit' },
       { title: 'Child Flows', href: '/showcases/childs-gotoflow' },
       { title: 'Modularize', href: '/showcases/modularize' },
+      { title: 'Fast Entries', href: '/showcases/fast-entires' },
       { title: 'API Rest', href: '/showcases/api-use' },
     ],
   },
