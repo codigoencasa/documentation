@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
@@ -9,7 +9,6 @@ import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
 import { useSectionStore } from '@/components/SectionProvider'
 import { Tag } from '@/components/Tag'
 import { remToPx } from '@/lib/remToPx'
-import { usePathname } from 'next/navigation'
 
 function useInitialValue(value, condition = true) {
   let initialValue = useRef(value).current
@@ -112,7 +111,8 @@ function ActivePageMarker({ group, pathname }) {
 
 function NavigationGroup({ group, className }) {
   const route = useRouter()
-  const [locale] = useState(route.route.slice(0,3))
+  const current_route = route.route.slice(0,3)
+  const [locale, setLocale] = useState(current_route)
   // If this is the mobile navigation then we always render the initial
   // state, so that the state does not change during the close animation.
   // The state will still update when we re-open (re-render) the navigation.
@@ -122,7 +122,7 @@ function NavigationGroup({ group, className }) {
     isInsideMobileNavigation
   )
 
-  const pathname = usePathname()
+  useEffect(() => setLocale(current_route), [current_route])
 
   let isActiveGroup =
     group.links.findIndex((link) => parseLocation({link:link.href, pathname:router.pathname})) !== -1
@@ -153,7 +153,7 @@ function NavigationGroup({ group, className }) {
         <ul role="list" className="border-l border-transparent">
           {group.links.map((link) => (
             <motion.li key={link.href} layout="position" className="relative">
-              <NavLink href={link.href} active={parseLocation({link:link.href, pathname:router.pathname})}>
+              <NavLink href={`${locale}${link.href}`} active={parseLocation({link:link.href, pathname:router.pathname})}>
                 {link.title}
               </NavLink>
               <AnimatePresence mode="popLayout" initial={false}>

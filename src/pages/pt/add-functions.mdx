@@ -36,12 +36,12 @@ e 'a Loja oferece: sapatos, camisas, calças e chapéus'.
 
 
 ```mermaid
-fluxograma LR
-   id1 (("user")) -- say (hello/hi) --> id2 (("Bot")) -- oi, bem vindo a minha loja incrível, como posso te ajudar? -- >id3 (("Bot")) -- a loja possui:, sapatos, camisas, calças e chapéus --> id4 (("usuário"))
-   estilo id1 preenchimento:#ffa69e, traço:#f79256, largura do traço: 0px
-   estilo id2 preenchimento:#1dd3b0, traçado:#248277, largura do traçado:0px
-   estilo ID3 preenchimento:#1dd3b0, traçado:#248277, largura do traçado:0px
-   estilo id4 preenchimento:#ffa69e, traço:#f79256, largura do traço:0px
+flowchart LR
+   id1(("user")) -- say (hello/hi) -->  id2(("Bot")) -- Hi, welcome to my amazing shop, how can I help you? --> id3(("Bot"))  -- The shop has:, shoes, shirts, pants, and hats  --> id4(("user"))
+   style id1 fill:#ffa69e,stroke:#f79256,stroke-width:0px
+   style id2 fill:#1dd3b0,stroke:#248277,stroke-width:0px
+   style id3 fill:#1dd3b0,stroke:#248277,stroke-width:0px
+   style id4 fill:#ffa69e,stroke:#f79256,stroke-width:0px
 ```
 ---
 
@@ -231,16 +231,16 @@ Ao utilizar funções de callback em um addAnswers a operação prioriza o envio
 </CodeGroup>
 
 ```mermaid
-fluxograma TB
-   id1 (("user")) -- say (hello) -->  
-   id2 (("Bot")) -- oi!, Você conhece 4+4? --> 
-   id3 (("Bot")) -- Total: 8 --> 
-   id4 (("usuário"))
+flowchart TB
+   id1(("user")) -- say (hello) -->  
+   id2(("Bot")) -- Hi!, Do you know 4+4? --> 
+   id3(("Bot"))  -- Total: 8 --> 
+   id4(("user"))
    
-   estilo id1 preenchimento:#ffa69e, traço:#f79256, largura do traço: 0px
-   estilo id2 preenchimento:#1dd3b0, traçado:#248277, largura do traçado:0px
-   estilo ID3 preenchimento:#1dd3b0, traçado:#248277, largura do traçado:0px
-   estilo id4 preenchimento:#ffa69e, traço:#f79256, largura do traço:0px
+   style id1 fill:#ffa69e,stroke:#f79256,stroke-width:0px
+   style id2 fill:#1dd3b0,stroke:#248277,stroke-width:0px
+   style id3 fill:#1dd3b0,stroke:#248277,stroke-width:0px
+   style id4 fill:#ffa69e,stroke:#f79256,stroke-width:0px
 ```
 
 ---
