@@ -2,147 +2,78 @@ import { Contributors } from '@/components/Contributors'
 import { Resources } from '@/components/Resources'
 import { Guides } from '@/components/Guides'
 
-# fast-entires
+export const description = 'Implement message queues for better resource management'
 
-working..
+# Fast Entires
 
-In many occasions we need to send a message via HTTP request is very useful to send reminders or order confirmations. In this case each provider implements a `handleCtx` function which allows you to inject the bot instantiation and access its functions from a controller.
+## How to modularize flows {{not:'true'}}
 
-<Error>
-It is important to use this function under your own responsibility, since abusive use may be considered as spam and your number may be blocked.
-</Error>
+As our projects grow we will need to implement a better way to maintain the project, in this case it is highly recommended to implement a module view.
 
-## Send Single Message
-
-  <CodeGroup title="Request" tag="POST" label="/v1/messages">
-  ```bash {{ title: 'Message' }}
-  curl https://api.example.chat/v1/messages \
-    -d number="34000000" \
-    -d message="Hello!"
-  ```
-  </CodeGroup>
-
-In the exercise below you can get an example of how it works. It is interesting to understand that internally the library already implements a very light version of HTTP similar to express but called [polka](https://github.com/lukeed/polka/tree/main).
-
-```ts {{title:'app.ts'}}
-import 'dotenv/config'
-import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider, handleCtx } from '@bot-whatsapp/provider-baileys'
-import flow from './flows';
-
-const PORT = process.env.PORT ?? 3001
-
-const main = async () => {
-    const provider = createProvider(BaileysProvider)
-    await createBot({
-        database: new MemoryDB(),
-        provider,
-        flow,
-    })
-
-    provider.initHttpServer(+PORT)
-    provider.http.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
-        const { number, message } = req.body
-        await bot.sendMessage(number, message, {})
-        return res.end('send')
-    }))
-}
-
-main()
-```
----
-
-## Send with Media
-
-  <CodeGroup title="Request" tag="POST" label="/v1/messages">
-  ```bash {{ title: 'Media Link' }}
-  curl https://api.example.chat/v1/messages \
-    -d number="34000000" \
-    -d message="Ey! send media"
-  ```
-  ```bash {{ title: 'Media Local' }}
-  curl --location 'https://api.example.chat/v1/messages' \
-  --form 'message="Ey! send media"' \
-  --form 'number="34000000"' \
-  --form 'file=@"/C:/local/image.png"'
-  ```
-  </CodeGroup>
-
-In the following example you will understand how to send files, images or videos from an api when the file is in a public URL or also if you want to upload it through a request.
+In the following example we will show how we have migrated the modules to a directory, as well as the provider and the database.
 
 <CodeGroup>
+```ts {{ title: 'app.ts' }}
+const messageQueue: {text:string, timestamp: number}[] = [];
 
-```ts {{title:'app-media.ts'}}
-import 'dotenv/config'
-import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider, handleCtx } from '@bot-whatsapp/provider-baileys'
-import flow from './flows';
+const GAP_SECONDS = 3000
 
-const PORT = process.env.PORT ?? 3001
+let messageTimer = null;
 
-const main = async () => {
-    const provider = createProvider(BaileysProvider)
-    await createBot({
-        database: new MemoryDB(),
-        provider,
-        flow,
-    })
+async function enqueueMessage(message: string): Promise<void> {
+    messageQueue.push({ text: message, timestamp: Date.now() });
 
-    provider.initHttpServer(+PORT)
-    provider.http.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
-        const { number, message, media } = req.body
-        await bot.sendMessage(number, message, { media }) // https://i.imgur.com/0HpzsEm.png
-        return res.end('send')
-    }))
+    return new Promise((resolve) => {
+        if (messageTimer) {
+            clearTimeout(messageTimer);
+        }
+
+        messageTimer = setTimeout(() => {
+            resolve(processMessageQueue());
+        }, GAP_SECONDS);
+    });
 }
 
-main()
-```
-```ts {{title:'app-media.storage.ts'}}
-import 'dotenv/config'
-import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider, handleCtx } from '@bot-whatsapp/provider-baileys'
-import multer from 'multer'
-import flow from './flows';
+function processMessageQueue(): string {
+    if (messageQueue.length === 0) return '';
 
-const PORT = process.env.PORT ?? 3001
-
-const storage = multer.diskStorage({
-    destination: function (_, file, cb) {
-        cb(null, './tmp/')
-    },
-    filename: function (_, file, cb) {
-        cb(null, file.originalname)
-    }
-})
-const upload = multer({ storage })
-
-const main = async () => {
-    const provider = createProvider(BaileysProvider)
-    await createBot({
-        database: new MemoryDB(),
-        provider,
-        flow,
-    })
-
-    provider.initHttpServer(+PORT)
-    provider.http.server
-    .use(upload.single('file'))
-    .post('/v1/messages', handleCtx(async (bot, req, res) => {
-        const { number, message } = req.body
-        await bot.sendMessage(number, message, { media: req.file.path })
-        return res.end('send')
-    }))
+    const combinedMessage = messageQueue.map(message => message.text).join(" ");
+    messageQueue.length = 0;
+    return combinedMessage;
 }
 
-main()
+export { enqueueMessage, processMessageQueue };
 ```
 </CodeGroup>
 
----
+An example of the scaffolding you can use in your project. Or a more user friendly folder structure.
+
+```ts {{title:'Tree'}}
+const { isMedia } = require("../layer/utils/mediaValidator");
+const { enqueueMessage } = require("../layer/utils/messageHandler");
+const {handlerAI} = require('../layer/utils/voicenoteHandler');
+const { isVoiceNote } = require("../layer/utils/voicenoteValidator");
+
+module.exports = async (ctx, ctxFn) => {
+  let userMessage
+  if(isVoiceNote(ctx.body)){
+    userMessage = await handlerAI(ctx);
+    console.log("vn:", userMessage)
+  }
+  if(isMedia(ctx.body)){
+    userMessage = '*Se envio una imagen*'
+  }
+  else{
+    userMessage = ctx.body;
+  }
+
+  let body = String(await enqueueMessage(userMessage));
+  console.log(body)
+```
+----
 
 <Guides />
 
 <Resources />
 
-<Contributors users={['leifermendez','lualreye']} />
+<Contributors users={['leifermendez']} />
