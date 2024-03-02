@@ -81,48 +81,48 @@ Cada histórico de conversas com o Usuário é totalmente independente, desta fo
 <RowCenter>
 
 ```mermaid
-fluxograma LR
-subestado do subgráfico1[usuário de Conversação A]
-style subState1 fill:#e2eafc, stroke:#ccdbfd, stroke-width:2px
-subgrafo flowStateA
-direção TB
-topState1[state] --> bottom1[addAnswer]
-fim
-subgrafo flowStateB
-direção TB
-topState2[state] --> bottom2[addAnswer]
-fim
-%% ^ Esses subgrafos são idênticos, exceto pelos links para eles:
+flowchart LR
+    subgraph subState1[Conversation User A]
+      style subState1 fill:#e2eafc,stroke:#ccdbfd,stroke-width:2px
+      subgraph flowStateA
+          direction TB
+          topState1[state] --> bottom1[addAnswer]
+      end
+      subgraph flowStateB
+          direction TB
+          topState2[state] --> bottom2[addAnswer]
+      end
+      %% ^ These subgraphs are identical, except for the links to them:
 
-%% Link *to* flowStateA: a direção do flowStateA é mantida
-estado --> flowStateA
-%% Link * within * flowStateB:
-%% flowStateB herda a direção do Gráfico de nível superior (LR)
-estado - - - > topState2
-fim
+      %% Link *to* flowStateA: flowStateA direction is maintained
+      state --> flowStateA
+      %% Link *within* flowStateB:
+      %% flowStateB inherits the direction of the top-level graph (LR)
+      state ---> topState2
+    end
 
 ```
 
 ```mermaid
-fluxograma LR
-subestado do subgráfico2[usuário de Conversação B]
-style subState2 fill:##fdf8e1, stroke:##ffffef, stroke-width:2px
-subgrafo flowState2A
-direção TB
-topState21[state] --> bottom1[addAnswer]
-fim
-subgrafo flowState2B
-direção TB
-topState22[state] --> bottom2[addAnswer]
-fim
-%% ^ Esses subgrafos são idênticos, exceto pelos links para eles:
+flowchart LR
+    subgraph subState2[Conversation User B]
+      style subState2 fill:##fdf8e1,stroke:##ffffef,stroke-width:2px
+      subgraph flowState2A
+          direction TB
+          topState21[state] --> bottom1[addAnswer]
+      end
+      subgraph flowState2B
+          direction TB
+          topState22[state] --> bottom2[addAnswer]
+      end
+      %% ^ These subgraphs are identical, except for the links to them:
 
-%% Link *to* flowState2A: a direção do flowState2A é mantida
-estado --> flowState2A
-%% Link * dentro* flowState2B:
-%% flowState2B herda a direção do Gráfico de nível superior (LR)
-estado - - - > topestado22
-fim
+      %% Link *to* flowState2A: flowState2A direction is maintained
+      state --> flowState2A
+      %% Link *within* flowState2B:
+      %% flowState2B inherits the direction of the top-level graph (LR)
+      state ---> topState22
+    end
 ```
 
 </RowCenter>
@@ -196,54 +196,55 @@ export default flowWelcome
 </CodeGroup>
 
 
+
 ```mermaid
-fluxograma LR
-subgrafo sub0[GlobalState]
-subgrafo sub1[usuário de Conversação A]
-style sub1 fill:#e2eafc, stroke:#ccdbfd, stroke-width:2px
-subgrafo flowA
-direção TB
-top1 [stateA] -.- >bottom1[addAnswer]
-fim
-subgrafo flowB
-direção TB
-top2 [stateA] -.- >bottom2[addAnswer]
-fim
-%% ^ Esses subgrafos são idênticos, exceto pelos links para eles:
+flowchart LR
+    subgraph sub0[GlobalState]
+      subgraph sub1[Conversation User A]
+        style sub1 fill:#e2eafc,stroke:#ccdbfd,stroke-width:2px
+        subgraph flowA
+            direction TB
+            top1[stateA] -.-> bottom1[addAnswer]
+        end
+        subgraph flowB
+            direction TB
+            top2[stateA] -.-> bottom2[addAnswer]
+        end
+        %% ^ These subgraphs are identical, except for the links to them:
 
-%% Link *to* flowA: a direção do flowA é mantida
-stateA -.- >top1
-%% Link * dentro * flowB:
-%% flowB herda a direção do Gráfico de nível superior (LR)
-stateA -.- >top2
-fim
+        %% Link *to* flowA: flowA direction is maintained
+        stateA -.-> top1
+        %% Link *within* flowB:
+        %% flowB inherits the direction of the top-level graph (LR)
+        stateA -.-> top2
+      end
 
-subgrafo sub2[usuário de Conversação B]
-style sub2 fill:#e2eafc, stroke:#ccdbfd, stroke-width:2px
-subgrafo flowA1
-direção TB
-top3[estadob] -.- >bottom3[addAnswer]
-fim
-subgrafo fluxob1
-direção TB
-top4[estadob] -.- >bottom4[addAnswer]
-fim
-%% ^ Esses subgrafos são idênticos, exceto pelos links para eles:
+      subgraph sub2[Conversation User B]
+        style sub2 fill:#e2eafc,stroke:#ccdbfd,stroke-width:2px
+        subgraph flowA1
+            direction TB
+            top3[stateB] -.-> bottom3[addAnswer]
+        end
+        subgraph flowB1
+            direction TB
+            top4[stateB] -.-> bottom4[addAnswer]
+        end
+        %% ^ These subgraphs are identical, except for the links to them:
 
-%% Link *to * flowA1: a direção do flowA1 é mantida
-estadob -.- >top3
-%% Link * dentro * fluxob1:
-%% fluxob1 herda a direção do Gráfico de nível superior (LR)
-estadob -.- >top4
-fim
+        %% Link *to* flowA1: flowA1 direction is maintained
+        stateB -.-> top3
+        %% Link *within* flowB1:
+        %% flowB1 inherits the direction of the top-level graph (LR)
+        stateB -.-> top4
+      end
 
-globalState --> bottom1
-globalState --> bottom2
-globalState --> bottom3
-globalState --> bottom4
+        globalState --> bottom1
+        globalState --> bottom2
+        globalState --> bottom3
+        globalState --> bottom4
 
-style globalState fill:#ffccd5, stroke:#c9184a, stroke-width:2px
-fim
+        style globalState fill:#ffccd5,stroke:#c9184a,stroke-width:2px
+    end
 
 ```
 
@@ -628,9 +629,9 @@ banco de dados: adapterDB,
 
 
 ```mermaid
-fluxograma TB
-flowWelcome[fluxo-bem-vindo.ts] -->/Inicia flow-a/flowA[flow-A. ts]
-flowWelcome -->/Inicia flow-b/flowB[flow-B. ts]
+flowchart TB
+    flowWelcome[flow-welcome.ts] -->|Inicia flow-a| flowA[flow-a.ts]
+    flowWelcome -->|Inicia flow-b| flowB[flow-b.ts]
 
 ```
 ---
