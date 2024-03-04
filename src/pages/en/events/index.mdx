@@ -1,20 +1,37 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
 export const description =
   'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
 
 # Events
 
-Sometimes users send messages such as an image, video or special location messages, among others, for that case there are events.
+Sometimes users send messages such as an image, a video or special location messages, among others, to receive and start a conversation when a message of this type arrives we can use the events.
+
+```mermaid
+flowchart BT
+    a(User)-.->eW((Welcome))-.->b[(BOT)]
+    s(User)-.->eM((Image/Video))-.->b[(BOT)]
+    c(User)-.->eD((Document))-.->b[(BOT)]
+    d(User)-.->eL((Location))-.->b[(BOT)]
+    e(User)-.->eV((Voice Note))-.->b[(BOT)]
+```
 
 ---
 
 ## Default  {{ tag: 'WELCOME'  }}
 
 When a user sends a "text" message that does not exist in a keyword on another flow, the WELCOME event will be triggered by default, which is the default event.
+
+Let's imagine the case in which a person writes the word `Thank you!`
+
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
   
-  const welcomeFlow = addKeyword(EVENTS.WELCOME).addAnswer('Message hello')
+  const welcomeFlow = addKeyword(EVENTS.WELCOME).addAnswer('Ey welcome?')
+  const greetingFlow = addKeyword(['hello','hi']).addAnswer('Hi!')
 ```
 ```js {{ title: 'app.js' }}
   const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
@@ -23,12 +40,40 @@ When a user sends a "text" message that does not exist in a keyword on another f
 ```
 </CodeGroup>
 
+<RowCenter>
+  <Col>
+  ```mermaid
+flowchart TB
+    A(User) --"Thank you!"--> B((BOT))
+    B --> C[Flows]
+    C --> G["welcomeFlow"]
+    G -. Ey welcome? .-> A
+
+  style B fill:#fff2b2,stroke:#ffee99,stroke-width:2px
+  style G fill:#b2f7ef,stroke:#9ceaef,stroke-width:2px
+```
+  </Col>
+  <Col>
+```mermaid
+flowchart TB
+    A(User) --"hello"--> B((BOT))
+    B --> C[Flows]
+    C --> G["greetingFlow"]
+    G -. Hi .-> A
+
+  style B fill:#fff2b2,stroke:#ffee99,stroke-width:2px
+  style G fill:#b2f7ef,stroke:#9ceaef,stroke-width:2px
+```
+  </Col>
+</RowCenter>
+
+We can see in the diagram above that the bot does a search in all the flows to get the best flow that can respond to the keyword "Thank You" but as it does not find then the "WELCOME" is triggered.
 
 ---
 
 ## Received Image or Video {{ tag: 'MEDIA'  }}
 
-When a user sends an image or video, MEDIA event will be triggered by default, which is the default event.
+When a user sends an image or a video, the MEDIA event, which is the default event, will be triggered by default. This is ideal for when we need them to send information and we need to store it.
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
@@ -79,12 +124,20 @@ When a user sends a document, DOCUMENT event will be triggered by default, which
 ```ts {{ title: 'app.ts' }}
   import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
   
-  const documentFlow = addKeyword(EVENTS.DOCUMENT).addAnswer("Wow! I'm sorry I can't read this document right now")
+  const documentFlow = addKeyword(EVENTS.DOCUMENT)
+  .addAnswer("Wow! I'm sorry I can't read this document right now", async (ctx, { provider }) => {
+    const localPath = await provider.saveFile(ctx, {path:'...'})
+    //console.log(localPath)
+  })
 ```
 ```js {{ title: 'app.js' }}
   const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
   
-  const documentFlow = addKeyword(EVENTS.DOCUMENT).addAnswer("Wow! I'm sorry I can't read this document right now")
+  const documentFlow = addKeyword(EVENTS.DOCUMENT)
+  .addAnswer("Wow! I'm sorry I can't read this document right now", async (ctx, { provider }) => {
+    const localPath = await provider.saveFile(ctx, {path:'...'})
+    //console.log(localPath)
+  })
 ```
 </CodeGroup>
 
@@ -100,8 +153,7 @@ When your chatbot needs to access a user's location, it's important to ensure th
 
 The received location context will look something like this in console:
 
-<CodeGroup>
-```js {{title: 'terminal'}}
+```bash
 ctx:  {
   ...
   message: Message {
@@ -116,9 +168,7 @@ ctx:  {
   name: 'yeyodev 👨🏾‍💻',
   from: '593000000000'
 }
-
 ```
-</CodeGroup>
 
 This will output the user's latitude and longitude in the console, allowing you to effectively utilize the location data for your chatbot's functionality.
 
@@ -128,15 +178,17 @@ To access the location data, you can use the following approach:
 ```ts {{ title: 'location.flow.ts' }}
 import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
 
-export default addKeyword(EVENTS.LOCATION).addAnswer("I have received your location!", null, async (ctx) => {
+export default addKeyword(EVENTS.LOCATION)
+.addAnswer("I have received your location!", null, async (ctx) => {
   const userLatitude = ctx.message.locationMessage.degreesLatitude;
   const userLongitude = ctx.message.locationMessage.degreesLongitude;
 })
 ```
 ```js {{ title: 'location.flow.js' }}
-import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
+const { EVENTS, addKeyword } = require("@bot-whatsapp/bot");
 
-export default addKeyword(EVENTS.LOCATION).addAnswer("I have received your location!", null, async (ctx) => {
+export default addKeyword(EVENTS.LOCATION)
+.addAnswer("I have received your location!", null, async (ctx) => {
   const userLatitude = ctx.message.locationMessage.degreesLatitude;
   const userLongitude = ctx.message.locationMessage.degreesLongitude;
 })
@@ -147,16 +199,34 @@ export default addKeyword(EVENTS.LOCATION).addAnswer("I have received your locat
 
 ## Received Voice Note {{ tag: 'VOICE_NOTE' }}
 
-When a user sends a "text" message that does not exist in a keyword on another flow, the WELCOME event will be triggered by default, which is the default event.
+When a user sends a voice note, the VOICE_NOTE event will be triggered by default, which is the event intended for this behavior, it is important to understand that a voice note is different from an image or video file.
+
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
   
-  const voiceNoteFlow = addKeyword(EVENTS.VOICE_NOTE).addAnswer('Give me a second to hear you!')
+  const voiceNoteFlow = addKeyword(EVENTS.VOICE_NOTE)
+  .addAnswer('Give me a second to hear you!', async (ctx, { provider }) => {
+    const localPath = await provider.saveFile(ctx, {path:'...'})
+    //console.log(localPath)
+  })
+  
 ```
 ```js {{ title: 'app.js' }}
   const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
   
-  const voiceNoteFlow = addKeyword(EVENTS.VOICE_NOTE).addAnswer('Give me a second to hear you!')
+  const voiceNoteFlow = addKeyword(EVENTS.VOICE_NOTE)
+  .addAnswer('Give me a second to hear you!', async (ctx, { provider }) => {
+    const localPath = await provider.saveFile(ctx, {path:'...'})
+    //console.log(localPath)
+  })
 ```
 </CodeGroup>
+
+---
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez']} />

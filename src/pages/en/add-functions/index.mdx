@@ -1,20 +1,27 @@
 import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
 
 export const description =
   'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
 
 # Features
 
-## addKeyword
+These are the most important functions that you should learn when creating flows or dynamic interactions with the bot
 
-This function is imported from *@bot-whastapp/bot*, allows to start a conversation based on the given settings.
+## Add keyword
 
-The function `addKeyword` is the starting point of a conversation flow, just need to pass an __array of keywords__,
+__`addKeyword`__  is the starting point of a conversation flow, just need to pass an __array of keywords__,
 when someone text those keywords in the chatbot, the function will trigger the predefined dialog you have set up.
 
 In the following example is stablished a conversation flow that received the keywords 'hello' and 'hi',
 then the chatbot will send a message using `addAnswer` with the text 'Hi, welcome to my amazing shop, how can I help you?'
 and 'The shop offers: shoes, shirts, pants, and hats'.
+
+<Note>
+The addKeywords function also has a number of proprieties that will help you solve different use cases.
+Some of these functions are: [regex](add-functions#regex), [sensitive](add-functions#sensitive)
+</Note>
 
 
 <CodeGroup>
@@ -43,12 +50,8 @@ flowchart LR
    style id3 fill:#1dd3b0,stroke:#248277,stroke-width:0px
    style id4 fill:#ffa69e,stroke:#f79256,stroke-width:0px
 ```
----
 
-<Note>
-The addKeywords function also has a number of properiedaes that will help you solve different use cases.
-Some of these functions are: [regex](/add-functions#regex), [sensitive](/add-functions#sensitive)
-</Note>
+
 
 The conversation flow can be limited to a specific __keyword__, in example the word 'purchase' to trigger the next dialog
 
@@ -67,37 +70,48 @@ The conversation flow can be limited to a specific __keyword__, in example the w
 ```
 </CodeGroup>
 
+---
 
-## Regex {{ not:'true'}} 
+## Regex {{ not:'true', tag:'addKeyword' }}
 
-The chatbot supports regex validation, in the following example an object is passed as the second parameter to the `addKeyword` function, the object has a property `regex` set to `true` and the __keywords__ property is a regex pattern.
+<Row>
+  <Col>
+The chatbot supports regex validation, in the following example an object is passed as the second parameter to the addKeyword function, the object has a property regex set to true and the keywords property is a regex pattern.
 
+  </Col>
+  <Col sticky>
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { addKeyword } from '@bot-whatsapp/bot';
 
-  const REGEX_CREDIT_CARD = `/(^4[0-9]{12}(?:[0-9]{3})?$)|(^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$)|(3[47][0-9]{13})|(^3(?:0[0-5]|[68][0-9])[0-9]{11}$)|(^6(?:011|5[0-9]{2})[0-9]{12}$)|(^(?:2131|1800|35\d{3})\d{11}$)/gm`;
+  const REGEX_GMAIL_EMAIL = /(\w+)@gmail\.com/g;
 
-  const mainFlow = addKeyword(REGEX_CREDIT_CARD, { regex: true })
-      .addAnswer(`This seems to be a valid credit card number`)
-      .addAnswer(`That's it, your credit card has been validated`)
+  const mainFlow = addKeyword(REGEX_GMAIL_EMAIL, 
+      { regex: true })
+      .addAnswer(`Thanks for the gmail address`)
 ```
 ```js {{ title: 'app.js' }}
   import { addKeyword } from '@bot-whatsapp/bot';
 
-  const REGEX_CREDIT_CARD = `/(^4[0-9]{12}(?:[0-9]{3})?$)|(^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$)|(3[47][0-9]{13})|(^3(?:0[0-5]|[68][0-9])[0-9]{11}$)|(^6(?:011|5[0-9]{2})[0-9]{12}$)|(^(?:2131|1800|35\d{3})\d{11}$)/gm`;
+  const REGEX_GMAIL_EMAIL = /(\w+)@gmail\.com/g;
 
-  const mainFlow = addKeyword(REGEX_CREDIT_CARD, { regex: true })
-      .addAnswer(`This seems to be a valid credit card number`)
-      .addAnswer(`That's it, your credit card has been validated`)
+  const mainFlow = addKeyword(REGEX_GMAIL_EMAIL, 
+      { regex: true })
+      .addAnswer(`Thanks for the gmail address`)
 ```
 </CodeGroup>
 
-## Sensitive {{ not:'true'}} 
+  </Col>
+</Row>
 
+## Sensitive {{ not:'true', tag:'addKeyword' }}
+
+<Row>
+  <Col>
 The chatbot detects an specific keyword in any part of a message, but passing the `sensitive` property as `true` the chatbot will trigger the dialog if the user write down the exact same __keyword__.
-Please follow the next example:
 
+  </Col>
+  <Col sticky>
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { addKeyword } from '@bot-whatsapp/bot';
@@ -112,15 +126,15 @@ Please follow the next example:
       .addAnswer(['Great! ', 'What do you want to buy?'])
 ```
 </CodeGroup>
+
+  </Col>
+</Row>
 
 ---
 
-## addAnswer
+## Add answer
 
-This function is imported from *@bot-whastapp/bot*.
-
-The function `addAnswer` is used to send a message to the user, it can be a simple text or a file attached.
-
+__`addAnswer`__ is used to send a message to the user, it can be a simple text or a file attached. 
 In the following example is stablished a conversation flow that received the keyword 'hello',
 then the chatbot will send a message using `addAnswer` with the text __'Hi, welcome to my amazing shop, how can I help you?'__
 
@@ -145,18 +159,24 @@ There are different settings for sending messages, some functions such as sendin
 , [callback](/add-functions#message-with-callback)
 </Note>
 
-## Send consecutive messages {{ not:'true'}} 
+---
 
-The chatbot can send multiple messages just adding the `addAnswer` function one after another.
-In the following example the chatbot will send (3) messages __'Hi'__, __'Welcome to my amazing shop'__ and __'how can I help you?'__ in that order.
+## Consecutive Messages {{ not:'true', tag:'addAnswer' }}
 
+<Row>
+  <Col>
+The chatbot can send multiple messages just adding the addAnswer function one after another. In the following example the chatbot will send (3) messages:
+`Hi`, `Welcome to my amazing shop`, `how can I help you?` in that order.
+
+  </Col>
+  <Col sticky>
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
 
   const mainFlow = addKeyword('hello')
       .addAnswer('Hi')
-      .addAnwer('Welcome to my amazing shop')
+      .addAnswer('Welcome to my amazing shop')
       .addAnswer('how can I help you?')
 ```
 ```js {{ title: 'app.js' }}
@@ -164,55 +184,79 @@ In the following example the chatbot will send (3) messages __'Hi'__, __'Welcome
 
   const mainFlow = addKeyword('hello')
       .addAnswer('Hi')
-      .addAnwer('Welcome to my amazing shop')
+      .addAnswer('Welcome to my amazing shop')
       .addAnswer('how can I help you?')
 ```
 </CodeGroup>
 
-## Send message with line breaks {{ not:'true'}} 
+  </Col>
+</Row>
 
+## Message with line breaks {{ not:'true', tag:'addAnswer' }}
+
+<Row>
+  <Col>
 Whenever you need to send a message with line breaks, you can use an array of string as you can see in the following example.
-
+  </Col>
+  <Col sticky>
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
   import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
 
   const mainFlow = addKeyword('hello')
-      .addAnswer(['Hi', 'Welcome to my amazing shop', 'how can I help you?'])
+      .addAnswer([
+        'Hi', 'Welcome to my amazing shop', 
+        'how can I help you?'
+      ])
 ```
 ```js {{ title: 'app.js' }}
   import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
 
   const mainFlow = addKeyword('hello')
-      .addAnswer(['Hi', 'Welcome to my amazing shop', 'how can I help you?'])
+      .addAnswer([
+        'Hi', 'Welcome to my amazing shop', 
+        'how can I help you?'
+      ])
 ``` 
 </CodeGroup>
 
-## Message with delay {{ not:'true'}} 
+  </Col>
+</Row>
 
-The chatbot can send a message with a delay, just add the `addAnswer` function with the `delay` property set to the amount of milliseconds you want to wait before sending the message.
+## Message with delay {{ not:'true', tag:'addAnswer' }}
 
+<Row>
+  <Col>
+The chatbot can send a message with a `delay`, just add the addAnswer function with the delay property set to the amount of milliseconds you want to wait before sending the message.
+  </Col>
+  <Col sticky>
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
 
-  const mainFlow = addKeyword('hello')
-      .addAnswer('This message will after 2 seconds', { delay: 2000 })
+const mainFlow = addKeyword('hello')
+  .addAnswer('This message will after 2 seconds',
+    { delay: 2000 }
+  )
 ```
 ```js {{ title: 'app.js' }}
-  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
 
-  const mainFlow = addKeyword('hello')
-      .addAnswer('This message will after 2 seconds', { delay: 2000 })
+const mainFlow = addKeyword('hello')
+  .addAnswer('This message will after 2 seconds',
+    { delay: 2000 }
+  )
 ``` 
 </CodeGroup>
+
+  </Col>
+</Row>
+
+---
 
 ## Message with callback {{ not:'true'}} 
 
 When using callback functions in an addAnswers the operation prioritizes the sending of the message and then the execution of the function.
-
-
-
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
@@ -223,12 +267,21 @@ When using callback functions in an addAnswers the operation prioritizes the sen
           const sum = 4 + 4
           await flowDynamic(`Total: ${sum}`)
       })
+      .addAction(async (_, {flowDynamic}) => {
+          await flowDynamic(`Other message`)
+      })
 ```
 ```js {{ title: 'app.js' }}
   import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
 
   const mainFlow = addKeyword('hello')
-      .addAnswer('This message will after 2 seconds', { delay: 2000 })
+      .addAnswer('Hi!, Do you know 4+4?', null, async (_, {flowDynamic}) => {
+          const sum = 4 + 4
+          await flowDynamic(`Total: ${sum}`)
+      })
+      .addAction(async (_, {flowDynamic}) => {
+          await flowDynamic(`Other message`)
+      })
 ``` 
 </CodeGroup>
 
@@ -247,11 +300,9 @@ flowchart TB
 
 ---
 
-## addAction
+## Add Action
 
-This function is imported from *@bot-whastapp/bot*.
-
-The function `addAction` is used to define specific actions as a response when a whatsapp message has been received, 
+__`addAction`__ is used to define specific actions as a response when a whatsapp message has been received, 
 this function allows to trigger conversation flows based on the user's input and define how the chatbot should act.
 
 In the folowing example you can see how you can trigger a function when the user sends a message with the keyword 'buy'.
@@ -303,100 +354,10 @@ You can use the `addAction` function with `capture` as you can see in the exampl
 ```
 </CodeGroup>
 
-### Example 1
-
-In this example, we have created a conversation flow using the keyword 'Hello' and 'Hi'.
-
-When the user text one of these keywords the chatbot will send a greeting message and 
-the chatbot will capture the user's response and send back the same repeated message to the user.
-
-We hope this will help you to get the main idea of how to use the `addAction` function on your whatsapp chatbot.
-If you have any questions, please let us know.
-
-<CodeGroup>
-```ts {{ title: 'app.ts' }}
-  import { addKeyword, addAction } from '@bot-whatsapp/bot';
-
-  const mainFlow = addKeyword(['Hola', 'Hi'])
-      .addAction(async (_, { fowDynamic }): void => {
-          return flowDynamic('Hi! This is Luis, how can I help you?');
-      })  
-      .addAction(async (_, { fowDynamic }): void => {
-          const message = ctx.body;
-          return console.flowDynamic(`The user said: ${message}`);
-      })
-```
-```js {{ title: 'app.js' }}
-  import { addKeyword, addAction } from '@bot-whatsapp/bot';
-
-  const mainFlow = addKeyword(['Hola', 'Hi'])
-      .addAction(async (_, { fowDynamic }) => {
-          return flowDynamic('Hi! This is Luis, how can I help you?');
-      })  
-      .addAction(async (_, { fowDynamic }) => {
-          const message = ctx.body;
-          return console.flowDynamic(`The user said: ${message}`);
-      })
-```
-</CodeGroup>
-
-<Note>
-The `addAction` function is a powerful tool to trigger specific actions when the user sends a message with a specific keyword,
-so we strongly recommend to use it for more complex logic than just sending a message to the user.
-</Note>
-
-### Example 2
-
-In the following example, we have created some conversation flows using 
-
-
-```ts {{ title: 'app.ts' }}
-  import { addKeyword, addAction } from '@bot-whatsapp/bot';
-
-  // Create main flow
-  const mainFlow = addKeyword(['Hello', 'Hi'])
-    .addAction(async (_, { fowDynamic }) => {
-        return flowDynamic('Hi, this is Luis, how can I help you?');
-    });
-
-  // Create a product request flow
-  const productRequestFlow = addKeyword(['product'])
-    .addAction(async (_, { fowDynamic }) => {
-        return flowDynamic('Great! What do you want to buy?');
-    })
-
-  // Create support flow
-  const suportFlow = addKeyword(['Hello', 'Hi'])
-    .addAction(async (_, { fowDynamic }) => {
-        return flowDynamic('Hi, may you describe your issue?');
-    });
-
-  // Create another request flow
-  const anotherRequestFlow = addKeyword(['request'])
-    .addAction(async (_, { fowDynamic }) => {
-      return flowDynamic('Please specify the request you want to make');
-    });
-
-  // Create help flow
-  const helpFlow = addKeyword(['help'])
-    .addAction({ capture: true }, async (ctx, { fowDynamic }) => {
-      const option = parseInt(ctx.body);
-      switch (option) {
-        case 1:
-          return flowDynamic('You can buy a product by typing the word "product"');
-        case 2:
-          return flowDynamic('You can request a service by typing the word "request"');
-        case 3:
-          return flowDynamic('You can ask for support by typing the word "support"');
-        default:
-          return flowDynamic('I did not understand your request');
-      }
-    });
-
-  // Create bot and add flows
-  const bot = createBot([mainFlow, productRequestFlow, suportFlow, anotherRequestFlow, helpFlow]);
-```
-
 ---
 
-<Contributors users={['lualreye', 'leifermendez']} />
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez','lualreye']} />

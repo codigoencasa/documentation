@@ -1,51 +1,82 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
 export const description =
-  'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
+  'In this guide, we will discuss what to do when something goes wrong while working with the API.'
 
-# Providers
+# Meta
 
-## Meta
+The [WhatsApp Business Platform](https://business.whatsapp.com/products/business-platform) allows medium and large businesses to communicate with their customers on a large scale. You can start conversations with customers in just a few minutes, send them customer service notifications or purchase updates, offer them a personalized level of service, and provide support through their preferred channel.
 
-The WhatsApp Business Platform enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service notifications or purchase updates, offer them a personalized level of service, and provide support through the channel of their choice.
+## Requirements
 
-<CodeGroup>
-```ts {{ title: 'main.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+- Register a [Facebook Developers](https://developers.facebook.com/apps) account.
+- You will need to verify your business and your application with official documents, the type of which may vary depending on your country.
+- You will need to associate an official phone number of your business with your account that is not linked to any other WhatsApp account, either regular or Business. For testing purposes, Meta provides a free phone number.
+- Meta offers __1000__ free customer-initiated conversations to the bot, and 250 free bot-initiated conversations to the customer. Once this limit is reached, each additional conversation will have a cost that may vary depending on your country or region.
 
-/** send static messages */
-const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+---
 
-/** send dynamic message from db or other sources */
-const infoFlow = addKeyword<BaileysProvider, MemoryDB>('info')
-    .addAction(async (ctx, { flowDynamic }) => {
-        await flowDynamic(`Welcome ${ctx.name}`)
-    })
+You must create a new application. To do this, click on the **Create application** button.
 
-/** send media files */
-const mediaFlow = addKeyword<BaileysProvider, MemoryDB>('image')
-    .addAnswer(`Send Image A`, { media: 'https://i.imgur.com/AsvWfUX.png' })
-    .addAction(async (ctx, { flowDynamic }) => {
-        await flowDynamic(`Welcome ${ctx.name}`)
-        await flowDynamic(
-            [
-                {
-                    body: 'Send Image B',
-                    media: 'https://i.imgur.com/w0RtKnN.png'
-                }
-            ]
-        )
-    })
+<Image src="https://i.imgur.com/DKgjwj9.png" />
 
-/** initialization bot */
+---
+
+On this screen, you must select **Company or Business**.
+
+<Image src="https://i.imgur.com/tapmpMk.png" />
+
+---
+
+In the next step, you must enter a name for your application, also enter a contact email address and select the Test Business application.
+
+<Image src="https://i.imgur.com/cfHLJTJ.png" />
+
+---
+
+Now, go to the WhatsApp Settings section.
+
+<Image src="https://i.imgur.com/37gMMM5.png" />
+
+---
+
+This is the part where you will find the access token and you can also see the number from where WhatsApp messages are sent and to where they will be sent. As you are in the trial version, you must register the numbers to which you want to send.
+
+<Image src="https://i.imgur.com/bkSAZn2.png" />
+
+---
+
+On this same page, you can find the Webhook section that we will soon need to use.
+
+<Image src="https://i.imgur.com/L3PRcj7.png" />
+
+---
+
+In the **main file** of the bot where you are implementing the meta adapter function, you are going to place the following data:
+
+- **numberId:** You can find it on the previous page.
+- **jwtToken:** You can find it on the previous page.
+- **VerifyToken:** You can write whatever you want, it's like a keyword.
+
+<Warning>
+In the example below, you can see a suggestion of how this can be done by using environment variables
+</Warning>
+
+```js
 const main = async () => {
+    const adapterDB = new MockAdapter()
+    const adapterFlow = createFlow([flowPrincipal])
 
-    const adapterDB = new MemoryDB()
-    const adapterFlow = createFlow([welcomeFlow, infoFlow, mediaFlow])
-    const adapterProvider = createProvider(BaileysProvider)
+    const adapterProvider = createProvider(MetaProvider, {
+        jwtToken: process.env.JWTOKEN, //EAARBW3ZBGU0UBAACDjtQIzI8JuEa.............
+        numberId: process.env.NUMBER_ID, //103975305758520
+        verifyToken: process.env.VERIFY_TOKEN, //LO_QUE_SEA,
+        version:'v16.0'
+    })
 
-    adapterProvider.initHttpServer(3000)
-
-    await createBot({
+    createBot({
         flow: adapterFlow,
         provider: adapterProvider,
         database: adapterDB,
@@ -53,54 +84,72 @@ const main = async () => {
 }
 
 main()
-
 ```
 
-```js {{ title: 'main.js' }}
-const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@bot-whatsapp/bot')
-const { BaileysProvider } = require('@bot-whatsapp/bot')
+---
 
-/** send static messages */
-const welcomeFlow = addKeyword(['hello', 'hi']).addAnswer('Ey! welcome')
+After executing the bot, you will find a message in the console similar to the following. Where you can find the URL for your **webhook**.
 
-/** send dynamic message from db or other sources */
-const infoFlow = addKeyword('info')
-    .addAction(async (ctx, { flowDynamic }) => {
-        await flowDynamic(`Welcome ${ctx.name}`)
-    })
+```shell
+$ npm start
+> node app.js
 
-/** send media files */
-const mediaFlow = addKeyword('image')
-    .addAnswer(`Send Image A`, { media: 'https://i.imgur.com/AsvWfUX.png' })
-    .addAction(async (ctx, { flowDynamic }) => {
-        await flowDynamic(`Welcome ${ctx.name}`)
-        await flowDynamic(
-            [
-                {
-                    body: 'Send Image B',
-                    media: 'https://i.imgur.com/w0RtKnN.png'
-                }
-            ]
-        )
-    })
-
-/** initialization bot */
-const main = async () => {
-
-    const adapterDB = new MemoryDB()
-    const adapterFlow = createFlow([welcomeFlow, infoFlow])
-    const adapterProvider = createProvider(BaileysProvider)
-
-    adapterProvider.initHttpServer(3000)
-
-    await createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-}
-
-main()
-
+[meta]: Add this url "WHEN A MESSAGE COMES IN"
+[meta]: POST http://localhost:3000/webhook
+[meta]: More information in the documentation
 ```
-</CodeGroup>
+
+---
+
+## What do I do now?
+
+You will notice that the bot starts an HTTP service (endpoint) that must be online on a server so that you can connect it with Meta.
+
+---
+
+### Option 1:
+
+You can test locally through a proxy tunnel server. 
+Download **[ngork](https://ngrok.com/download)**, a free tool that will help with this.
+
+<Image src="https://i.imgur.com/TjjBtRh.png" />
+
+---
+
+This generates an online URL that we can use in the **WebHook** section of Meta
+
+<Image src="https://i.imgur.com/NXHMDsf.png" />
+
+---
+
+<Image src="https://i.imgur.com/tpov3D1.png" />
+
+---
+
+<Image src="https://i.imgur.com/haRGylR.png" />
+
+---
+
+<Image src="https://i.imgur.com/cMaIzeC.png" />
+
+---
+
+### Option 2:
+
+If you have already deployed your bot on a server, you need to obtain the public IP or subdomain provided to you. **Example** if you are using
+[Railway](https://railway.app/), you can go to the settings section and generate a subdomain. We would then have the **WebHook**
+`https://base-twilio-memory-production.up.railway.app/twilio-hook`
+
+<Image src="https://i.imgur.com/Yg2BYqB.png" />
+
+---
+
+<Image src="https://i.imgur.com/dIbyEwp.png" />
+
+----
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez']} />

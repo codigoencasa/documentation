@@ -1,9 +1,63 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
 export const description =
   'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
 
 # Practices
 
-The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
+Below you will find different examples showing the implementation in different use cases. These examples have been compiled based on the community, feel free to post an example that you like or that you think would be useful for new people.
+
+<div className="not-prose aling-block">
+  <Button
+    href="https://git-scm.com/downloads"
+    variant="text"
+    target="_blank"
+    arrow="right"
+    children="Contribute with your example"
+  />
+</div>
+
+---
+
+## My first bot
+
+The following code represents the quick use of a bot that when you type the word `hi`, greets you with a welcome message and asks you for your name and then returns a funny image
+
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hi'])
+    .addAnswer('Ey! welcome')
+    .addAnswer('Your name is?', { capture: true }, async (ctx, { flowDynamic }) => {
+        await flowDynamic([`nice! ${ctx.body}`,'I will send you a funny image'])
+    })
+    .addAction(async(_ , {flowDynamic}) => {
+        const dataApi = await fetch(`https://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true`)
+        const [imageUrl] = await dataApi.json()
+        await flowDynamic([{body:'😜', media: imageUrl}])
+    })
+
+
+const main = async () => {
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(BaileysProvider)
+
+    adapterProvider.initHttpServer(3000)
+
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+```
+
 
 ---
 
@@ -222,3 +276,9 @@ const flow = addKeyword<BaileysProvider>('botoff')
 ```
 
 ---
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez']} />

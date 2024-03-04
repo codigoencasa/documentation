@@ -3,26 +3,26 @@ import { Heading } from '@/components/Heading'
 
 const guides = [
   {
-    href: '/showcase-my-first-bot',
+    href: '/uses-cases#my-first-bot',
     name: 'My first chatbot',
     description: 'Learn how build your first chatbot in few minutes',
   },
   {
-    href: '/pagination',
-    name: 'Pagination',
-    description: 'Understand how to work with paginated responses.',
+    href: '/concepts',
+    name: 'Concepts',
+    description: 'Understand the essential concepts for building bots',
   },
   {
-    href: '/errors',
-    name: 'Errors',
+    href: '/add-functions',
+    name: 'Add Functions',
     description:
-      'Read about the different types of errors returned by the API.',
+      'The key to learning how to write flows is add-functions.',
   },
   {
-    href: '/webhooks',
-    name: 'Webhooks',
+    href: '/plugins',
+    name: 'Plugins',
     description:
-      'Learn how to programmatically configure webhooks for your app.',
+      'Unlimitate and start implementing the community plugins.',
   },
 ]
 
@@ -32,7 +32,7 @@ export function Guides() {
       <Heading level={2} id="guides">
         Guides
       </Heading>
-      <div className="not-prose mt-4 grid grid-cols-1 gap-8 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="not-prose mt-4 grid grid-cols-1 gap-8  border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-4">
         {guides.map((guide) => (
           <div key={guide.href}>
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">

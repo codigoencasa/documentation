@@ -111,18 +111,16 @@ function ActivePageMarker({ group, pathname }) {
 
 function NavigationGroup({ group, className }) {
   const route = useRouter()
-  const current_route = route.route.slice(0,3)
-  const [locale, setLocale] = useState(current_route)
-  // If this is the mobile navigation then we always render the initial
-  // state, so that the state does not change during the close animation.
-  // The state will still update when we re-open (re-render) the navigation.
+  const currentPath = route.asPath;
+  const language = currentPath.split('/')[1].toLocaleLowerCase();
+  const [locale, setLocale] = useState(language)
   let isInsideMobileNavigation = useIsInsideMobileNavigation()
   let [router, sections] = useInitialValue(
     [useRouter(), useSectionStore((s) => s.sections)],
     isInsideMobileNavigation
   )
 
-  useEffect(() => setLocale(current_route), [current_route])
+  useEffect(() => setLocale(language), [language])
 
   let isActiveGroup =
     group.links.findIndex((link) => parseLocation({link:link.href, pathname:router.pathname})) !== -1
@@ -199,9 +197,8 @@ export const navigation = [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
       { title: 'Concepts', href: '/concepts' },
-      { title: 'Uses cases', href: '/pratices' },
+      { title: 'Examples', href: '/uses-cases' },
       { title: 'Events', href: '/events' },
-      { title: 'Errors', href: '/errors' },
     ],
   },
   {
@@ -217,20 +214,19 @@ export const navigation = [
   {
     title: 'Showcases',
     links: [
-      { title: 'Conversations', href: '/conversations' },
-      { title: 'Messages', href: '/messages' },
-      { title: 'Groups', href: '/groups' },
-      { title: 'Attachments', href: '/attachments' },
-      { title: 'Queue limit', href: '/queueLimit' },
+      { title: 'Queue limit', href: '/showcases/queue-limit' },
+      { title: 'Modularize', href: '/showcases/modularize' },
+      { title: 'Fast Entries', href: '/showcases/fast-entires' },
+      { title: 'API Rest', href: '/showcases/api-use' },
     ],
   },
   {
     title: 'Plugins',
     links: [
-      { title: 'Contributing', href: '/plugins-contributing' },
-      { title: 'Telegram', href: '/telegram' },
-      { title: 'Shopify', href: '/shopify' },
-      { title: 'Agents', href: '/agentsOpenAi' },
+      { title: 'Contributing', href: '/plugins' },
+      { title: 'Telegram', href: '/plugins/telegram' },
+      { title: 'Shopify', href: '/plugins/shopify' },
+      { title: 'Agents', href: '/plugins/agentsOpenAi' },
     ],
   },
 ]

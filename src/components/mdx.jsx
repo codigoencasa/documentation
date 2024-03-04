@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import Link from 'next/link'
 import clsx from 'clsx'
 
 import { Heading } from '@/components/Heading'
+import { Modal } from '@/components/modal'
 
 export const a = Link
 export { Button } from '@/components/Button'
@@ -9,6 +11,27 @@ export { CodeGroup, Code as code, Pre as pre } from '@/components/Code'
 
 export const h2 = function H2(props) {
   return <Heading level={2} {...props} />
+}
+
+export const Image = function Img(props) {
+  const [isOpen, setIsOpen] = useState(false)
+  const showModal = () => setIsOpen(true)
+
+  return (
+  <>
+  <img 
+  onClick={showModal}
+  className='not-prose cursor-pointer aling-block my-6 overflow-hidden rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10' {...props} />
+        {isOpen && (
+        <Modal
+          src={props.src}
+          alt="snow"
+          caption="caption"
+          onClose={() => setIsOpen(false)}
+        />
+      )}
+  </>
+  )
 }
 
 function InfoIcon(props) {
