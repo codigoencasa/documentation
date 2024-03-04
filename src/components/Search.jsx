@@ -19,7 +19,7 @@ function useAutocomplete() {
   let [autocomplete] = useState(() =>
     createAutocomplete({
       id,
-      placeholder: 'Find something...',
+      placeholder: '',
       defaultActiveItemId: 0,
       onStateChange({ state }) {
         setAutocompleteState(state)
@@ -307,7 +307,7 @@ function SearchButton(props) {
         {...props}
       >
         <SearchIcon className="h-5 w-5 stroke-current" />
-        Find something...
+      
         <kbd className="ml-auto text-2xs text-zinc-400 dark:text-zinc-500">
           <kbd className="font-sans">{modifierKey}</kbd>
           <kbd className="font-sans">K</kbd>
@@ -316,7 +316,7 @@ function SearchButton(props) {
       <button
         type="button"
         className="flex h-6 w-6 items-center justify-center rounded-md transition hover:bg-zinc-900/5 dark:hover:bg-white/5 lg:hidden focus:[&:not(:focus-visible)]:outline-none"
-        aria-label="Find something..."
+        aria-label=""
         {...props}
       >
         <SearchIcon className="h-5 w-5 stroke-zinc-900 dark:stroke-white" />
@@ -485,7 +485,6 @@ export function Search() {
         {...buttonProps}
       >
         <SearchIcon className="h-5 w-5 stroke-current" />
-        Find something...
         <kbd className="ml-auto text-2xs text-zinc-400 dark:text-zinc-500">
           <kbd className="font-sans">{modifierKey}</kbd>
           <kbd className="font-sans">K</kbd>
@@ -504,7 +503,7 @@ export function MobileSearch() {
       <button
         type="button"
         className="flex h-6 w-6 items-center justify-center rounded-md transition hover:bg-zinc-900/5 dark:hover:bg-white/5 lg:hidden focus:[&:not(:focus-visible)]:outline-none"
-        aria-label="Find something..."
+        aria-label=""
         {...buttonProps}
       >
         <SearchIcon className="h-5 w-5 stroke-zinc-900 dark:stroke-white" />

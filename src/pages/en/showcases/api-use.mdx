@@ -25,20 +25,22 @@ In the exercise below you can get an example of how it works. It is interesting 
 ```ts {{title:'app.ts'}}
 import 'dotenv/config'
 import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider, handleCtx } from '@bot-whatsapp/provider-baileys'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
 import flow from './flows';
 
 const PORT = process.env.PORT ?? 3001
 
 const main = async () => {
     const provider = createProvider(BaileysProvider)
-    await createBot({
+
+    const { handleCtx, httpServer } = await createBot({
         database: new MemoryDB(),
         provider,
         flow,
     })
 
-    provider.initHttpServer(+PORT)
+    httpServer(+PORT)
+
     provider.http.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
         const { number, message } = req.body
         await bot.sendMessage(number, message, {})
@@ -73,20 +75,22 @@ In the following example you will understand how to send files, images or videos
 ```ts {{title:'app-media.ts'}}
 import 'dotenv/config'
 import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider, handleCtx } from '@bot-whatsapp/provider-baileys'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
 import flow from './flows';
 
 const PORT = process.env.PORT ?? 3001
 
 const main = async () => {
     const provider = createProvider(BaileysProvider)
-    await createBot({
+
+    const { handleCtx, httpServer } = await createBot({
         database: new MemoryDB(),
         provider,
         flow,
     })
 
-    provider.initHttpServer(+PORT)
+    httpServer(+PORT)
+
     provider.http.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
         const { number, message, media } = req.body
         await bot.sendMessage(number, message, { media }) // https://i.imgur.com/0HpzsEm.png
@@ -99,7 +103,7 @@ main()
 ```ts {{title:'app-media.storage.ts'}}
 import 'dotenv/config'
 import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider, handleCtx } from '@bot-whatsapp/provider-baileys'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
 import multer from 'multer'
 import flow from './flows';
 
@@ -117,13 +121,15 @@ const upload = multer({ storage })
 
 const main = async () => {
     const provider = createProvider(BaileysProvider)
-    await createBot({
+    
+    const { handleCtx, httpServer } = await createBot({
         database: new MemoryDB(),
         provider,
         flow,
     })
 
-    provider.initHttpServer(+PORT)
+    httpServer(+PORT)
+
     provider.http.server
     .use(upload.single('file'))
     .post('/v1/messages', handleCtx(async (bot, req, res) => {

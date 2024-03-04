@@ -51,34 +51,30 @@ In this example we can see the basis of a simple bot which responds to the keywo
 import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
 import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
 
-/** send static messages */
 const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
 
-/** send dynamic message from db or other sources */
-const infoFlow = addKeyword<BaileysProvider, MemoryDB>('info')
-    .addAction(async (ctx, { flowDynamic }) => {
-        await flowDynamic(`Welcome ${ctx.name}`)
-    })
-
-
-/** initialization bot */
 const main = async () => {
 
     const adapterDB = new MemoryDB()
-    const adapterFlow = createFlow([welcomeFlow, infoFlow])
+    const adapterFlow = createFlow([welcomeFlow])
     const adapterProvider = createProvider(BaileysProvider)
 
-    adapterProvider.initHttpServer(3000)
-
-    await createBot({
+    const { handleCtx, httpServer } = await createBot({
         flow: adapterFlow,
         provider: adapterProvider,
         database: adapterDB,
     })
+
+    httpServer(3000)
+
+    adapterProvider.http.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
+        const { number, message } = req.body
+        await bot.sendMessage(number, message, {})
+        return res.end('send')
+    }))
 }
 
 main()
-
 ```
 
 ```js {{ title: 'main.js' }}
