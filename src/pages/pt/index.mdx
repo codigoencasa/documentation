@@ -3,20 +3,20 @@ import { Resources } from '@/components/Resources'
 import { HeroPattern } from '@/components/HeroPattern'
 import { Sponsors } from '@/components/Sponsors'
 
-export const description = 'Com essa biblioteca, você pode configurar respostas automatizadas para perguntas frequentes, receber e responder a mensagens de forma automatizada e rastrear as interações com os clientes. Além disso, nosso Chatbot se integra facilmente a outros sistemas e ferramentas que você já está usando na sua empresa.'
+export const description = 'Com esta biblioteca, pode configurar respostas automatizadas a perguntas frequentes, receber e responder a mensagens de forma automatizada e acompanhar as interações com os clientes. Além disso, o nosso Chatbot integra-se facilmente com outros sistemas e ferramentas que já utiliza na sua empresa.'
 
 export const sections = [
 ]
 
 <HeroPattern />
 
-# Documentação
+# Get started with BuilderBot
 
 Esta é uma estrutura __free__ e de código aberto com uma maneira intuitiva e extensível de criar chatbot e aplicativos inteligentes que se conectam a diferentes canais de comunicação, como __[Whatsapp](http://ir_a_un_recurso_o_blog)__, __[Telegram](http://ir_a_un_recurso_o_blog)__ e outros.
 Criamos uma estrutura intuitiva para que você possa ter seu primeiro chatbot em minutos.
 
 
-## Início rápido
+## Quick Start
 Para instalar rapidamente com o seguinte comando
 
 <CodeGroup>
@@ -29,61 +29,68 @@ npm create bot-whatsapp@latest
 ```
 </CodeGroup>
 
+
+<div className="not-prose aling-block">
+  <Button
+    href="/quickstart#install"
+    variant="text"
+    arrow="right"
+    children="Installation and requirements"
+  />
+</div>
+
+
 ---
 
-## Exemplo rápido {{ anchor: false }}
+## Quick Example {{ anchor: false }}
 
-Neste exemplo, podemos ver a base de um bot simples que responde às palavras-chave enviadas por um usuário, as palavras são: `info, hello, hi`. Você pode ver como criar o bot e implementar os [fluxos](/concepts#flow).
+Neste exemplo, podemos ver a base de um bot simples que responde às palavras-chave enviadas por um usuário, as palavras são: `info, hello, hi`. Você pode ver como criar o bot e implementar o [flows](/concepts#flow).
 
 <CodeGroup>
 ```ts {{ title: 'main.ts' }}
 import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
 import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
 
-/** enviar mensagens estáticas */
 const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
 
-/** enviar mensagem dinâmica do banco de dados ou de outras fontes */
-const infoFlow = addKeyword<BaileysProvider, MemoryDB>('info')
-    .addAction(async (ctx, { flowDynamic }) => {
-        await flowDynamic(`Welcome ${ctx.name}`)
-    })
-
-
-/** bot de inicialização */
 const main = async () => {
 
     const adapterDB = new MemoryDB()
-    const adapterFlow = createFlow([welcomeFlow, infoFlow])
+    const adapterFlow = createFlow([welcomeFlow])
     const adapterProvider = createProvider(BaileysProvider)
 
-    adapterProvider.initHttpServer(3000)
-
-    await createBot({
+    const { handleCtx, httpServer } = await createBot({
         flow: adapterFlow,
         provider: adapterProvider,
         database: adapterDB,
     })
+
+    httpServer(3000)
+
+    adapterProvider.http.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
+        const { number, message } = req.body
+        await bot.sendMessage(number, message, {})
+        return res.end('send')
+    }))
 }
 
 main()
-
 ```
 
 ```js {{ title: 'main.js' }}
 const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@bot-whatsapp/bot')
 const { BaileysProvider } = require('@bot-whatsapp/bot')
 
-/** enviar mensagens estáticas */
+/** send static messages */
 const welcomeFlow = addKeyword(['hello', 'hi']).addAnswer('Ey! welcome')
 
-/** enviar mensagem dinâmica do banco de dados ou de outras fontes */
+/** send dynamic message from db or other sources */
 const infoFlow = addKeyword('info')
     .addAction(async (ctx, { flowDynamic }) => {
         await flowDynamic(`Welcome ${ctx.name}`)
     })
 
-/** bot de inicialização */
+/** initialization bot */
 const main = async () => {
 
     const adapterDB = new MemoryDB()
