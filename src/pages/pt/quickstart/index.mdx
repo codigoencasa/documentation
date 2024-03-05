@@ -1,27 +1,90 @@
 import { Resources } from '@/components/Resources'
 
 export const description =
-  'Este guia o deixará pronto para usar a API de protocolo. Abordaremos como iniciar um cliente de API e como fazer sua primeira solicitação de API.'
+  'Este guia irá prepará-lo e pronto para usar a API do Protocolo. Abordaremos como iniciar um cliente de API e como fazer sua primeira solicitação de API.'
 
-# Início rápido {{ tag: 'Quickstart' }}
+## Install
 
-Neste exemplo, podemos ver a base de um bot simples que responde às palavras-chave enviadas por um usuário, as palavras são: `info, hello, hi`. Você pode ver como criar o bot e implementar os [fluxos](/concepts#flow).
+Criar um bot é tão simples quanto executar o seguinte comando e seguir as instruções
+<Note>
+  Pré-requisitos a considerar antes de utilizar esta ferramenta,[Node](https://nodejs.org/en) v20 ou superior e [Git](https://git-scm.com/download)
+</Note>
+
+
+<CodeGroup>
+```bash {{ title: 'pnpm' }}
+pnpm create bot-whatsapp@latest
+```
+
+```bash {{ title: 'npm' }}
+npm create bot-whatsapp@latest
+```
+</CodeGroup>
+
+Utilize a tecla espaço para seleccionar e a tecla enter para confirmar. A CLI realiza uma verificação preliminar do nó e da versão do sistema operativo, informando-o se cumpre os requisitos ou fornecendo-lhe informações relevantes. Além de gerar um projeto de base para você simplesmente iniciar
+
+<video className="rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10" autoPlay loop muted src="https://bot-whatsapp.netlify.app/videos/console.webm"></video>
+
+---
+
+## Requirements
+
+
+Certifique-se de ter instalado o Node versão 20 ou superior, abaixo você pode ver um exemplo para verificar a versão do node que você está usando.
+
+```bash
+node -v
+v20.10.0
+```
+
+<div className="not-prose aling-block">
+  <Button
+    href="https://nodejs.org/en"
+    variant="text"
+    target="_blank"
+    arrow="right"
+    children="Download node from its official website"
+  />
+</div>
+
+Recomenda-se ter o GIT instalado para uma operação adequada. Se você estiver usando Linux ou Macos, provavelmente já tem o GIT instalado por padrão.
+
+```bash
+git -v
+git version XXXX
+```
+
+<div className="not-prose aling-block">
+  <Button
+    href="https://git-scm.com/downloads"
+    variant="text"
+    target="_blank"
+    arrow="right"
+    children="Download GIT from its official website"
+  />
+</div>
+
+---
+
+## Base Example
+
+Neste exemplo, podemos ver a base de um bot simples que responde às palavras-chave enviadas por um usuário, as palavras são: `info, hello, hi`. Você pode ver como criar o bot e implementar o [flows](/concepts#flow).
 
 <CodeGroup>
 ```ts {{ title: 'main.ts' }}
 import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
 import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
 
-/** enviar mensagens estáticas */
+/** send static messages */
 const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
 
-/** enviar mensagem dinâmica do banco de dados ou de outras fontes */
+/** send dynamic message from db or other sources */
 const infoFlow = addKeyword<BaileysProvider, MemoryDB>('info')
     .addAction(async (ctx, { flowDynamic }) => {
         await flowDynamic(`Welcome ${ctx.name}`)
     })
 
-/** enviar arquivos de media */
+/** send media files */
 const mediaFlow = addKeyword<BaileysProvider, MemoryDB>('image')
     .addAnswer(`Send Image A`, { media: 'https://i.imgur.com/AsvWfUX.png' })
     .addAction(async (ctx, { flowDynamic }) => {
@@ -36,7 +99,7 @@ const mediaFlow = addKeyword<BaileysProvider, MemoryDB>('image')
         )
     })
 
-/** bot de inicialização */
+/** initialization bot */
 const main = async () => {
 
     const adapterDB = new MemoryDB()
@@ -60,16 +123,16 @@ main()
 const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@bot-whatsapp/bot')
 const { BaileysProvider } = require('@bot-whatsapp/bot')
 
-/** enviar mensagens estáticas */
+/** send static messages */
 const welcomeFlow = addKeyword(['hello', 'hi']).addAnswer('Ey! welcome')
 
-/** enviar mensagem dinâmica do banco de dados ou de outras fontes */
+/** send dynamic message from db or other sources */
 const infoFlow = addKeyword('info')
     .addAction(async (ctx, { flowDynamic }) => {
         await flowDynamic(`Welcome ${ctx.name}`)
     })
 
-/** enviar arquivos de media */
+/** send media files */
 const mediaFlow = addKeyword('image')
     .addAnswer(`Send Image A`, { media: 'https://i.imgur.com/AsvWfUX.png' })
     .addAction(async (ctx, { flowDynamic }) => {
@@ -84,7 +147,7 @@ const mediaFlow = addKeyword('image')
         )
     })
 
-/** bot de inicialização */
+/** initialization bot */
 const main = async () => {
 
     const adapterDB = new MemoryDB()
@@ -107,65 +170,5 @@ main()
 
 ---
 
-## Instalar
-
-Criar um bot é tão simples quanto executar o seguinte comando e seguir as instruções
-<Note>
-  Pré-requisitos a serem considerados antes de usar essa ferramenta, [Node](https://nodejs.org/en) v20 ou superior e [Git](https://git-scm.com/download)
-</Note>
-
-
-<CodeGroup>
-```bash {{ title: 'pnpm' }}
-pnpm create bot-whatsapp@latest
-```
-
-```bash {{ title: 'npm' }}
-npm create bot-whatsapp@latest
-```
-</CodeGroup>
-
-Use a tecla de espaço para selecionar e a tecla Enter para confirmar. A CLI executa uma verificação preliminar da versão do Node e do sistema operacional, informando se ela atende aos requisitos ou fornecendo informações relevantes. Além de gerar um projeto básico para você simplesmente iniciar
-
-<video className="rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10" autoPlay loop muted src="https://bot-whatsapp.netlify.app/videos/console.webm"></video>
-
----
-
-## Requisitos
-
-
-Certifique-se de ter instalado o Node versão 20 ou superior. Veja abaixo um exemplo para verificar a versão do node que você está usando.
-
-```bash
-node -v
-v20.10.0
-```
-
-<div className="not-prose aling-block">
-  <Button
-    href="https://nodejs.org/en"
-    variant="text"
-    target="_blank"
-    arrow="right"
-    children="Download node from its official website"
-  />
-</div>
-
-It is recommended to have GIT installed for proper operation. If you are using Linux or MacOc you probably already have GIT installed by default.
-
-```bash
-git -v
-git version XXXX
-```
-
-<div className="not-prose aling-block">
-  <Button
-    href="https://git-scm.com/downloads"
-    variant="text"
-    target="_blank"
-    arrow="right"
-    children="Download GIT from its official website"
-  />
-</div>
 
 <Resources />

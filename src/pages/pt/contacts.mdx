@@ -1,42 +1,42 @@
 export const description =
-'Nesta página, vamos nos aprofundar nos diferentes endpoints de contato que você pode usar para gerenciar contatos programaticamente.'
+  'Nesta página, vamos nos aprofundar nos diferentes endpoints de contato que você pode usar para gerenciar contatos programaticamente.'
 
-# Contatos
+# Contacts
 
-Como o nome sugere, os contatos são uma parte essencial do Protocolo-a razão pela qual o protocolo existe é para que você possa ter conversas seguras com seus contatos. Nesta página, vamos nos aprofundar nos diferentes endpoints de contato que você pode usar para gerenciar contatos programaticamente. Veremos como consultar, criar, atualizar e excluir contatos. {{ className: 'lead'}}
+Como o nome sugere, os contactos são uma parte essencial do Protocolo — a razão pela qual o protocolo existe é para que possa ter conversas seguras com os seus contactos. Nesta página, vamos nos aprofundar nos diferentes endpoints de contato que você pode usar para gerenciar contatos programaticamente. Veremos como consultar, criar, atualizar e excluir contatos. {{className: 'lead'}}
 
-## O modelo de contato
+## The contact model
 
-O modelo de Contato contém todas as informações sobre seus contatos, como nome de usuário, avatar e número de telefone. Ele também contém uma referência à conversa entre você e o contato e informações sobre quando eles estiveram ativos pela última vez no protocolo.
+O modelo de contacto contém todas as informações sobre os seus contactos, tais como o respetivo nome de utilizador, avatar e número de telefone. Ele também contém uma referência à conversa entre você e o contato e informações sobre quando eles estiveram ativos pela última vez no protocolo.
 
-### Propriedades
+### Properties
 
 <Properties>
-<Property name= " id " type="string">
-Identificador único do contato.
-</Property>
-<Property name=" username " type="string">
-O nome de usuário do contato.
-</Property>
-<Property name=" phone_number " type="string">
-O número de telefone do contato.
-</Property>
-<Property name=" avatar_url "type= "string">
-A URL da imagem do avatar para o contato.
-</Property>
-<Property name=" display_name " type="string">
-O nome de exibição do contato na lista de contatos. Por padrão, este é apenas o
-username.
-</Property>
-<Property name=" conversation_id " type="string">
-Identificador exclusivo da conversa associada ao contato.
-</Property>
-<Property name=" last_active_at " type="timestamp">
-Timestamp de quando o contato esteve ativo pela última vez na plataforma.
-</Property>
-<Property name=" created_at " type="timestamp">
-Timestamp de quando o contato foi criado.
-</Property>
+  <Property name="id" type="string">
+Identificador único do contacto.
+  </Property>
+  <Property name="username" type="string">
+O nome de utilizador do contacto.
+  </Property>
+  <Property name="phone_number" type="string">
+O número de telefone do contacto.
+  </Property>
+  <Property name="avatar_url" type="string">
+O URL da imagem do avatar para o contacto.
+  </Property>
+  <Property name="display_name" type="string">
+ O nome de apresentação do contacto na lista de contactos. Por padrão, este é apenas o
+nome de utilizador.
+  </Property>
+  <Property name="conversation_id" type="string">
+Identificador único para a conversa associada ao contacto.
+  </Property>
+  <Property name="last_active_at" type="timestamp">
+Data e hora de quando o contacto esteve activo pela última vez na plataforma.
+  </Property>
+  <Property name="created_at" type="timestamp">
+Carimbo de data / hora de quando o contato foi criado.
+  </Property>
 </Properties>
 
 ---

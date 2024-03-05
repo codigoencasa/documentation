@@ -1,40 +1,40 @@
 export const description =
-  'Nesta página, vamos mergulhar nos diferentes endpoints de grupo que você pode usar para gerenciar grupos programaticamente.'
+  'Nesta página, vamos nos aprofundar nos diferentes endpoints de grupo que você pode usar para gerenciar grupos programaticamente.'
 
-# Grupos
+# Groups
 
-Os grupos são onde as comunidades vivem no Protocolo - eles são uma coleção de contatos com os quais você está conversando de uma só vez. Nesta página, vamos mergulhar nos diferentes endpoints de grupo que você pode usar para gerenciar grupos programaticamente. Veremos como consultar, criar, atualizar e excluir grupos. {{ classname: 'lead' }}
+Os grupos são onde as comunidades vivem em Protocolo-eles são uma coleção de contatos com os quais você está conversando de uma só vez. Nesta página, vamos nos aprofundar nos diferentes endpoints de grupo que você pode usar para gerenciar grupos programaticamente. Veremos como consultar, criar, atualizar e excluir grupos. {{className: 'lead'}}
 
-## O modelo de grupo
+## The group model
 
 O modelo de grupo contém todas as informações sobre seus grupos, incluindo quais contatos estão no grupo e o nome, a descrição e o avatar do grupo.
 
-### Propriedades
+### Properties
 
 <Properties>
-  <Property da propriedade="id" type="string">
-    Identificador único para o grupo.
+  <Property name="id" type="string">
+Identificador único para o grupo.
   </Property>
-  <Property da propriedade="nome" type="string">
-    O nome do grupo.
+  <Property name="name" type="string">
+O nome do grupo.
   </Property>
-  <Property da propriedade="descrição" type="string">
-    A descrição para o grupo.
+  <Property name="description" type="string">
+A descrição do grupo.
   </Property>
-  <Property da propriedade="avatar_url" type="string">
-    O URL da imagem do avatar para o grupo.
+  <Property name="avatar_url" type="string">
+O URL da imagem do avatar para o grupo.
   </Property>
-  <Property da propriedade="conversation_id" type="string">
-    Identificador exclusivo para a conversa que pertence ao grupo.
+  <Property name="conversation_id" type="string">
+Identificador único para a conversa que pertence ao grupo.
   </Property>
-  <Property da propriedade="contatos" type="array">
-    Um array de objetos de contato que são membros do grupo.
+  <Property name="contacts" type="array">
+Uma matriz de objetos de contato que são membros do grupo.
   </Property>
-  <Property da propriedade="created_at" type="timestamp">
-    Timestamp de quando o grupo foi criado.
+  <Property name="created_at" type="timestamp">
+Data e hora de quando o grupo foi criado.
   </Property>
-  <Property da propriedade="archived_at" type="timestamp">
-    Timestamp de quando o grupo foi arquivado.
+  <Property name="archived_at" type="timestamp">
+Data e hora de quando o grupo foi arquivado.
   </Property>
 </Properties>
 
