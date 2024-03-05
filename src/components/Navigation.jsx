@@ -111,8 +111,9 @@ function ActivePageMarker({ group, pathname }) {
 
 function NavigationGroup({ group, className }) {
   const route = useRouter()
+  const regexLanguage = /^\/([^\/]+)/;
   const currentPath = route.asPath;
-  const language = currentPath.split('/')[1].toLocaleLowerCase();
+  const language = currentPath.split(regexLanguage)[1].toLocaleLowerCase();
   const [locale, setLocale] = useState(language)
   let isInsideMobileNavigation = useIsInsideMobileNavigation()
   let [router, sections] = useInitialValue(
@@ -151,7 +152,7 @@ function NavigationGroup({ group, className }) {
         <ul role="list" className="border-l border-transparent">
           {group.links.map((link) => (
             <motion.li key={link.href} layout="position" className="relative">
-              <NavLink href={`${locale}${link.href}`} active={parseLocation({link:link.href, pathname:router.pathname})}>
+              <NavLink href={`${link.href}`} active={parseLocation({link:link.href, pathname:router.pathname})}>
                 {link.title}
               </NavLink>
               <AnimatePresence mode="popLayout" initial={false}>
@@ -171,11 +172,11 @@ function NavigationGroup({ group, className }) {
                     {sections.filter((s) => !s?.not).map((section) => (
                       <li key={section.id}>
                         <NavLink
-                          href={`${locale}${link.href}#${section.id}`}
+                          href={`/${locale}${link.href}#${section.id}`}
                           tag={section.tag}
                           isAnchorLink
                         >
-                          {section.title}
+                        {section.title}
                         </NavLink>
                       </li>
                     ))}
