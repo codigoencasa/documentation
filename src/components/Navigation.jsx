@@ -227,7 +227,7 @@ export const navigation = [
       { title: 'Contributing', href: '/plugins' },
       { title: 'Telegram', href: '/plugins/telegram' },
       { title: 'Shopify', href: '/plugins/shopify' },
-      { title: 'Agents', href: '/plugins/agentsOpenAi' },
+      { title: 'Agents', href: '/plugins/agents' },
     ],
   },
 ]

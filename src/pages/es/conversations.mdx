@@ -1,0 +1,48 @@
+export const description =
+'En esta página, profundizaremos en los diferentes puntos finales de conversación que puede usar para administrar conversaciones mediante programación.'
+
+# Conversations
+
+Las conversaciones son una parte esencial del Protocolo: son los contenedores de los mensajes entre usted, sus contactos y grupos. En esta página, analizaremos los diferentes puntos finales de conversación que puede usar para administrar conversaciones mediante programación. Veremos cómo consultar, crear, actualizar y eliminar conversaciones. {{className: 'lead'}}
+
+## Conversation model
+
+El modelo de conversación contiene toda la información sobre las conversaciones entre usted y sus contactos. Además, las conversaciones también pueden estar basadas en grupos con más de un contacto, pueden tener un mensaje anclado y pueden silenciarse.
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+Identificador único de la conversación.
+  </Property>
+  <Property name="contact_id" type="string">
+Identificador único para el otro contacto en la conversación.
+  </Property>
+  <Property name="group_id" type="string">
+Identificador único del grupo al que pertenece la conversación.
+  </Property>
+  <Property name="pinned_message_id" type="string">
+Identificador único para el mensaje anclado.
+  </Property>
+  <Property name="is_pinned" type="boolean">
+Si la conversación ha sido anclada o no.
+  </Property>
+  <Property name="is_muted" type="boolean">
+Si la conversación ha sido silenciada o no.
+  </Property>
+  <Property name="last_active_at" type="timestamp">
+Marca de tiempo de la última vez que estuvo activa la conversación.
+  </Property>
+  <Property name="last_opened_at" type="timestamp">
+Marca de tiempo de la última vez que la conversación fue abierta por el autenticado
+usuario.
+  </Property>
+  <Property name="created_at" type="timestamp">
+Marca de tiempo de cuándo se creó la conversación.
+  </Property>
+  <Property name="archived_at" type="timestamp">
+Marca de tiempo de cuándo se archivó la conversación.
+  </Property>
+</Properties>
+
+---

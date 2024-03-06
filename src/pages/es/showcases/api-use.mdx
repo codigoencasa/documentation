@@ -1,0 +1,152 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+# How to implement a REST API?
+
+En muchas ocasiones necesitamos enviar un mensaje a través de una solicitud HTTP es muy útil para enviar recordatorios o confirmaciones de pedidos. En este caso, cada proveedor implementa una función 'handleCtx' que le permite inyectar la instanciación del bot y acceder a sus funciones desde un controlador.
+
+<Error>
+Es importante utilizar esta función bajo su propia responsabilidad, ya que el uso abusivo puede considerarse spam y su número puede ser bloqueado.
+</Error>
+
+## Send Single Message
+
+  <CodeGroup title="Request" tag="POST" label="/v1/messages">
+  ```bash {{ title: 'Message' }}
+  curl https://api.example.chat/v1/messages \
+    -d number="34000000" \
+    -d message="Hello!"
+  ```
+  </CodeGroup>
+
+En el ejercicio a continuación puede obtener un ejemplo de cómo funciona. Es interesante entender que internamente la biblioteca ya implementa una versión muy ligera de HTTP similar a express pero llamada [polka](https://github.com/lukeed/polka/tree/main).
+
+```ts {{title:'app.ts'}}
+import 'dotenv/config'
+import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import flow from './flows';
+
+const PORT = process.env.PORT ?? 3001
+
+const main = async () => {
+    const provider = createProvider(BaileysProvider)
+
+    const { handleCtx, httpServer } = await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow,
+    })
+
+    httpServer(+PORT)
+
+    provider.http.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
+        const { number, message } = req.body
+        await bot.sendMessage(number, message, {})
+        return res.end('send')
+    }))
+}
+
+main()
+```
+---
+
+## Send with Media
+
+  <CodeGroup title="Request" tag="POST" label="/v1/messages">
+  ```bash {{ title: 'Media Link' }}
+  curl https://api.example.chat/v1/messages \
+    -d number="34000000" \
+    -d message="Ey! send media"
+  ```
+  ```bash {{ title: 'Media Local' }}
+  curl --location 'https://api.example.chat/v1/messages' \
+  --form 'message="Ey! send media"' \
+  --form 'number="34000000"' \
+  --form 'file=@"/C:/local/image.png"'
+  ```
+  </CodeGroup>
+
+En el siguiente ejemplo entenderás cómo enviar archivos, imágenes o videos desde una api cuando el archivo se encuentra en una URL pública o también si quieres subirlo a través de una solicitud.
+
+<CodeGroup>
+
+```ts {{title:'app-media.ts'}}
+import 'dotenv/config'
+import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import flow from './flows';
+
+const PORT = process.env.PORT ?? 3001
+
+const main = async () => {
+    const provider = createProvider(BaileysProvider)
+
+    const { handleCtx, httpServer } = await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow,
+    })
+
+    httpServer(+PORT)
+
+    provider.http.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
+        const { number, message, media } = req.body
+        await bot.sendMessage(number, message, { media }) // https://i.imgur.com/0HpzsEm.png
+        return res.end('send')
+    }))
+}
+
+main()
+```
+```ts {{title:'app-media.storage.ts'}}
+import 'dotenv/config'
+import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import multer from 'multer'
+import flow from './flows';
+
+const PORT = process.env.PORT ?? 3001
+
+const storage = multer.diskStorage({
+    destination: function (_, file, cb) {
+        cb(null, './tmp/')
+    },
+    filename: function (_, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+const upload = multer({ storage })
+
+const main = async () => {
+    const provider = createProvider(BaileysProvider)
+    
+    const { handleCtx, httpServer } = await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow,
+    })
+
+    httpServer(+PORT)
+
+    provider.http.server
+    .use(upload.single('file'))
+    .post('/v1/messages', handleCtx(async (bot, req, res) => {
+        const { number, message } = req.body
+        await bot.sendMessage(number, message, { media: req.file.path })
+        return res.end('send')
+    }))
+}
+
+main()
+```
+</CodeGroup>
+
+---
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez','lualreye']} />

@@ -1,0 +1,438 @@
+export const description =
+  'En esta página, profundizaremos en los diferentes puntos finales de mensajes que puede usar para administrar mensajes mediante programación.'
+
+# Messages
+
+Los mensajes son de lo que están hechas las conversaciones en el Protocolo: son los componentes básicos de sus conversaciones con sus contactos de Protocolo. En esta página, analizaremos los diferentes puntos finales de mensajes que puede usar para administrar mensajes mediante programación. Veremos cómo consultar, enviar, actualizar y eliminar mensajes. {{className: 'lead'}}
+
+## The message model
+
+El modelo de mensajes contiene toda la información sobre los mensajes y archivos adjuntos que envías a tus contactos y grupos, incluida la reacción de tus contactos ante ellos.
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+Identificador único del mensaje.
+  </Property>
+  <Property name="conversation_id" type="string">
+Identificador único de la conversación a la que pertenece el mensaje.
+  </Property>
+  <Property name="contact" type="object">
+El objeto de contacto para el contacto que envió el mensaje.
+  </Property>
+  <Property name="message" type="string">
+El contenido del mensaje.
+  </Property>
+  <Property name="reactions" type="array">
+Una matriz de objetos de reacción asociados con el mensaje.
+  </Property>
+  <Property name="attachments" type="array">
+Una matriz de objetos adjuntos asociados con el mensaje.
+  </Property>
+  <Property name="read_at" type="timestamp">
+Marca de tiempo de cuándo se leyó el mensaje.
+  </Property>
+  <Property name="created_at" type="timestamp">
+Marca de tiempo de cuándo se creó el mensaje.
+  </Property>
+  <Property name="updated_at" type="timestamp">
+Marca de tiempo de la última vez que se actualizó el mensaje.
+  </Property>
+</Properties>
+
+---
+
+## List all messages {{ tag: 'GET', label: '/v1/messages' }}
+
+<Row>
+  <Col>
+
+Este punto final le permite recuperar una lista paginada de todos sus mensajes (en una conversación si se proporciona un id de conversación). Por defecto, se muestran un máximo de diez mensajes por página.
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="conversation_id" type="string">
+Limitar a los mensajes de una conversación determinada.
+      </Property>
+      <Property name="limit" type="integer">
+Limite el número de mensajes devueltos.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/messages">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G https://api.protocol.chat/v1/messages \
+      -H "Authorization: Bearer {token}" \
+      -d conversation_id=xgQQXg3hrtjh7AvZ \
+      -d limit=10
+    ```
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.messages.list()
+    ```
+
+    ```python
+    from protocol_api import ApiClient
+
+    client = ApiClient(token)
+
+    client.messages.list()
+    ```
+
+    ```php
+    $client = new \Protocol\ApiClient($token);
+
+    $client->messages->list();
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "has_more": false,
+      "data": [
+        {
+          "id": "SIuAFUNKdSYHZF2w",
+          "conversation_id": "xgQQXg3hrtjh7AvZ",
+          "contact": {
+            "id": "WAz8eIbvDR60rouK",
+            "username": "KevinMcCallister",
+            "phone_number": "1-800-759-3000",
+            "avatar_url": "https://assets.protocol.chat/avatars/buzzboy.jpg",
+            "last_active_at": 705103200,
+            "created_at": 692233200
+          },
+          "message": "It’s a nice night for a neck injury.",
+          "reactions": [],
+          "attachments": [],
+          "read_at": 705103200,
+          "created_at": 692233200,
+          "updated_at": 692233200
+        },
+        {
+          "id": "hSIhXBhNe8X1d8Et",
+          // ..
+        }
+      ]
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Send a message {{ tag: 'POST', label: '/v1/messages' }}
+
+<Row>
+  <Col>
+
+Este punto final le permite enviar un nuevo mensaje a una de sus conversaciones.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="conversation_id" type="string">
+Identificador único de la conversación a la que pertenece el mensaje.
+      </Property>
+      <Property name="message" type="string">
+El contenido del mensaje.
+      </Property>
+    </Properties>
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="attachments" type="array">
+Una matriz de objetos adjuntos asociados con el mensaje.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/messages">
+
+    ```bash {{ title: 'cURL' }}
+    curl https://api.protocol.chat/v1/messages \
+      -H "Authorization: Bearer {token}" \
+      -d conversation_id="xgQQXg3hrtjh7AvZ" \
+      -d message="You’re what the French call ‘les incompetents.’"
+    ```
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.messages.send({
+      conversation_id: 'xgQQXg3hrtjh7AvZ',
+      message: 'You’re what the French call ‘les incompetents.’',
+    })
+    ```
+
+    ```python
+    from protocol_api import ApiClient
+
+    client = ApiClient(token)
+
+    client.messages.send(
+      conversation_id="xgQQXg3hrtjh7AvZ",
+      message="You’re what the French call ‘les incompetents.’",
+    )
+    ```
+
+    ```php
+    $client = new \Protocol\ApiClient($token);
+
+    $client->messages->send([
+      'conversation_id' => 'xgQQXg3hrtjh7AvZ',
+      'message' => 'You’re what the French call ‘les incompetents.’',
+    ]);
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "gWqY86BMFRiH5o11",
+      "conversation_id": "xgQQXg3hrtjh7AvZ",
+      "contact": {
+        "id": "inEIRvzjC6YLMX3o",
+        "username": "LinnieMcCallister",
+        "phone_number": "1-800-759-3000",
+        "avatar_url": "https://assets.protocol.chat/avatars/linnie.jpg",
+        "last_active_at": 705103200,
+        "created_at": 692233200
+      },
+      "message": "You’re what the French call ‘les incompetents.’",
+      "reactions": [],
+      "attachments": [],
+      "read_at": null,
+      "created_at": 692233200,
+      "updated_at": null
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Retrieve a message {{ tag: 'GET', label: '/v1/messages/:id' }}
+
+<Row>
+  <Col>
+
+    Este extremo le permite recuperar un mensaje proporcionando el ID del mensaje. Consulte  [the list](#the-message-model) en la parte superior de esta página, para ver qué propiedades se incluyen con los objetos de mensaje.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/messages/SIuAFUNKdSYHZF2w">
+
+    ```bash {{ title: 'cURL' }}
+    curl https://api.protocol.chat/v1/messages/SIuAFUNKdSYHZF2w \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.messages.get('SIuAFUNKdSYHZF2w')
+    ```
+
+    ```python
+    from protocol_api import ApiClient
+
+    client = ApiClient(token)
+
+    client.messages.get("SIuAFUNKdSYHZF2w")
+    ```
+
+    ```php
+    $client = new \Protocol\ApiClient($token);
+
+    $client->messages->get('SIuAFUNKdSYHZF2w');
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "SIuAFUNKdSYHZF2w",
+      "conversation_id": "xgQQXg3hrtjh7AvZ",
+      "contact": {
+        "id": "WAz8eIbvDR60rouK",
+        "username": "KevinMcCallister",
+        "phone_number": "1-800-759-3000",
+        "avatar_url": "https://assets.protocol.chat/avatars/kevin.jpg",
+        "last_active_at": 705103200,
+        "created_at": 692233200
+      },
+      "message": "I’m traveling with my dad. He’s at a meeting. I hate meetings.",
+      "reactions": [],
+      "attachments": [],
+      "read_at": 705103200,
+      "created_at": 692233200,
+      "updated_at": 692233200
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Update a message {{ tag: 'PUT', label: '/v1/messages/:id' }}
+
+<Row>
+  <Col>
+
+Este punto final le permite realizar una actualización de un mensaje. Ejemplos de actualizaciones son agregar una reacción, editar el mensaje o agregar un archivo adjunto.
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="message" type="string">
+El contenido del mensaje.
+      </Property>
+      <Property name="reactions" type="array">
+Una matriz de objetos de reacción asociados con el mensaje.
+      </Property>
+      <Property name="attachments" type="array">
+Una matriz de objetos adjuntos asociados con el mensaje.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="PUT" label="/v1/messages/SIuAFUNKdSYHZF2w">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X PUT https://api.protocol.chat/v1/messages/SIuAFUNKdSYHZF2w \
+      -H "Authorization: Bearer {token}" \
+      -d reactions[red_angry_face][]="KateMcCallister"
+    ```
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.messages.update('SIuAFUNKdSYHZF2w', {
+        reactions: {
+            red_angry_face: ['KateMcCallister']
+        }
+    })
+    ```
+
+    ```python
+    from protocol_api import ApiClient
+
+    client = ApiClient(token)
+
+    client.messages.update("SIuAFUNKdSYHZF2w",
+        reactions={"red_angry_face": ["KateMcCallister"]})
+    ```
+
+    ```php
+    $client = new \Protocol\ApiClient($token);
+
+    $client->messages->update('SIuAFUNKdSYHZF2w', [
+      'reactions' => [
+        'red_angry_face' => ['KateMcCallister'],
+      ],
+    ]);
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "id": "SIuAFUNKdSYHZF2w",
+      "conversation_id": "xgQQXg3hrtjh7AvZ",
+      "contact": {
+        "id": "WAz8eIbvDR60rouK",
+        "username": "KevinMcCallister",
+        "phone_number": "1-800-759-3000",
+        "avatar_url": "https://assets.protocol.chat/avatars/buzzboy.jpg",
+        "last_active_at": 705103200,
+        "created_at": 692233200
+      },
+      "message": "I'm not apologizing. I'd rather kiss a toilet seat.",
+      "reactions": [
+        {
+          "red_angry_face": [
+            "KateMcCallister"
+          ]
+        }
+      ],
+      "attachments": [],
+      "read_at": 705103200,
+      "created_at": 692233200,
+      "updated_at": 692233200
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Delete a message {{ tag: 'DELETE', label: '/v1/messages/:id' }}
+
+<Row>
+  <Col>
+
+Este punto final le permite eliminar mensajes de sus conversaciones. Nota: Esto eliminará permanentemente el mensaje.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="DELETE" label="/v1/messages/SIuAFUNKdSYHZF2w">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X DELETE https://api.protocol.chat/v1/messages/SIuAFUNKdSYHZF2w \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.messages.delete('SIuAFUNKdSYHZF2w')
+    ```
+
+    ```python
+    from protocol_api import ApiClient
+
+    client = ApiClient(token)
+
+    client.messages.delete("SIuAFUNKdSYHZF2w")
+    ```
+
+    ```php
+    $client = new \Protocol\ApiClient($token);
+
+    $client->messages->delete('SIuAFUNKdSYHZF2w');
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>

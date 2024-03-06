@@ -1,0 +1,42 @@
+export const description =
+  'En esta página, analizaremos los diferentes puntos finales de grupo que puede usar para administrar grupos mediante programación.'
+
+# Groups
+
+Los grupos son donde las comunidades viven en Protocolo — son una colección de contactos con los que estás hablando de una vez. En esta página, analizaremos los diferentes puntos finales de grupo que puede usar para administrar grupos mediante programación. Veremos cómo consultar, crear, actualizar y eliminar grupos. {{className: 'lead'}}
+
+## The group model
+
+El modelo de grupo contiene toda la información sobre sus grupos, incluidos los contactos que están en el grupo y el nombre, la descripción y el avatar del grupo.
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+Identificador único para el grupo.
+  </Property>
+  <Property name="name" type="string">
+El nombre del grupo.  
+</Property>
+  <Property name="description" type="string">
+La descripción del grupo.
+  </Property>
+  <Property name="avatar_url" type="string">
+La URL de la imagen de avatar del grupo.
+  </Property>
+  <Property name="conversation_id" type="string">
+Identificador único de la conversación que pertenece al grupo.
+  </Property>
+  <Property name="contacts" type="array">
+Una matriz de objetos de contacto que son miembros del grupo.
+  </Property>
+  <Property name="created_at" type="timestamp">
+Marca de tiempo de cuándo se creó el grupo.
+  </Property>
+  <Property name="archived_at" type="timestamp">
+Marca de tiempo de cuándo se archivó el grupo.
+  </Property>
+</Properties>
+
+---
+

@@ -1,0 +1,95 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description = 'Implemente colas de mensajes para una mejor administración de recursos'
+
+# Modularize
+
+## How to modularize flows {{not:'true'}}
+
+A medida que nuestros proyectos crezcan, necesitaremos implementar una mejor manera de mantener el proyecto, en este caso es muy recomendable implementar una vista de módulo.
+
+En el siguiente ejemplo mostraremos cómo hemos migrado los módulos a un directorio, así como el proveedor y la base de datos.
+
+
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { createBot } from '@bot-whatsapp/bot';
+  import { flow } from "./flow";
+  import { database } from "./database";
+  import { provider } from "./provider";
+  import { ai } from "./services/ai";
+
+  const main = async () => {
+  await createBot({
+          flow,
+          provider,
+          database,
+      },
+          extensions: {
+          ai // Dependency AI 
+      })
+
+  provider.initHttpServer(3000)
+}
+main()
+```
+```ts {{ title: 'provider/index.ts' }}
+  import { createProvider } from '@bot-whatsapp/bot';
+  import { BaileysProvider } from '@bot-whatsapp/provider-baileys';
+
+  export const provider = createProvider(BaileysProvider)
+```
+```ts {{ title: 'database/index.ts' }}
+  export const database = new MemoryDB()
+```
+```ts {{ title: 'flow/index.ts' }}
+  import { createFlow } from '@bot-whatsapp/bot';
+  import { flowWelcome } from "./welcome.flow";
+  import { byeFlow } from "./bye.flow";
+  import { mediaFlow } from "./media.flow";
+  // other flows....
+
+  export const flow =  createFlow([flowWelcome, byeFlow, mediaFlow])
+```
+```ts {{ title: 'flow/welcome.flow.ts' }}
+  import { addKeyword, EVENTS } from '@bot-whatsapp/bot';
+
+  export const flowWelcome = addKeyword(EVENTS.WELCOME)
+  .addAction(async (ctx, {flowDynamic, extensions})=> {
+    const { ai } = extensions
+    const talkWithGPT = ai.chat(ctx.body) // Dependency AI from app.ts
+    await flowDynamic(talkWithGPT)
+  })
+```
+```ts {{ title: 'services/ai.ts' }}
+  // ....
+  export const ai = new AiService(process.env.OPEN_AI_KEY);
+```
+</CodeGroup>
+
+Un ejemplo del andamio que puede utilizar en su proyecto. O una estructura de carpetas más amigable para el usuario.
+
+``` {{title:'structure'}}
+src
+├── app.ts
+├── database
+│   └── index.ts
+├── flow
+│   ├── index.ts
+│   └── welcome.flow.ts
+│   └── bye.flow.ts
+│   └── media.flow.ts
+├── provider
+│   └── index.ts
+└── services
+    └── ai.ts
+```
+----
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez', 'elimeleth']} />
