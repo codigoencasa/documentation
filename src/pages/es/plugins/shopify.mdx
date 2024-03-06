@@ -1,0 +1,155 @@
+export const description = "Aprende a implementar tu propio bot de Shopify para ayudar a los clientes de tu tienda y encargarte de las ventas"
+
+# Shopify
+
+<Note>
+Si necesitas ayuda para generar tu clave API de Shopify, puedes visitar estos recursos [Shopify Api Key](https://www.shopify.com/partners/blog/17056443-how-to-generate-a-shopify-api-token)
+</Note>
+
+Para integrar el complemento en sus otros flujos, debe instalar la biblioteca:
+
+## Install
+
+```bash {{ title: 'npm' }}
+    npm install @builderbot-plugins/shopify
+```
+
+```typescript
+    import 'dotenv/config'
+    import { createBot, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
+    import { createShopifyFlow } from '@builderbot-plugins/shopify'
+    import BaileysProvider from "@bot-whatsapp/provider/baileys";
+
+    const main = async () => {
+
+        const provider = createProvider(BaileysProvider)
+
+        const { flow } = await createShopifyFlow({
+            modelName: 'gpt-3.5-turbo-16k',
+            openApiKey: "YOUR_OPEN_API_KEY_HERE",
+            shopifyApiKey: "YOUR_SHOPIFY_API_KEY_HERE",
+            shopifyDomain: "YOUR_SHOPIFY_DOMAIN_HERE"
+        })
+
+        await createBot({
+            database: new MemoryDB(),
+            provider,
+            flow: createFlow(flow)
+        })
+
+    }
+
+    main()
+```
+
+## SmartFlows
+
+De acuerdo, un smartflow no es más que un flujo como lo conocemos, ¡es solo que este tiene algo que lo hace especial!
+
+Ese algo es la capacidad de comunicarse con la IA para comprender lo que el usuario está tratando de decirnos.
+
+Para agregar un smartflow, sigue el código que te muestro a continuación
+
+
+```ts
+
+    /* stuff code */
+
+    const byeFlow = addKeyword('bye').addAnswer('bye, i hope see you soon');
+
+    const smartFlowBye = {
+        name: 'BYE_FLOW',
+        description: [
+            "I'm an expert in goodbyes,",
+            "I'm the right person to respond when the user says bye or is saying goodbye."
+        ].join(' '),
+        flow: byeFlow
+    }
+
+    const extra = { 
+        flows: [smartFlowBye]
+    }
+
+    const { flow } = await createShopifyFlow({
+        modelName: 'gpt-3.5-turbo-16k',
+        openApiKey: "YOUR_OPEN_API_KEY_HERE",
+        shopifyApiKey: "YOUR_SHOPIFY_API_KEY_HERE",
+        shopifyDomain: "YOUR_SHOPIFY_DOMAIN_HERE",
+    }, extra)
+
+
+    await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow(flows)
+    })
+
+```
+La respuesta del bot debería ser algo como esto.
+
+![ByeFlow](https://imgur.com/eCafkEH.jpg)
+
+## NormalFlows
+
+A veces solo necesitamos un flujo común para proporcionar respuestas inmediatas y controladas. En este caso, simplemente agreguemos el flujo para activar una acción cuando el usuario diga gracias.
+
+```ts
+    const gratefullFlow = addKeyword('/thanks/', 
+    { sensitive: false, regex: true }).addAnswer("Thank you for trusting our store ❤️");
+
+
+    const flows = flow.concat(gratefullFlow)
+
+    const { flow } = await createShopifyFlow({
+        modelName: 'gpt-3.5-turbo-16k',
+        openApiKey: "YOUR_OPEN_API_KEY_HERE",
+        shopifyApiKey: "YOUR_SHOPIFY_API_KEY_HERE",
+        shopifyDomain: "YOUR_SHOPIFY_DOMAIN_HERE"
+    })
+
+    await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow(flows)
+    })
+```
+
+![normalFlow](https://imgur.com/8USmljn.jpg)
+
+## Tests
+Algunas pruebas realizadas en el complemento se pueden encontrar en el siguiente enlace.
+
+Las siguientes pruebas se llevaron a cabo en varios escenarios de la vida real, que van desde la falta de familiaridad hasta la ambigüedad
+
+- [Tests](https://docs.google.com/spreadsheets/d/12zfSJ8F1Uij-vHg3tQxbpFBIrNFbRJ5Y-i0Vw7afDlo/)
+
+## Accuracy
+__ACCURACY FROM PLUGIN__
+
+El complemento fue sometido a varias pruebas conversacionales, que van desde preguntas directas hasta otras más conversacionales.
+
+aquí algunos ejemplos
+
+![pricing](https://imgur.com/Hqg2iKe.jpg)
+![image](https://imgur.com/XWixElU.jpg)
+![colors](https://imgur.com/wfdYgQf.jpg)
+
+El plugin tiene un 97% de precisión cuando la conversación no es ambigua
+
+El complemento tiene una precisión del 96% cuando la conversación no es ambigua. Esto significa que es tan precisa como la pregunta misma.
+Esto no disminuye su potencial.
+
+TODO:
+
+- [ ] Mejora la conversación del historial.
+
+- [ ] Administre preguntas ambiguas en el mismo flujo.
+
+- [ ] Mejorar los trigueros de respuesta por parte de los agentes.
+
+- [ ] Lenguaje dinámico hablado por el usuario.
+
+## References
+__REFERENCE:__\
+[Shopify pluggin](https://github.com/codigoencasa/bot-plugins/tree/feature/shopify/packages/shopify)\
+[Telegram provider](https://github.com/codigoencasa/bot-plugins/tree/feature/shopify/packages/telegram)

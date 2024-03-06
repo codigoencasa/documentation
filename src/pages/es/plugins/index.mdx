@@ -1,0 +1,109 @@
+export const description = 'Contribuyendo con nosotros, uniéndote y codificando lado a lado una gran comunidad'
+
+# CONTRIBUTING
+
+## Welcome
+
+¡Nos alegra que estés interesado en contribuir a nuestro proyecto! Aquí encontrarás toda la información necesaria para empezar a colaborar. Puede contribuir de varias maneras, ya sea actualizando la documentación, mejorando el código, revisando los problemas pendientes en el[issues](https://github.com/codigoencasa/bot-plugins/issues), 
+o incluso realizando aportaciones económicas, que se destinarán a diversos fines relacionados con el desarrollo y mantenimiento del proyecto. Puedes ver más detalles sobre cómo hacer aportaciones económicas [here](https://opencollective.com/bot-whatsapp).
+
+El lenguaje principal que utilizamos en este proyecto es TypeScript, que nos permite mantener un código legible y escalable.
+
+## Frequent Questions
+
+Aquí hay algunas respuestas a las preguntas frecuentes que pueden surgir al contribuir al proyecto:
+
+- **What is Lerna?** Puedes encontrar una definición de esto [video](https://share.vidyard.com/watch/n3HLai7q4kj2yZHL35e3bo).
+- **How do I make commits effectively?** Aqui te muestro como hacerlo [video](https://share.vidyard.com/watch/KjqJ5v2dgdAMdVZeLpJZix)
+- **What are our communication channels?** Puedes unirte a la comunidad [Discord](https://link.codigoencasa.com/DISCORD).
+
+----
+
+## Requirements:
+
+Antes de comenzar a contribuir al proyecto, asegúrese de tener instaladas las siguientes herramientas:
+
+- **Node.js**: Versión 18 o superior. Puede descargar Node desde [here](https://nodejs.org/es/download/).
+- **pnpm**: Gestor de paquetes. Puede instalarlo siguiendo las instrucciones [here](https://pnpm.io/cli/install).
+- **VSCode**: Editor de código que recomendamos, ya que tiene complementos útiles.
+- **Conventional Commits**: Complemento de VSCode que te ayuda a crear confirmaciones semánticas, siguiendo las mejores prácticas. Puedes instalarlo desde [here](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits&ssr=false#overview).
+
+----
+
+## Get Starter
+
+## Make a fork {{not:'true'}}
+
+Antes de comenzar a trabajar en el proyecto, transfiéralo a su propia cuenta de GitHub. Esto le permitirá trabajar en su propia copia del repositorio. Haga clic en el siguiente enlace para bifurcar: [here](https://github.com/codigoencasa/bot-plugins/fork).
+
+### Clone the Repository (from your fork)
+
+Una vez que hayas bifurcado el proyecto, clona tu propia copia del repositorio usando el siguiente comando en tu terminal:
+
+```bash
+git clone https://github.com/TU_USERNAME/bot-plugins
+```
+
+----
+
+## Dependencies install
+
+Vaya a la carpeta del proyecto y ejecute los siguientes comandos para instalar las dependencias necesarias:
+
+```bash
+cd bot-plugins
+pnpm install
+pnpm run build
+```
+
+----
+
+## Create a new integration
+
+Para crear una nueva integración, ejecute el siguiente comando en su terminal:
+
+```bash
+pnpm run create.package <package_name>
+```
+
+---
+
+## compile (build)
+
+Para compilar la aplicación, ejecute el siguiente comando en su terminal. Esto generará un directorio dist dentro de los paquetes de repositorio mono.
+
+```bash
+npx lerna run build --scope=<package_name>
+```
+
+## tests environments
+
+Una vez hayas ejecutado la compilación y todo esté correcto, ejecuta el siguiente comando en tu terminal:
+
+```bash
+pnpm run copy.lib
+```
+
+Este comando copiará los archivos necesarios en la carpeta base_app. Asegúrese de haber ejecutado previamente npm install dentro de la carpeta `base_app` Luego, desde la raíz de su directorio, ejecute:
+
+```bash
+pnpm run copy.lib
+```
+
+Para iniciar el asistente, ejecute:
+
+```bash
+npm run dev
+```
+
+Debería funcionar sin problemas.
+
+## Test End-to-End (E2E)
+
+Todos los cambios realizados deben pasar las pruebas `end-to-end`. Estas pruebas se ejecutan con el siguiente comando:
+
+```bash
+pnpm run test
+```
+
+Asegúrese de tener una carpeta de prueba y archivos con el `.test.ts` para sus `tests`.

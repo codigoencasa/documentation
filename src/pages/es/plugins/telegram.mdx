@@ -1,0 +1,105 @@
+export const description = 'Telegram es un proveedor fácil de usar, en este artículo aprenderá cómo integrar sus bots de Telegram con la biblioteca.'
+
+# Telegram
+
+<Note>
+Crea tu primer bot de Telegram si aún no tienes uno [create your firts Telegram bot](https://core.telegram.org/bots/tutorial "Create your firts Telegra bot")
+</Note>
+
+Para implementar un chatbot en Telegram, debe instalar la biblioteca `@builderbot-plugins/telegram`
+
+## Install
+
+```bash {{ title: 'npm' }}
+    npm install @builderbot-plugins/telegram
+```
+
+```typescript
+    import { createBot, MemoryDB, createProvider, addKeyword, createFlow, EVENTS } from '@bot-whatsapp/bot'
+    import { createShopifyFlow } from '@builderbot-plugins/shopify'
+    import { TelegramProvider } from '@builderbot-plugins/telegram'
+
+    const main = async () => {
+        const provider = createProvider(TelegramProvider, {
+            token: 'YOUR_TOKEN_HERE'
+        })
+
+        const { flow } = await createShopifyFlow()
+
+        await createBot({
+            database: new MemoryDB(),
+            provider,
+            flow: createFlow(flow)
+        })
+
+    }
+    main()
+```
+Al ejecutar el proveedor de Telegram, debería ver algo como esto:
+
+![loaded](https://imgur.com/38pH9Ad.png)
+
+## Flows
+Crea tu primer flujo con Telegram.
+
+```ts
+    /* code stuff */
+
+    const provider = createProvider(TelegramProvider, {
+            token: 'YOUR_TOKEN_HERE'
+    })
+    const welcome = addKeyword(EVENTS.WELCOME).addAnswer('Hi, Welcome to Telegram!');
+
+    await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow([welcome])
+    })
+
+    /* code stuff */
+```
+![flow](https://imgur.com/VC3NvtD.png)
+
+¡Parece magia, cierto!
+
+## Webhook
+
+Muy bien, continuemos. Si necesita exponer un puerto o una API para escuchar y enviar mensajes, puede hacerlo de la siguiente manera.
+
+```typescript
+    import 'dotenv/config'
+    import { createBot, MemoryDB, createProvider, addKeyword, createFlow, EVENTS } from '@bot-whatsapp/bot'
+    import { createShopifyFlow } from '@builderbot-plugins/shopify'
+    import { TelegramProvider, handleCtx } from '@builderbot-plugins/telegram'
+
+    const main = async () => {
+
+        const provider = createProvider(TelegramProvider, {
+            token: "YOUR_TELEGRAM_TOKEN_HERE"
+        })
+
+        provider.initHttpServer(9000)
+            .http.server.post('/webhook', handleCtx((null, req, res) => {
+                    console.log('I am function what doing someting')
+                    res.end('ok')
+            }))
+        
+        const welcomeFlow = addKeyword('Hi!!').addAnswer('Hi!, friend.')
+
+        await createBot({
+            database: new MemoryDB(),
+            provider,
+            flow: createFlow([welcomeFlow])
+        })
+
+    }
+
+    main()
+```
+
+aquí algunas pantallas del ejemplo anterior
+
+![Imgur](https://imgur.com/JgXOUZw.png)
+![Imgur](https://imgur.com/4uRkIrg.png)
+![Imgur](https://imgur.com/7XFKtUc.png)
+![Imgur](https://imgur.com/2zOp2GR.png)

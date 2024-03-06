@@ -1,0 +1,106 @@
+export const description =
+  'En esta guía, hablaremos sobre lo que sucede cuando algo sale mal mientras trabaja con la API.'
+
+# Providers
+
+## Twilio
+
+La plataforma WhatsApp Business permite a medianas y grandes empresas comunicarse con sus clientes a gran escala. Puede iniciar conversaciones con los clientes en solo minutos, enviarles notificaciones de servicio al cliente o actualizaciones de compras, ofrecerles un nivel de servicio personalizado y brindarles asistencia a través del canal que elijan.
+
+<CodeGroup>
+```ts {{ title: 'main.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+/** send static messages */
+const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+
+/** send dynamic message from db or other sources */
+const infoFlow = addKeyword<BaileysProvider, MemoryDB>('info')
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+    })
+
+/** send media files */
+const mediaFlow = addKeyword<BaileysProvider, MemoryDB>('image')
+    .addAnswer(`Send Image A`, { media: 'https://i.imgur.com/AsvWfUX.png' })
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+        await flowDynamic(
+            [
+                {
+                    body: 'Send Image B',
+                    media: 'https://i.imgur.com/w0RtKnN.png'
+                }
+            ]
+        )
+    })
+
+/** initialization bot */
+const main = async () => {
+
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow, infoFlow, mediaFlow])
+    const adapterProvider = createProvider(BaileysProvider)
+
+    adapterProvider.initHttpServer(3000)
+
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+
+```
+
+```js {{ title: 'main.js' }}
+const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@bot-whatsapp/bot')
+const { BaileysProvider } = require('@bot-whatsapp/bot')
+
+/** send static messages */
+const welcomeFlow = addKeyword(['hello', 'hi']).addAnswer('Ey! welcome')
+
+/** send dynamic message from db or other sources */
+const infoFlow = addKeyword('info')
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+    })
+
+/** send media files */
+const mediaFlow = addKeyword('image')
+    .addAnswer(`Send Image A`, { media: 'https://i.imgur.com/AsvWfUX.png' })
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+        await flowDynamic(
+            [
+                {
+                    body: 'Send Image B',
+                    media: 'https://i.imgur.com/w0RtKnN.png'
+                }
+            ]
+        )
+    })
+
+/** initialization bot */
+const main = async () => {
+
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow, infoFlow])
+    const adapterProvider = createProvider(BaileysProvider)
+
+    adapterProvider.initHttpServer(3000)
+
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+
+```
+</CodeGroup>

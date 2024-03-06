@@ -1,0 +1,57 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description =
+  'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
+
+
+
+# Context
+
+El objeto "context" es un componente clave dentro del marco que brinda a los desarrolladores acceso a información esencial sobre la interacción continua entre el usuario y el bot. Esta información incluye propiedades predeterminadas como ' de '(que representa al remitente) y `cuerpo ' (que contiene el mensaje o la entrada del usuario).
+
+Cuando utilizas el metodo [addAnswer](/add-functions#add-keyword) and [addAction](/add-functions#add-action), el objeto context se pasa como primer argumento en las funciones de devolución de llamada. Esto permite a los desarrolladores acceder y manipular las propiedades de los contextos de forma dinámica, lo que permite respuestas y acciones personalizadas basadas en las características específicas de cada interacción del usuario.
+
+
+<CodeGroup>
+
+```ts {{ title: 'flow-addKeyword.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowA = addKeyword('register')
+    .addAnswer('What is your name?', { capture: true }, async (ctx, { state }) => {
+      const responseName = ctx.body
+      const nameFrom = ctx.name
+      const numberFrom = ctx.from
+
+      console.log(`Other properties:`, ctx)
+    })
+
+  export default flowA
+```
+```ts {{ title: 'flow-addAction.ts' }}
+  import { addKeyword } from '@bot-whatsapp/bot';
+
+  const flowB = addKeyword('resume')
+    .addAction(async (ctx, { state }) => {
+      const responseName = ctx.body
+      const nameFrom = ctx.name
+      const numberFrom = ctx.from
+
+      console.log(`Other properties:`, ctx)
+    })
+
+  export default flowB
+```
+</CodeGroup>
+
+Es importante tener en cuenta que las propiedades que siempre tendrá disponibles son from, body, name, pero también tendrá muchas más propiedades diferentes según el [provider](/concepts#provider).
+
+---
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez','lualreye', 'elimeleth']} />
