@@ -1,0 +1,174 @@
+import { Resources } from '@/components/Resources'
+
+export const description =
+  'Este guia irá prepará-lo e pronto para usar a API do Protocolo. Abordaremos como iniciar um cliente de API e como fazer sua primeira solicitação de API.'
+
+## Install
+
+Criar um bot é tão simples quanto executar o seguinte comando e seguir as instruções
+<Note>
+  Pré-requisitos a considerar antes de utilizar esta ferramenta,[Node](https://nodejs.org/en) v20 ou superior e [Git](https://git-scm.com/download)
+</Note>
+
+
+<CodeGroup>
+```bash {{ title: 'pnpm' }}
+pnpm create bot-whatsapp@latest
+```
+
+```bash {{ title: 'npm' }}
+npm create bot-whatsapp@latest
+```
+</CodeGroup>
+
+Utilize a tecla espaço para seleccionar e a tecla enter para confirmar. A CLI realiza uma verificação preliminar do nó e da versão do sistema operativo, informando-o se cumpre os requisitos ou fornecendo-lhe informações relevantes. Além de gerar um projeto de base para você simplesmente iniciar
+
+<video className="rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10" autoPlay loop muted src="https://bot-whatsapp.netlify.app/videos/console.webm"></video>
+
+---
+
+## Requirements
+
+
+Certifique-se de ter instalado o Node versão 20 ou superior, abaixo você pode ver um exemplo para verificar a versão do node que você está usando.
+
+```bash
+node -v
+v20.10.0
+```
+
+<div className="not-prose aling-block">
+  <Button
+    href="https://nodejs.org/en"
+    variant="text"
+    target="_blank"
+    arrow="right"
+    children="Download node from its official website"
+  />
+</div>
+
+Recomenda-se ter o GIT instalado para uma operação adequada. Se você estiver usando Linux ou Macos, provavelmente já tem o GIT instalado por padrão.
+
+```bash
+git -v
+git version XXXX
+```
+
+<div className="not-prose aling-block">
+  <Button
+    href="https://git-scm.com/downloads"
+    variant="text"
+    target="_blank"
+    arrow="right"
+    children="Download GIT from its official website"
+  />
+</div>
+
+---
+
+## Base Example
+
+Neste exemplo, podemos ver a base de um bot simples que responde às palavras-chave enviadas por um usuário, as palavras são: `info, hello, hi`. Você pode ver como criar o bot e implementar o [flows](/concepts#flow).
+
+<CodeGroup>
+```ts {{ title: 'main.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+
+/** send static messages */
+const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+
+/** send dynamic message from db or other sources */
+const infoFlow = addKeyword<BaileysProvider, MemoryDB>('info')
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+    })
+
+/** send media files */
+const mediaFlow = addKeyword<BaileysProvider, MemoryDB>('image')
+    .addAnswer(`Send Image A`, { media: 'https://i.imgur.com/AsvWfUX.png' })
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+        await flowDynamic(
+            [
+                {
+                    body: 'Send Image B',
+                    media: 'https://i.imgur.com/w0RtKnN.png'
+                }
+            ]
+        )
+    })
+
+/** initialization bot */
+const main = async () => {
+
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow, infoFlow, mediaFlow])
+    const adapterProvider = createProvider(BaileysProvider)
+
+    adapterProvider.initHttpServer(3000)
+
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+
+```
+
+```js {{ title: 'main.js' }}
+const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@bot-whatsapp/bot')
+const { BaileysProvider } = require('@bot-whatsapp/bot')
+
+/** send static messages */
+const welcomeFlow = addKeyword(['hello', 'hi']).addAnswer('Ey! welcome')
+
+/** send dynamic message from db or other sources */
+const infoFlow = addKeyword('info')
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+    })
+
+/** send media files */
+const mediaFlow = addKeyword('image')
+    .addAnswer(`Send Image A`, { media: 'https://i.imgur.com/AsvWfUX.png' })
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+        await flowDynamic(
+            [
+                {
+                    body: 'Send Image B',
+                    media: 'https://i.imgur.com/w0RtKnN.png'
+                }
+            ]
+        )
+    })
+
+/** initialization bot */
+const main = async () => {
+
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow, infoFlow])
+    const adapterProvider = createProvider(BaileysProvider)
+
+    adapterProvider.initHttpServer(3000)
+
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+
+```
+</CodeGroup>
+
+---
+
+
+<Resources />

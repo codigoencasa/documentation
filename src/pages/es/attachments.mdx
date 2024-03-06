@@ -1,37 +1,37 @@
 export const description =
-  'Nesta página, vamos nos aprofundar nos diferentes endpoints de anexos que você pode usar para gerenciar anexos programaticamente.'
+  'En esta página, analizaremos los diferentes puntos finales de archivos adjuntos que puede usar para administrar archivos adjuntos mediante programación.'
 
 # Attachments
 
-Anexos são como você compartilha coisas em Protocolo-eles permitem que você envie todos os tipos de arquivos para seus contatos e grupos. Nesta página, vamos nos aprofundar nos diferentes endpoints de anexos que você pode usar para gerenciar anexos programaticamente. Veremos como consultar, carregar, atualizar e excluir anexos. {{className: 'lead'}}
+Los archivos adjuntos son la forma en que compartes cosas en el Protocolo: te permiten enviar todo tipo de archivos a tus contactos y grupos. En esta página, analizaremos los diferentes puntos finales de archivos adjuntos que puede usar para administrar archivos adjuntos mediante programación. Veremos cómo consultar, cargar, actualizar y eliminar archivos adjuntos. {{className: 'lead'}}
 
 ## The attachment model
 
-O modelo de anexo contém todas as informações sobre os ficheiros que envia aos seus contactos e grupos, incluindo o nome, tipo e tamanho.
+El modelo de datos adjuntos contiene toda la información sobre los archivos que envía a sus contactos y grupos, incluidos el nombre, el tipo y el tamaño.
 
 ### Properties
 
 <Properties>
   <Property name="id" type="string">
-Identificador único do anexo.
+    Unique identifier for the attachment.
   </Property>
   <Property name="message_id" type="string">
-Identificador único da mensagem associada ao anexo.
+    Unique identifier for the message associated with the attachment.
   </Property>
   <Property name="filename" type="string">
-O nome do ficheiro do anexo.
+    The filename for the attachment.
   </Property>
   <Property name="file_url" type="string">
-O URL do ficheiro anexo.
+    The URL for the attached file.
   </Property>
   <Property name="file_type" type="string">
-O tipo MIME do ficheiro anexo.
+    The MIME type of the attached file.
   </Property>
   <Property name="file_size" type="integer">
-O tamanho do ficheiro do anexo em bytes.
+    The file size of the attachment in bytes.
   </Property>
   <Property name="created_at" type="timestamp">
-Carimbo de data / hora de quando o anexo foi criado.
+    Timestamp of when the attachment was created.
   </Property>
 </Properties>
 
@@ -42,16 +42,16 @@ Carimbo de data / hora de quando o anexo foi criado.
 <Row>
   <Col>
 
-Este ponto de extremidade permite que você recupere uma lista paginada de todos os seus anexos (em uma conversa, se um ID de conversa for fornecido). Por predefinição, são apresentados um máximo de dez anexos por página.
+Este punto final le permite recuperar una lista paginada de todos sus archivos adjuntos (en una conversación si se proporciona un id de conversación). De forma predeterminada, se muestra un máximo de diez archivos adjuntos por página.
 
     ### Optional attributes
 
     <Properties>
       <Property name="conversation_id" type="string">
-Limite aos anexos de uma determinada conversa.
+Limite los archivos adjuntos de una conversación determinada.
       </Property>
       <Property name="limit" type="integer">
-Limite o número de anexos devolvidos.
+Limite el número de archivos adjuntos devueltos.
       </Property>
     </Properties>
 
@@ -122,13 +122,13 @@ Limite o número de anexos devolvidos.
 <Row>
   <Col>
 
-Este ponto de extremidade permite-lhe carregar um novo anexo para uma conversa. Veja os exemplos de código para saber como enviar o arquivo para a API do Protocolo.
+Este punto final le permite cargar un nuevo archivo adjunto a una conversación. Consulte los ejemplos de código para saber cómo enviar el archivo a la API de protocolo.
 
     ### Required attributes
 
     <Properties>
       <Property name="file" type="string">
-O ficheiro que pretende adicionar como anexo.
+El archivo que desea agregar como archivo adjunto.
       </Property>
     </Properties>
 
@@ -191,7 +191,7 @@ O ficheiro que pretende adicionar como anexo.
 <Row>
   <Col>
 
-    Este ponto de extremidade permite que você recupere um anexo fornecendo o ID do anexo. Referir-se a  [the list](#the-attachment-model) no topo desta página para ver quais propriedades estão incluídas com objetos de anexo.
+   Este punto final le permite recuperar un archivo adjunto proporcionando el id del archivo adjunto. Consulte [the list](#the-attachment-model) en la parte superior de esta página, para ver qué propiedades se incluyen con los objetos adjuntos.
 
   </Col>
   <Col sticky>
@@ -249,13 +249,13 @@ O ficheiro que pretende adicionar como anexo.
 <Row>
   <Col>
 
-Este ponto de extremidade permite que você execute uma atualização em um anexo. Actualmente, o único tipo de actualização suportado é a alteração do nome do ficheiro.
+Este punto final le permite realizar una actualización en un archivo adjunto. Actualmente, el único tipo de actualización admitido es cambiar el nombre del archivo.
 
     ### Optional attributes
 
     <Properties>
       <Property name="filename" type="string">
-O novo nome do ficheiro para o anexo.
+        The new filename for the attachment.
       </Property>
     </Properties>
 
@@ -320,7 +320,7 @@ O novo nome do ficheiro para o anexo.
 <Row>
   <Col>
 
-Este ponto de extremidade permite excluir anexos. Observação: isso excluirá permanentemente o arquivo.
+Este punto final le permite eliminar archivos adjuntos. Nota: Esto eliminará permanentemente el archivo.
 
   </Col>
   <Col sticky>

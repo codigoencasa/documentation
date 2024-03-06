@@ -1,44 +1,44 @@
 export const description =
-  'Nesta página, vamos nos aprofundar nos diferentes endpoints de mensagens que você pode usar para gerenciar mensagens programaticamente.'
+  'En esta página, profundizaremos en los diferentes puntos finales de mensajes que puede usar para administrar mensajes mediante programación.'
 
 # Messages
 
-As mensagens são o que as conversas são feitas no protocolo — eles são os blocos de construção básicos de suas conversas com seus contatos de Protocolo. Nesta página, vamos nos aprofundar nos diferentes endpoints de mensagens que você pode usar para gerenciar mensagens programaticamente. Veremos como consultar, enviar, atualizar e excluir mensagens. {{ className: 'lead' }}
+Los mensajes son de lo que están hechas las conversaciones en el Protocolo: son los componentes básicos de sus conversaciones con sus contactos de Protocolo. En esta página, analizaremos los diferentes puntos finales de mensajes que puede usar para administrar mensajes mediante programación. Veremos cómo consultar, enviar, actualizar y eliminar mensajes. {{className: 'lead'}}
 
 ## The message model
 
-O modelo de mensagem contém todas as informações sobre as mensagens e anexos que envia aos seus contactos e grupos, incluindo a forma como os seus contactos reagiram a eles.
+El modelo de mensajes contiene toda la información sobre los mensajes y archivos adjuntos que envías a tus contactos y grupos, incluida la reacción de tus contactos ante ellos.
 
 ### Properties
 
 <Properties>
-<Property name="id" type= "string">
-Identificador único da mensagem.
-</Property>
-<Property name="conversation_id" type= "string">
-Identificador único para a conversa à qual a mensagem Pertence.
-</Property>
-<Property name="contacto" type= "objecto">
-O objecto de contacto do contacto que enviou a mensagem.
-</Property>
-<Property name="message" type= "string">
-O conteúdo da mensagem.
-</Property>
-<Property name="reactions" type= "array">
-Uma matriz de objetos de reação associados à mensagem.
-</Property>
-<Property name="attachments" type= "array">
-Uma matriz de objetos anexos associados à mensagem.
-</Property>
-<Property name="read_at" type= "timestamp">
-Timestamp de quando a mensagem foi lida.
-</Property>
-<Property name="created_at" type= "timestamp">
-Data e hora de quando a mensagem foi criada.
-</Property>
-<Property name="updated_at" type= "timestamp">
-Data e hora de quando a mensagem foi atualizada pela última vez.
-</Property>
+  <Property name="id" type="string">
+Identificador único del mensaje.
+  </Property>
+  <Property name="conversation_id" type="string">
+Identificador único de la conversación a la que pertenece el mensaje.
+  </Property>
+  <Property name="contact" type="object">
+El objeto de contacto para el contacto que envió el mensaje.
+  </Property>
+  <Property name="message" type="string">
+El contenido del mensaje.
+  </Property>
+  <Property name="reactions" type="array">
+Una matriz de objetos de reacción asociados con el mensaje.
+  </Property>
+  <Property name="attachments" type="array">
+Una matriz de objetos adjuntos asociados con el mensaje.
+  </Property>
+  <Property name="read_at" type="timestamp">
+Marca de tiempo de cuándo se leyó el mensaje.
+  </Property>
+  <Property name="created_at" type="timestamp">
+Marca de tiempo de cuándo se creó el mensaje.
+  </Property>
+  <Property name="updated_at" type="timestamp">
+Marca de tiempo de la última vez que se actualizó el mensaje.
+  </Property>
 </Properties>
 
 ---
@@ -48,16 +48,16 @@ Data e hora de quando a mensagem foi atualizada pela última vez.
 <Row>
   <Col>
 
-Este ponto de extremidade permite que você recupere uma lista paginada de todas as suas mensagens (em uma conversa, se um ID de conversa for fornecido). Por predefinição, são apresentadas no máximo dez mensagens por página.
+Este punto final le permite recuperar una lista paginada de todos sus mensajes (en una conversación si se proporciona un id de conversación). Por defecto, se muestran un máximo de diez mensajes por página.
 
     ### Optional attributes
 
     <Properties>
       <Property name="conversation_id" type="string">
-        Limit to messages from a given conversation.
+Limitar a los mensajes de una conversación determinada.
       </Property>
       <Property name="limit" type="integer">
-        Limit the number of messages returned.
+Limite el número de mensajes devueltos.
       </Property>
     </Properties>
 
@@ -137,16 +137,16 @@ Este ponto de extremidade permite que você recupere uma lista paginada de todas
 <Row>
   <Col>
 
-Este ponto de extremidade permite-lhe enviar uma nova mensagem para uma das suas conversas.
+Este punto final le permite enviar un nuevo mensaje a una de sus conversaciones.
 
     ### Required attributes
 
     <Properties>
       <Property name="conversation_id" type="string">
-Identificador único para a conversa à qual a mensagem Pertence.
+Identificador único de la conversación a la que pertenece el mensaje.
       </Property>
       <Property name="message" type="string">
-O conteúdo da mensagem.
+El contenido del mensaje.
       </Property>
     </Properties>
 
@@ -154,7 +154,7 @@ O conteúdo da mensagem.
 
     <Properties>
       <Property name="attachments" type="array">
-Uma matriz de objetos anexos associados à mensagem.
+Una matriz de objetos adjuntos asociados con el mensaje.
       </Property>
     </Properties>
 
@@ -234,7 +234,7 @@ Uma matriz de objetos anexos associados à mensagem.
 <Row>
   <Col>
 
-   Este ponto de extremidade permite que você recupere uma mensagem fornecendo o ID da mensagem. Referir-se a [the list](#the-message-model) no topo desta página para ver quais propriedades estão incluídas com objetos de mensagem.
+    Este extremo le permite recuperar un mensaje proporcionando el ID del mensaje. Consulte  [the list](#the-message-model) en la parte superior de esta página, para ver qué propiedades se incluyen con los objetos de mensaje.
 
   </Col>
   <Col sticky>
@@ -301,19 +301,19 @@ Uma matriz de objetos anexos associados à mensagem.
 <Row>
   <Col>
 
-Este ponto de extremidade permite que você execute uma atualização em uma mensagem. Exemplos de atualizações são adicionar uma reação, editar a mensagem ou adicionar um anexo.
+Este punto final le permite realizar una actualización de un mensaje. Ejemplos de actualizaciones son agregar una reacción, editar el mensaje o agregar un archivo adjunto.
 
     ### Optional attributes
 
     <Properties>
       <Property name="message" type="string">
-O conteúdo da mensagem.
+El contenido del mensaje.
       </Property>
       <Property name="reactions" type="array">
-Uma matriz de objetos de reação associados à mensagem.
+Una matriz de objetos de reacción asociados con el mensaje.
       </Property>
       <Property name="attachments" type="array">
-Uma matriz de objetos anexos associados à mensagem.
+Una matriz de objetos adjuntos asociados con el mensaje.
       </Property>
     </Properties>
 
@@ -398,7 +398,7 @@ Uma matriz de objetos anexos associados à mensagem.
 <Row>
   <Col>
 
-Este ponto de extremidade permite que você exclua mensagens de suas conversas. Observação: isso excluirá permanentemente a mensagem.
+Este punto final le permite eliminar mensajes de sus conversaciones. Nota: Esto eliminará permanentemente el mensaje.
 
   </Col>
   <Col sticky>

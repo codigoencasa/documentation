@@ -1,0 +1,153 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description =
+  'En esta guía, discutiremos qué hacer cuando algo sale mal mientras trabajamos con la API.'
+
+# Meta
+
+[WhatsApp Business Platform](https://business.whatsapp.com/products/business-platform) permite a medianas y grandes empresas comunicarse con sus clientes a gran escala. Puede iniciar conversaciones con los clientes en solo unos minutos, enviarles notificaciones de servicio al cliente o actualizaciones de compras, ofrecerles un nivel de servicio personalizado y brindarles asistencia a través de su canal preferido.
+
+## Requirements
+
+- Registrar un [Desarrolladores de Facebook](https://developers.facebook.com/apps) cuenta.
+- Deberá verificar su negocio y su solicitud con documentos oficiales, cuyo tipo puede variar según su país.
+- Necesitarás asociar un número de teléfono oficial de tu negocio a tu cuenta que no esté vinculado a ninguna otra cuenta de WhatsApp, ya sea regular o Comercial. Para fines de prueba, Meta proporciona un número de teléfono gratuito.
+- Meta ofrece __1000__ conversaciones gratuitas iniciadas por el cliente al bot y 250 conversaciones gratuitas iniciadas por el bot al cliente. Una vez alcanzado este límite, cada conversación adicional tendrá un costo que puede variar según su país o región.
+---
+
+Debe crear una nueva aplicación. Para ello, haga clic en el boton **Create application**
+
+<Image src="https://i.imgur.com/DKgjwj9.png" />
+
+---
+
+En esta pantalla, debe seleccionar **Company or Business**.
+
+<Image src="https://i.imgur.com/tapmpMk.png" />
+
+---
+
+En el siguiente paso, debe ingresar un nombre para su aplicación, también ingresar una dirección de correo electrónico de contacto y seleccionar la aplicación Comercial de prueba.
+
+<Image src="https://i.imgur.com/cfHLJTJ.png" />
+
+---
+
+Ahora, ve a la sección de Configuración de WhatsApp.
+
+<Image src="https://i.imgur.com/37gMMM5.png" />
+
+---
+
+Esta es la parte donde encontrarás el token de acceso y también puedes ver el número desde donde se envían los mensajes de WhatsApp y hacia dónde se enviarán. Como estás en la versión de prueba, debes registrar los números a los que deseas enviar.
+
+<Image src="https://i.imgur.com/bkSAZn2.png" />
+
+---
+
+En esta misma página, puede encontrar la sección de Webhook que pronto necesitaremos usar.
+
+<Image src="https://i.imgur.com/L3PRcj7.png" />
+
+---
+
+En el **main file** del bot donde está implementando la función meta adapter, colocará los siguientes datos:
+
+- **numberId:** Puedes encontrarlo en la página anterior.
+- **jwtToken:** Puedes encontrarlo en la página anterior.
+- **VerifyToken:** Puedes escribir lo que quieras, es como una palabra clave
+
+<Warning>
+En el siguiente ejemplo, puede ver una sugerencia de cómo se puede hacer esto mediante el uso de variables de entorno
+</Warning>
+
+```js
+const main = async () => {
+    const adapterDB = new MockAdapter()
+    const adapterFlow = createFlow([flowPrincipal])
+
+    const adapterProvider = createProvider(MetaProvider, {
+        jwtToken: process.env.JWTOKEN, //EAARBW3ZBGU0UBAACDjtQIzI8JuEa.............
+        numberId: process.env.NUMBER_ID, //103975305758520
+        verifyToken: process.env.VERIFY_TOKEN, //LO_QUE_SEA,
+        version:'v16.0'
+    })
+
+    createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+```
+
+---
+
+Después de ejecutar el bot, encontrará un mensaje en la consola similar al siguiente. Donde puede encontrar la URL de su **webhook**.
+
+```shell
+$ npm start
+> node app.js
+
+[meta]: Add this url "WHEN A MESSAGE COMES IN"
+[meta]: POST http://localhost:3000/webhook
+[meta]: More information in the documentation
+```
+
+---
+
+## What do I do now?
+
+Notarás que el bot inicia un servicio HTTP (endpoint) que debe estar en línea en un servidor para que puedas conectarlo con Meta.
+---
+
+### Option 1:
+
+Puede realizar pruebas localmente a través de un servidor de túnel proxy.
+Descarga **[ngork](https://ngrok.com/download)**,una herramienta gratuita que nos ayudará.
+
+<Image src="https://i.imgur.com/TjjBtRh.png" />
+
+---
+
+Esto genera una URL en línea que podemos usar en la sección **WebHook** de Metal
+
+<Image src="https://i.imgur.com/NXHMDsf.png" />
+
+---
+
+<Image src="https://i.imgur.com/tpov3D1.png" />
+
+---
+
+<Image src="https://i.imgur.com/haRGylR.png" />
+
+---
+
+<Image src="https://i.imgur.com/cMaIzeC.png" />
+
+---
+
+### Option 2:
+
+Si ya ha implementado su bot en un servidor, debe obtener la IP pública o el subdominio que se le proporcionó. **Ejemplo** si está utilizando
+[Railway](https://railway.app/), puede ir a la sección de configuración y generar un subdominio. Entonces tendríamos el **WebHook**
+`https://base-twilio-memory-production.up.railway.app/twilio-hook`
+
+<Image src="https://i.imgur.com/Yg2BYqB.png" />
+
+---
+
+<Image src="https://i.imgur.com/dIbyEwp.png" />
+
+----
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez', 'elimeleth']} />
