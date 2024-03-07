@@ -15,7 +15,7 @@ En el siguiente ejemplo mostraremos cómo hemos migrado los módulos a un direct
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { createBot } from '@bot-whatsapp/bot';
+  import { createBot } from '@builderbot/bot';
   import { flow } from "./flow";
   import { database } from "./database";
   import { provider } from "./provider";
@@ -36,8 +36,8 @@ En el siguiente ejemplo mostraremos cómo hemos migrado los módulos a un direct
 main()
 ```
 ```ts {{ title: 'provider/index.ts' }}
-  import { createProvider } from '@bot-whatsapp/bot';
-  import { BaileysProvider } from '@bot-whatsapp/provider-baileys';
+  import { createProvider } from '@builderbot/bot';
+  import { BaileysProvider } from '@builderbot/provider-baileys';
 
   export const provider = createProvider(BaileysProvider)
 ```
@@ -45,7 +45,7 @@ main()
   export const database = new MemoryDB()
 ```
 ```ts {{ title: 'flow/index.ts' }}
-  import { createFlow } from '@bot-whatsapp/bot';
+  import { createFlow } from '@builderbot/bot';
   import { flowWelcome } from "./welcome.flow";
   import { byeFlow } from "./bye.flow";
   import { mediaFlow } from "./media.flow";
@@ -54,7 +54,7 @@ main()
   export const flow =  createFlow([flowWelcome, byeFlow, mediaFlow])
 ```
 ```ts {{ title: 'flow/welcome.flow.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot';
+  import { addKeyword, EVENTS } from '@builderbot/bot';
 
   export const flowWelcome = addKeyword(EVENTS.WELCOME)
   .addAction(async (ctx, {flowDynamic, extensions})=> {

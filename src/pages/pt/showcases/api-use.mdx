@@ -24,8 +24,8 @@ No exercício abaixo, você pode obter um exemplo de como funciona. É interessa
 
 ```ts {{title:'app.ts'}}
 import 'dotenv/config'
-import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { createBot, MemoryDB, createProvider } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 import flow from './flows';
 
 const PORT = process.env.PORT ?? 3001
@@ -74,8 +74,8 @@ No exemplo a seguir, você entenderá como enviar arquivos, imagens ou vídeos d
 
 ```ts {{title:'app-media.ts'}}
 import 'dotenv/config'
-import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { createBot, MemoryDB, createProvider } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 import flow from './flows';
 
 const PORT = process.env.PORT ?? 3001
@@ -102,8 +102,8 @@ main()
 ```
 ```ts {{title:'app-media.storage.ts'}}
 import 'dotenv/config'
-import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { createBot, MemoryDB, createProvider } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 import multer from 'multer'
 import flow from './flows';
 

@@ -26,8 +26,8 @@ Below you will find different examples showing the implementation in different u
 The following code represents the quick use of a bot that when you type the word `hi`, greets you with a welcome message and asks you for your name and then returns a funny image
 
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 
 const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hi'])
     .addAnswer('Ey! welcome')

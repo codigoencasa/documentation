@@ -21,11 +21,11 @@ To install quickly with the following command
 
 <CodeGroup>
 ```bash {{ title: 'pnpm' }}
-pnpm create bot-whatsapp@latest
+pnpm create builderbot@latest
 ```
 
 ```bash {{ title: 'npm' }}
-npm create bot-whatsapp@latest
+npm create builderbot@latest
 ```
 </CodeGroup>
 
@@ -48,8 +48,8 @@ In this example we can see the basis of a simple bot which responds to the keywo
 
 <CodeGroup>
 ```ts {{ title: 'main.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 
 const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
 
@@ -78,8 +78,8 @@ main()
 ```
 
 ```js {{ title: 'main.js' }}
-const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@bot-whatsapp/bot')
-const { BaileysProvider } = require('@bot-whatsapp/bot')
+const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@builderbot/bot')
+const { BaileysProvider } = require('@builderbot/bot')
 
 /** send static messages */
 const welcomeFlow = addKeyword(['hello', 'hi']).addAnswer('Ey! welcome')

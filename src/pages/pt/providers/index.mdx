@@ -49,8 +49,8 @@ Cada provedor pode precisar ajustar chaves de acesso, Configurações, entre out
 
 <CodeGroup>
 ```ts {{ title: 'meta-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { MetaProvider } from '@bot-whatsapp/provider-meta';
+import { createProvider } from "@builderbot/bot";
+import { MetaProvider } from '@builderbot/provider-meta';
 
 export type IProvider = typeof MetaProvider
 export const adapterProvider = createProvider(MetaProvider, {
@@ -62,8 +62,8 @@ export const adapterProvider = createProvider(MetaProvider, {
 ```
 
 ```ts {{ title: 'twilio-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { TwilioProvider } from '@bot-whatsapp/provider-twilio';
+import { createProvider } from "@builderbot/bot";
+import { TwilioProvider } from '@builderbot/provider-twilio';
 
 export type IProvider = typeof TwilioProvider
 export const adapterProvider = createProvider(TwilioProvider, {
@@ -75,24 +75,24 @@ export const adapterProvider = createProvider(TwilioProvider, {
 ```
 
 ```ts {{ title: 'baileys-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys';
+import { createProvider } from "@builderbot/bot";
+import { BaileysProvider } from '@builderbot/provider-baileys';
 
 export type IProvider = typeof BaileysProvider
 export const adapterProvider = createProvider(BaileysProvider)
 ```
 
 ```ts {{ title: 'venom-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { VenomProvider } from '@bot-whatsapp/provider-venom';
+import { createProvider } from "@builderbot/bot";
+import { VenomProvider } from '@builderbot/provider-venom';
 
 export type IProvider = typeof VenomProvider
 export const adapterProvider = createProvider(VenomProvider)
 ```
 
 ```ts {{ title: 'wppconnect-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { WPPConnectProvider } from '@bot-whatsapp/provider-wppconnect';
+import { createProvider } from "@builderbot/bot";
+import { WPPConnectProvider } from '@builderbot/provider-wppconnect';
 
 export type IProvider = typeof WPPConnectProvider
 export const adapterProvider = createProvider(WPPConnectProvider)
@@ -113,8 +113,8 @@ Lembre-se de que os seguintes requisitos devem ser atendidos para implementar o 
 
 <CodeGroup>
 ```ts {{ title: 'meta-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { MetaProvider } from '@bot-whatsapp/provider-meta';
+import { createProvider } from "@builderbot/bot";
+import { MetaProvider } from '@builderbot/provider-meta';
 
 export type IProvider = typeof MetaProvider
 export const adapterProvider = createProvider(MetaProvider, {
@@ -125,7 +125,7 @@ export const adapterProvider = createProvider(MetaProvider, {
 })
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
 import { IProvider, adapterProvider } from './meta-provider';
 
 const welcomeFlow = addKeyword<IProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
@@ -154,8 +154,8 @@ Lembre-se de que os seguintes requisitos devem ser atendidos para implementar o 
 
 <CodeGroup>
 ```ts {{ title: 'twilio-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { TwilioProvider } from '@bot-whatsapp/provider-twilio';
+import { createProvider } from "@builderbot/bot";
+import { TwilioProvider } from '@builderbot/provider-twilio';
 
 export type IProvider = typeof TwilioProvider
 export const adapterProvider = createProvider(TwilioProvider, {
@@ -166,7 +166,7 @@ export const adapterProvider = createProvider(TwilioProvider, {
 });
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
 import { IProvider, adapterProvider } from './twilio-provider';
 
 const welcomeFlow = addKeyword<IProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
@@ -198,16 +198,16 @@ Lembre-se de que os seguintes requisitos devem ser atendidos para implementar o 
 
 <CodeGroup>
 ```ts {{ title: 'baileys-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys';
+import { createProvider } from "@builderbot/bot";
+import { BaileysProvider } from '@builderbot/provider-baileys';
 
 export type IProvider = typeof BaileysProvider
 export const adapterProvider = createProvider(BaileysProvider)
 
 ```
 ```ts {{ title: 'baileys-provider-extend.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys';
+import { createProvider } from "@builderbot/bot";
+import { BaileysProvider } from '@builderbot/provider-baileys';
 
 export type IProvider = typeof BaileysProvider
 export const adapterProvider = createProvider(BaileysProvider, {
@@ -220,7 +220,7 @@ export const adapterProvider = createProvider(BaileysProvider, {
 })
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
 import { IProvider, adapterProvider } from './baileys-provider';
 
 const welcomeFlow = addKeyword<IProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
@@ -252,15 +252,15 @@ Lembre-se de que os seguintes requisitos devem ser atendidos para implementar o 
 
 <CodeGroup>
 ```ts {{ title: 'venom-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { VenomProvider } from '@bot-whatsapp/provider-venom';
+import { createProvider } from "@builderbot/bot";
+import { VenomProvider } from '@builderbot/provider-venom';
 
 export type IProvider = typeof VenomProvider
 export const adapterProvider = createProvider(VenomProvider)
 ```
 ```ts {{ title: 'venom-provider-extend.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { VenomProvider } from '@bot-whatsapp/provider-venom';
+import { createProvider } from "@builderbot/bot";
+import { VenomProvider } from '@builderbot/provider-venom';
 
 export type IProvider = typeof VenomProvider
 export const adapterProvider = createProvider(VenomProvider, {
@@ -269,7 +269,7 @@ export const adapterProvider = createProvider(VenomProvider, {
 })
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
 import { IProvider, adapterProvider } from './venom-provider';
 
 const welcomeFlow = addKeyword<IProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
@@ -301,15 +301,15 @@ Lembre-se de que os seguintes requisitos devem ser atendidos para implementar o 
 
 <CodeGroup>
 ```ts {{ title: 'wppconnect-provider.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { WPPConnectProvider } from '@bot-whatsapp/provider-wppconnect';
+import { createProvider } from "@builderbot/bot";
+import { WPPConnectProvider } from '@builderbot/provider-wppconnect';
 
 export type IProvider = typeof WPPConnectProvider
 export const adapterProvider = createProvider(WPPConnectProvider)
 ```
 ```ts {{ title: 'wppconnect-provider-extend.ts' }}
-import { createProvider } from "@bot-whatsapp/bot";
-import { WPPConnectProvider } from '@bot-whatsapp/provider-wppconnect';
+import { createProvider } from "@builderbot/bot";
+import { WPPConnectProvider } from '@builderbot/provider-wppconnect';
 
 export type IProvider = typeof WPPConnectProvider
 export const adapterProvider = createProvider(WPPConnectProviderClass, {
@@ -317,7 +317,7 @@ export const adapterProvider = createProvider(WPPConnectProviderClass, {
 })
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
 import { IProvider, adapterProvider } from './wppconnect-provider';
 
 const welcomeFlow = addKeyword<IProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')

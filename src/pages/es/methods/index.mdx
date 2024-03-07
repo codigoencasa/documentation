@@ -20,7 +20,7 @@ __Remember__ that the state is independent per conversation between user and bot
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { createFlow, MemoryDB, createProvider } from '@bot-whatsapp/bot';
+  import { createFlow, MemoryDB, createProvider } from '@builderbot/bot';
   // ...
   import flowA from './flows/flow-a'
   import flowB from './flows/flow-b'
@@ -41,7 +41,7 @@ __Remember__ that the state is independent per conversation between user and bot
   }
 ```
 ```ts {{ title: 'flow-a.ts' }}
-  import { addKeyword, addAction } from '@bot-whatsapp/bot';
+  import { addKeyword, addAction } from '@builderbot/bot';
 
   const flowA = addKeyword('register')
     .addAnswer('What is your name?', { capture: true }, async (ctx, { state }) => {
@@ -56,7 +56,7 @@ __Remember__ that the state is independent per conversation between user and bot
   export default flowA
 ```
 ```ts {{ title: 'flow-b.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const flowB = addKeyword('resume')
     .addAnswer('ok your name is...', null, async (_, { state, flowDynamic }) => {
@@ -140,7 +140,7 @@ A continuación, puede ver un ejemplo práctico en el que usamos globalState par
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { createFlow, MemoryDB, createProvider } from '@bot-whatsapp/bot';
+  import { createFlow, MemoryDB, createProvider } from '@builderbot/bot';
   // ...
   import flowWelcome from './flows/flow-welcome'
   import flowOnOff from './flows/flow-on-off'
@@ -161,7 +161,7 @@ A continuación, puede ver un ejemplo práctico en el que usamos globalState par
   }
 ```
 ```ts {{ title: 'flow-on-off.ts' }}
-  import { addKeyword, addAction } from '@bot-whatsapp/bot';
+  import { addKeyword, addAction } from '@builderbot/bot';
 
   const flowOnOff = addKeyword('turnOffBot')
     .addAction(async (ctx, { globalState, flowDynamic, endFlow }) => {
@@ -179,7 +179,7 @@ A continuación, puede ver un ejemplo práctico en el que usamos globalState par
 
 ```
 ```ts {{ title: 'flow-welcome.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const flowWelcome = addKeyword('hi')
     .addAction(async (_, { globalState, endFlow }) => {
@@ -371,7 +371,7 @@ Muchas veces necesitará enviar mensajes provenientes de una llamada API o datos
 
 <CodeGroup>
 ```ts {{ title: 'flow-standalone.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const flowStandAlone = addKeyword('register')
     .addAnswer('What is your name?', { capture: true }, async (ctx, { flowDynamic }) => {
@@ -383,7 +383,7 @@ Muchas veces necesitará enviar mensajes provenientes de una llamada API o datos
   export default flowStandAlone
 ```
 ```ts {{ title: 'flow-multiline.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const flowStandAlone = addKeyword('register')
     .addAnswer('Hello!', null, async (ctx, { flowDynamic }) => {
@@ -398,7 +398,7 @@ Muchas veces necesitará enviar mensajes provenientes de una llamada API o datos
   export default flowStandAlone
 ```
 ```ts {{ title: 'flow-list.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const flowProducts = addKeyword('products')
     .addAction( async (_, { flowDynamic }) => {
@@ -482,7 +482,7 @@ Para integrar la función fallBack () en el flujo de interacción del bot, se us
 <CodeGroup>
 
 ```ts {{ title: 'flow-validate-email-custom-error.ts' }}
-import { addKeyword } from '@bot-whatsapp/bot';
+import { addKeyword } from '@builderbot/bot';
 
 const flowEmailRegister = addKeyword('hello')
   .addAnswer('What is your email?', {capture:true}, (ctx, { fallBack }) => {
@@ -494,7 +494,7 @@ const flowEmailRegister = addKeyword('hello')
   });
 ```
 ```ts {{ title: 'flow-validate-email-default-error.ts' }}
-import { addKeyword } from '@bot-whatsapp/bot';
+import { addKeyword } from '@builderbot/bot';
 
 const flowEmailRegister = addKeyword('hello')
   .addAnswer('What is your email?', {capture:true}, (ctx, { fallBack }) => {
@@ -559,7 +559,7 @@ En el código proporcionado, se muestra cómo usar `gotoFlow` para dirigir al us
 <CodeGroup>
 
 ```ts {{ title: 'flow-welcome.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot';
+  import { addKeyword, EVENTS } from '@builderbot/bot';
 
   const flowWelcome = addKeyword('hi')
     .addAnswer('Welcome!', null, async (ctx, { gotoFlow }) => {
@@ -573,7 +573,7 @@ En el código proporcionado, se muestra cómo usar `gotoFlow` para dirigir al us
   export default flowWelcome
 ```
 ```ts {{ title: 'flow-a.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot';
+  import { addKeyword, EVENTS } from '@builderbot/bot';
 
   const flowA = addKeyword(EVENTS.ACTION)
       .addAction(async (_, { flowDynamic }) => {
@@ -583,7 +583,7 @@ En el código proporcionado, se muestra cómo usar `gotoFlow` para dirigir al us
   export default flowA
 ```
 ```ts {{ title: 'flow-b.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot';
+  import { addKeyword, EVENTS } from '@builderbot/bot';
 
   const flowB = addKeyword(EVENTS.ACTION)
     .addAnswer(`It's your first time here! What's your email address?`, 
@@ -594,7 +594,7 @@ En el código proporcionado, se muestra cómo usar `gotoFlow` para dirigir al us
   export default flowB
 ```
 ```ts {{ title: 'app.ts' }}
-  import { createFlow, MemoryDB, createProvider } from '@bot-whatsapp/bot';
+  import { createFlow, MemoryDB, createProvider } from '@builderbot/bot';
   // ...
   import flowWelcome from './flows/flow-welcome'
   import flowA from './flows/flow-a'
@@ -656,7 +656,7 @@ Imagine un caso en el que desea hablar con un contacto sin la intervención del 
     }))
 ```
 ```ts {{ title: 'flow-mute.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const flowMute = addKeyword('hi')
       .addAction(async (ctx, { flowDynamic, blacklist }) => {
@@ -674,7 +674,7 @@ Imagine un caso en el que desea hablar con un contacto sin la intervención del 
   export default flowMute
 ```
 ```ts {{ title: 'flow-check-if.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const flowCheckIf = addKeyword('hi')
       .addAction(async (ctx, { flowDynamic, blacklist }) => {

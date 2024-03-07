@@ -24,8 +24,8 @@ In the exercise below you can get an example of how it works. It is interesting 
 
 ```ts {{title:'app.ts'}}
 import 'dotenv/config'
-import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { createBot, MemoryDB, createProvider } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 import flow from './flows';
 
 const PORT = process.env.PORT ?? 3001
@@ -74,8 +74,8 @@ In the following example you will understand how to send files, images or videos
 
 ```ts {{title:'app-media.ts'}}
 import 'dotenv/config'
-import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { createBot, MemoryDB, createProvider } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 import flow from './flows';
 
 const PORT = process.env.PORT ?? 3001
@@ -102,8 +102,8 @@ main()
 ```
 ```ts {{title:'app-media.storage.ts'}}
 import 'dotenv/config'
-import { createBot, MemoryDB, createProvider } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { createBot, MemoryDB, createProvider } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 import multer from 'multer'
 import flow from './flows';
 
@@ -142,6 +142,103 @@ const main = async () => {
 main()
 ```
 </CodeGroup>
+
+---
+
+## Block Users
+
+  <CodeGroup title="Request" tag="POST" label="/v1/blacklist">
+  ```bash {{ title: 'BlackList API' }}
+  curl https://api.example.chat/v1/blacklist \
+    -d number="34000000" \
+    -d intent="'add' or 'remove'"
+  ```
+  </CodeGroup>
+
+In the following example you will understand how to add numbers to a blacklist to prevent the bot from answering those numbers, very useful when we want to talk to a person without the bot answering.
+
+```ts {{title:'blacklist-api.ts'}}
+import { createBot, MemoryDB, createProvider } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
+import flow from './flows';
+
+const PORT = process.env.PORT ?? 3001
+
+const main = async () => {
+    const provider = createProvider(BaileysProvider)
+
+    const { handleCtx, httpServer } = await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow,
+    })
+
+    httpServer(+PORT)
+
+    provider.http.server.post('/v1/blacklist', handleCtx(async (bot, req, res) => {
+        const { number, intent } = req.body
+        if (intent === 'remove') bot.blacklist.remove(`340000000`)
+        if (intent === 'add') bot.blacklist.add(`340000000`)
+
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        return res.end(JSON.stringify({ status: 'ok', number, intent }))
+    }))
+}
+
+main()
+```
+
+---
+
+## Trigger Flows 
+
+  <CodeGroup title="Request" tag="POST" label="/v1/register">
+  ```bash {{ title: 'Send Register Form' }}
+  curl https://api.example.chat/v1/register \
+    -d number="34000000" \
+    -d name ="Joe"
+  ```
+  </CodeGroup>
+
+In the following example you will understand how to start a flow to a given number from an API request, it is a new experimental function that may undergo changes in the future.
+
+```ts {{title:'trigger-flow-api.ts'}}
+import { createBot, MemoryDB, createProvider } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
+
+const PORT = process.env.PORT ?? 3001
+
+const registerFlow = addKeyword(utils.setEvent('EVENT_REGISTER'))
+    .addAnswer(`What is your name?`, { capture: true }, async (ctx, { state }) => {
+        await state.update({ name: ctx.body })
+    })
+    .addAnswer('What is your age?', { capture: true }, async (ctx, { state }) => {
+        await state.update({ age: ctx.body })
+    })
+    .addAction(async (_, { flowDynamic, state }) => {
+        await flowDynamic(`${state.get('name')}, thanks for your information!: Your age: ${state.get('age')}`)
+    })
+
+const main = async () => {
+    const provider = createProvider(BaileysProvider)
+
+    const { handleCtx, httpServer } = await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow([registerFlow]),
+    })
+
+    httpServer(+PORT)
+
+    provider.http.server.post('/v1/register', handleCtx(async (bot, req, res) => {
+        const { number, name } = req.body
+        await bot.dispatch('EVENT_REGISTER', { from: number, name })
+        return res.end('trigger')
+    }))
+}
+
+main()
+```
 
 ---
 

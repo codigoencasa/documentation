@@ -17,7 +17,7 @@ Cuando utilizas el metodo [addAnswer](/add-functions#add-keyword) and [addAction
 <CodeGroup>
 
 ```ts {{ title: 'flow-addKeyword.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const flowA = addKeyword('register')
     .addAnswer('What is your name?', { capture: true }, async (ctx, { state }) => {
@@ -31,7 +31,7 @@ Cuando utilizas el metodo [addAnswer](/add-functions#add-keyword) and [addAction
   export default flowA
 ```
 ```ts {{ title: 'flow-addAction.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const flowB = addKeyword('resume')
     .addAction(async (ctx, { state }) => {

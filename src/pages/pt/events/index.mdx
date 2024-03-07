@@ -28,13 +28,13 @@ Vamos imaginar o caso em que uma pessoa escreve a palavra `Thank you!`
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  import { addKeyword, EVENTS } from '@builderbot/bot'
   
   const welcomeFlow = addKeyword(EVENTS.WELCOME).addAnswer('Ey welcome?')
   const greetingFlow = addKeyword(['hello','hi']).addAnswer('Hi!')
 ```
 ```js {{ title: 'app.js' }}
-  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  const { addKeyword, EVENTS } = require('@builderbot/bot')
   
   const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('Message hello')
 ```
@@ -77,12 +77,12 @@ Quando um usuário envia uma imagem ou um vídeo, o evento de mídia, que é o e
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  import { addKeyword, EVENTS } from '@builderbot/bot'
   
   const mediaFlow = addKeyword(EVENTS.MEDIA).addAnswer('I received a media image/video')
 ```
 ```js {{ title: 'app.js' }}
-  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  const { addKeyword, EVENTS } = require('@builderbot/bot')
   
   const mediaFlow = addKeyword(EVENTS.MEDIA).addAnswer('I received a media image/video')
 ```
@@ -94,8 +94,8 @@ Para salvar o arquivo de mídia, você deve invocar a função saveFile do prove
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
-  import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+  import { addKeyword, EVENTS } from '@builderbot/bot'
+  import { BaileysProvider } from '@builderbot/provider-baileys'
 
   const mediaFlow = addKeyword<BaileysProvider>(EVENTS.MEDIA)
   .addAnswer('I received a media image/video', async (ctx, { provider }) => {
@@ -104,8 +104,8 @@ Para salvar o arquivo de mídia, você deve invocar a função saveFile do prove
   })
 ```
 ```js {{ title: 'app.js' }}
-  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
-  const { BaileysProvider } = require('@bot-whatsapp/bot')
+  const { addKeyword, EVENTS } = require('@builderbot/bot')
+  const { BaileysProvider } = require('@builderbot/bot')
   
   const mediaFlow = addKeyword(EVENTS.MEDIA)
   .addAnswer('I received a media image/video', async (ctx, { provider }) => {
@@ -122,7 +122,7 @@ Para salvar o arquivo de mídia, você deve invocar a função saveFile do prove
 Quando um usuário envia um documento, o evento DOCUMENT será acionado por padrão, que é o evento padrão.
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  import { addKeyword, EVENTS } from '@builderbot/bot'
   
   const documentFlow = addKeyword(EVENTS.DOCUMENT)
   .addAnswer("Wow! I'm sorry I can't read this document right now", async (ctx, { provider }) => {
@@ -131,7 +131,7 @@ Quando um usuário envia um documento, o evento DOCUMENT será acionado por padr
   })
 ```
 ```js {{ title: 'app.js' }}
-  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  const { addKeyword, EVENTS } = require('@builderbot/bot')
   
   const documentFlow = addKeyword(EVENTS.DOCUMENT)
   .addAnswer("Wow! I'm sorry I can't read this document right now", async (ctx, { provider }) => {
@@ -174,7 +174,7 @@ Para aceder aos dados de localização, pode utilizar a seguinte abordagem:
 
 <CodeGroup>
 ```ts {{ title: 'location.flow.ts' }}
-import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
+import { EVENTS, addKeyword } from "@builderbot/bot";
 
 export default addKeyword(EVENTS.LOCATION)
 .addAnswer("I have received your location!", null, async (ctx) => {
@@ -183,7 +183,7 @@ export default addKeyword(EVENTS.LOCATION)
 })
 ```
 ```js {{ title: 'location.flow.js' }}
-const { EVENTS, addKeyword } = require("@bot-whatsapp/bot");
+const { EVENTS, addKeyword } = require("@builderbot/bot");
 
 export default addKeyword(EVENTS.LOCATION)
 .addAnswer("I have received your location!", null, async (ctx) => {
@@ -201,7 +201,7 @@ Quando um utilizador envia uma nota de voz, o VOICE_NOTE evento será acionado p
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  import { addKeyword, EVENTS } from '@builderbot/bot'
   
   const voiceNoteFlow = addKeyword(EVENTS.VOICE_NOTE)
   .addAnswer('Give me a second to hear you!', async (ctx, { provider }) => {
@@ -211,7 +211,7 @@ Quando um utilizador envia uma nota de voz, o VOICE_NOTE evento será acionado p
   
 ```
 ```js {{ title: 'app.js' }}
-  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  const { addKeyword, EVENTS } = require('@builderbot/bot')
   
   const voiceNoteFlow = addKeyword(EVENTS.VOICE_NOTE)
   .addAnswer('Give me a second to hear you!', async (ctx, { provider }) => {

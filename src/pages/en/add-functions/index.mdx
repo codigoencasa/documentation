@@ -26,14 +26,14 @@ Some of these functions are: [regex](add-functions#regex), [sensitive](add-funct
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const mainFlow = addKeyword(['hello', 'hi'])
       .addAnswer(['Hi, welcome to my amazing shop', 'how can I help you?'])
       .addAnswer(['The shop has: ', 'shoes, shirts, pants, and hats'])
 ```
 ```js {{ title: 'app.js' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const mainFlow = addKeyword(['hello', 'hi'])
       .addAnswer(['Hi, welcome to my amazing shop', 'how can I help you?'])
@@ -57,13 +57,13 @@ The conversation flow can be limited to a specific __keyword__, in example the w
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const mainFlow = addKeyword('buy')
       .addAnswer(['Great! ', 'What do you want to buy?'])
 ```
 ```js {{ title: 'app.js' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const mainFlow = addKeyword('purchase')
       .addAnswer(['Great! ', 'What do you want to buy?'])
@@ -82,7 +82,7 @@ The chatbot supports regex validation, in the following example an object is pas
   <Col sticky>
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const REGEX_GMAIL_EMAIL = /(\w+)@gmail\.com/g;
 
@@ -91,7 +91,7 @@ The chatbot supports regex validation, in the following example an object is pas
       .addAnswer(`Thanks for the gmail address`)
 ```
 ```js {{ title: 'app.js' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const REGEX_GMAIL_EMAIL = /(\w+)@gmail\.com/g;
 
@@ -114,13 +114,13 @@ The chatbot detects an specific keyword in any part of a message, but passing th
   <Col sticky>
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const mainFlow = addKeyword('buy', { sensitive: true })
       .addAnswer(['Great! ', 'What do you want to buy?'])
 ```
 ```js {{ title: 'app.js' }}
-  import { addKeyword } from '@bot-whatsapp/bot';
+  import { addKeyword } from '@builderbot/bot';
 
   const mainFlow = addKeyword('buy', { sensitive: true })
       .addAnswer(['Great! ', 'What do you want to buy?'])
@@ -140,13 +140,13 @@ then the chatbot will send a message using `addAnswer` with the text __'Hi, welc
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+  import { addKeyword, addAnswer } from '@builderbot/bot';
 
   const mainFlow = addKeyword('hello')
       .addAnswer('Hi, welcome to my amazing shop, how can I help you?')
 ```
 ```js {{ title: 'app.js' }}
-  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+  import { addKeyword, addAnswer } from '@builderbot/bot';
 
   const mainFlow = addKeyword('hello')
       .addAnswer('Hi, welcome to my amazing shop, how can I help you?')
@@ -172,7 +172,7 @@ The chatbot can send multiple messages just adding the addAnswer function one af
   <Col sticky>
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+  import { addKeyword, addAnswer } from '@builderbot/bot';
 
   const mainFlow = addKeyword('hello')
       .addAnswer('Hi')
@@ -180,7 +180,7 @@ The chatbot can send multiple messages just adding the addAnswer function one af
       .addAnswer('how can I help you?')
 ```
 ```js {{ title: 'app.js' }}
-  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+  import { addKeyword, addAnswer } from '@builderbot/bot';
 
   const mainFlow = addKeyword('hello')
       .addAnswer('Hi')
@@ -201,7 +201,7 @@ Whenever you need to send a message with line breaks, you can use an array of st
   <Col sticky>
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+  import { addKeyword, addAnswer } from '@builderbot/bot';
 
   const mainFlow = addKeyword('hello')
       .addAnswer([
@@ -210,7 +210,7 @@ Whenever you need to send a message with line breaks, you can use an array of st
       ])
 ```
 ```js {{ title: 'app.js' }}
-  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+  import { addKeyword, addAnswer } from '@builderbot/bot';
 
   const mainFlow = addKeyword('hello')
       .addAnswer([
@@ -232,7 +232,7 @@ The chatbot can send a message with a `delay`, just add the addAnswer function w
   <Col sticky>
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+import { addKeyword, addAnswer } from '@builderbot/bot';
 
 const mainFlow = addKeyword('hello')
   .addAnswer('This message will after 2 seconds',
@@ -240,7 +240,7 @@ const mainFlow = addKeyword('hello')
   )
 ```
 ```js {{ title: 'app.js' }}
-import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+import { addKeyword, addAnswer } from '@builderbot/bot';
 
 const mainFlow = addKeyword('hello')
   .addAnswer('This message will after 2 seconds',
@@ -260,7 +260,7 @@ When using callback functions in an addAnswers the operation prioritizes the sen
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+  import { addKeyword, addAnswer } from '@builderbot/bot';
 
   const mainFlow = addKeyword('hello')
       .addAnswer('Hi!, Do you know 4+4?', null, async (_, {flowDynamic}) => {
@@ -272,7 +272,7 @@ When using callback functions in an addAnswers the operation prioritizes the sen
       })
 ```
 ```js {{ title: 'app.js' }}
-  import { addKeyword, addAnswer } from '@bot-whatsapp/bot';
+  import { addKeyword, addAnswer } from '@builderbot/bot';
 
   const mainFlow = addKeyword('hello')
       .addAnswer('Hi!, Do you know 4+4?', null, async (_, {flowDynamic}) => {
@@ -309,7 +309,7 @@ In the folowing example you can see how you can trigger a function when the user
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, addAction } from '@bot-whatsapp/bot';
+  import { addKeyword, addAction } from '@builderbot/bot';
 
   const mainFlow = addKeyword('buy')
       .addAnswer('Great! What do you want to buy?')
@@ -318,7 +318,7 @@ In the folowing example you can see how you can trigger a function when the user
       })
 ```
 ```js {{ title: 'app.js' }}
-  import { addKeyword, addAction } from '@bot-whatsapp/bot';
+  import { addKeyword, addAction } from '@builderbot/bot';
 
   const mainFlow = addKeyword('buy')
       .addAnswer('Great! What do you want to buy?')
@@ -333,7 +333,7 @@ You can use the `addAction` function with `capture` as you can see in the exampl
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, addAction } from '@bot-whatsapp/bot';
+  import { addKeyword, addAction } from '@builderbot/bot';
 
   const mainFlow = addKeyword(['Hello', 'Hi'])
       .addAction(async (_, { fowDynamic }): void => {
@@ -345,7 +345,7 @@ You can use the `addAction` function with `capture` as you can see in the exampl
       })
 ```
 ```js {{ title: 'app.js' }}
-  import { addKeyword, addAction } from '@bot-whatsapp/bot';
+  import { addKeyword, addAction } from '@builderbot/bot';
 
   const mainFlow = addKeyword(['Hello', 'Hi'])
       .addAction(async (_, { fowDynamic }) => {

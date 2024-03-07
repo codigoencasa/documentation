@@ -9,8 +9,8 @@ The WhatsApp Business Platform enables medium and large businesses to communicat
 
 <CodeGroup>
 ```ts {{ title: 'main.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 
 /** send static messages */
 const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
@@ -57,8 +57,8 @@ main()
 ```
 
 ```js {{ title: 'main.js' }}
-const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@bot-whatsapp/bot')
-const { BaileysProvider } = require('@bot-whatsapp/bot')
+const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@builderbot/bot')
+const { BaileysProvider } = require('@builderbot/bot')
 
 /** send static messages */
 const welcomeFlow = addKeyword(['hello', 'hi']).addAnswer('Ey! welcome')
