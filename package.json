@@ -54,7 +54,7 @@
     "prettier": "^3.2.5",
     "prettier-plugin-pkg": "^0.18.1",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "vercel": "^33.5.1",
+    "vercel": "^33.5.5",
     "yarn-upgrade-all": "^0.7.2"
   }
 }
