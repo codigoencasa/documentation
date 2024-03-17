@@ -218,6 +218,8 @@ export const navigation = [
       { title: 'Queue limit', href: '/showcases/queue-limit' },
       { title: 'Modularize', href: '/showcases/modularize' },
       { title: 'Fast Entries', href: '/showcases/fast-entires' },
+      { title: 'Idle', href: '/showcases/idle-optional' },
+      { title: 'Scheduled Reboots', href: '/showcases/docker-pm2' },
       { title: 'API Rest', href: '/showcases/api-use' },
     ],
   },
