@@ -210,6 +210,7 @@ export const navigation = [
       { title: 'Methods', href: '/methods' },
       { title: 'Databases', href: '/databases' },
       { title: 'Providers', href: '/providers' },
+      { title: 'Deploy', href: '/deploy' },
     ],
   },
   {

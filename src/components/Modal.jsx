@@ -7,7 +7,7 @@ export function Modal({ src, alt, caption, onClose }) {
       <span className="modal-close absolute shadow-sm rounded-sm bg-white p-2 z-10 -top-5 -right-2 cursor-pointer" onClick={onClose}>
           <TimesIcon />
         </span>
-        <img className="modal-content rounded-md m-0 object-contain h-full w-full mx-auto" src={src} alt={alt} /></div>
+        <img className="modal-content rounded-md m-0 object-contain max-h-[800px] h-full my-auto w-full mx-auto" src={src} alt={alt} /></div>
     </div>
   );
 }
