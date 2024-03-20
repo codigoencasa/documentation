@@ -106,11 +106,7 @@ Below you will find more information about each of these databases.
 
 ## Memory
 
-The [WhatsApp Business Platform](https://business.whatsapp.com/products/business-platform) enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service notifications or purchase updates, offer them a personalized level of service, and provide support through the channel of their choice.
-
-<Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information](/databases/memory)
-</Warning>
+The Memory database, often called a Mock database, operates without storing bot-generated responses and needs no configuration. Primarily used for testing and development, it offers a lightweight and convenient solution. This database type is ideal for scenarios where data persistence isn't necessary, facilitating quick prototyping and efficient debugging without managing persistent data storage overhead.
 
 <CodeGroup>
 ```ts {{ title: 'memory-database.ts' }}
@@ -142,11 +138,8 @@ main()
 
 ## Json
 
-[Twilio](https://www.twilio.com/en-us/messaging/channels/whatsapp) is a development platform that enables developers to build cloud communication applications and web systems. Twilio's communications APIs enable businesses to provide the right communication experience for their customers within web and mobile applications. By using Twilio APIs, developers can quickly add this functionality to an application, such as voice messaging, video calls, text messaging and more.
-
-<Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information](/providers/twilio)
-</Warning>
+[JSON](https://www.json.org/) database provides the benefit of securely storing bot-generated responses in a local file, ensuring durability across sessions. Utilizing this database type requires specifying a file path (`filename`) where the JSON data will be stored. It proves particularly valuable when preserving conversation history or user interactions is imperative.
+By enabling structured data storage, it simplifies data retrieval and analysis, rendering it appropriate for applications where data persistence and retrieval play a critical role.
 
 <CodeGroup>
 ```ts {{ title: 'json-database.ts' }}
@@ -178,14 +171,9 @@ main()
 
 ## Mongo
 
-[Baileys](https://whiskeysockets.github.io/) is an open source project which allows sending messages, receiving messages and dozens of other features by implementing WebSocket in a version of whatsapp.
-It is a project with great trajectory driven by people with great knowledge of the subject, you can deepen in this library directly in its documentation or [repository](https://github.com/WhiskeySockets/Baileys).
+[MongoDB](https://www.mongodb.com/en/what-is-mongodb) strength lies in its flexible document-oriented structure, which requires configuration parameters like the database URI and name (`dbUri`, `dbName`). Its scalable architecture provides robust storage capabilities, ideal for handling large data volumes.
 
-Because this is a free provider that emulates the whatsapp web interface, you must scan the QR to log in.
-
-<Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information](/providers/baileys)
-</Warning>
+By embracing a NoSQL approach, MongoDB offers flexibility in schema design, effortlessly accommodating evolving application needs. It proves particularly suitable for environments requiring high-performance data storage and retrieval, thanks to its efficient indexing and querying functionalities.
 
 <CodeGroup>
 ```ts {{ title: 'mongo-database.ts' }}
@@ -220,15 +208,9 @@ main()
 
 ## MySQL
 
-[Venom](https://github.com/orkestral/venom) is an open-source project that utilizes JavaScript to create high-performance bots for WhatsApp. It supports a wide range of interactions including customer care, media sending, AI-based phrase recognition, and various architectural designs tailored for WhatsApp.
-You can visit their [official](https://orkestral.io/) website as the repository to understand other features you can use.
+[MySQL](https://www.mysql.com/) database, a widely embraced relational database management system, provides strong data storage capabilities for storing bot-generated responses. When integrating with MySQL, essential parameters such as `host`, `user`, `password`, and the `database` name must be specified. This database variant assures data durability and scalability, rendering it well-suited for applications demanding high-performance data storage and retrieval.
 
-
-Because this is a free provider that emulates the whatsapp web interface, you must scan the QR to log in.
-
-<Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information](/providers/venom)
-</Warning>
+With MySQL, developers can harness advanced querying features and transaction support, facilitating efficient management of bot-generated data within a structured and secure framework.
 
 <CodeGroup>
 ```ts {{ title: 'mysql-database.ts' }}
@@ -265,14 +247,9 @@ main()
 
 ## Postgres
 
-[WPPConnect](https://wppconnect.io) is an open source project developed by the JavaScript community with the aim of exporting functions from WhatsApp Web to the node, which can be used to support the creation of any interaction, such as customer service, media sending, intelligence recognition based on phrases artificial and many other things, use your imagination
-You can visit their official website as the [repository](https://github.com/wppconnect-team/wppconnect) to understand other features you can use.
+[PostgreSQL](https://www.postgresql.org/) database, celebrated for its reliability and cutting-edge features, presents formidable data storage solutions for bot-generated responses. Seamless integration with PostgreSQL entails specifying vital parameters such as `host`, `user`, `password`, `database` name, and `port`. This database variant guarantees data integrity and scalability, rendering it optimal for applications requiring top-tier data storage and retrieval performance.
 
-Because this is a free provider that emulates the whatsapp web interface, you must scan the QR to log in.
-
-<Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information](/providers/wpp-connect)
-</Warning>
+PostgreSQL's flexible architecture and endorsement of advanced data types empower developers to craft sophisticated bots endowed with extensive functionality. Leveraging PostgreSQL equips developers with potent querying capabilities, transactional support, and comprehensive data management features, fostering the creation of resilient and efficient bot systems.
 
 <CodeGroup>
 ```ts {{ title: 'postgres-database.ts' }}
@@ -308,4 +285,4 @@ main()
 
 ---
 
-<Contributors users={['leifermendez']} />
+<Contributors users={['leifermendez', 'hhsm95']} />
