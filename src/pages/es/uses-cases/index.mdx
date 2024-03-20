@@ -26,8 +26,8 @@ A continuación encontrará diferentes ejemplos que muestran la implementación 
 El siguiente código representa el uso rápido de un bot que cuando escribes la palabra `hola`, te saluda con un mensaje de bienvenida y te pregunta tu nombre y luego devuelve una imagen divertida
 
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 
 const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hi'])
     .addAnswer('Ey! welcome')

@@ -22,13 +22,13 @@ Refers to creating structured sequences of interactions, as in building conversa
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-import { addKeyword } from '@bot-whatsapp/bot'
+import { addKeyword } from '@builderbot/bot'
 
 addKeyword(['hello','hi']).addAnswer('Ey! welcome')
 ```
 
 ```js {{ title: 'app.js' }}
-const { addKeyword } = require('@bot-whatsapp/bot') 
+const { addKeyword } = require('@builderbot/bot') 
 
 addKeyword(['hello','hi']).addAnswer('Ey! welcome')
 ```
@@ -67,8 +67,8 @@ It is a key piece used to deliver the message to the chosen supplier. In a case 
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 
 // ...stuff code...
 
@@ -85,8 +85,8 @@ main()
 ```
 
 ```ts {{ title: 'provider.wppconnect.ts' }}
-import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
-import { WPPConnectProviderClass } from '@bot-whatsapp/provider-wppconnect'
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@builderbot/bot'
+import { WPPConnectProviderClass } from '@builderbot/provider-wppconnect'
 
 // ...stuff code...
 
@@ -103,8 +103,8 @@ main()
 ```
 
 ```ts {{ title: 'provider.meta.ts' }}
-import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
-import { MetaProvider } from '@bot-whatsapp/provider-meta'
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@builderbot/bot'
+import { MetaProvider } from '@builderbot/provider-meta'
 
 // ...stuff code...
 
@@ -145,8 +145,8 @@ It is ready to implement adapters from [Mongo](/databases#mongo), [MySQL](/datab
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 
 // ...stuff code...
 
@@ -163,8 +163,8 @@ main()
 ```
 
 ```ts {{ title: 'provider.wppconnect.ts' }}
-import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
-import { WPPConnectProviderClass } from '@bot-whatsapp/provider-wppconnect'
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@builderbot/bot'
+import { WPPConnectProviderClass } from '@builderbot/provider-wppconnect'
 
 // ...stuff code...
 
@@ -181,8 +181,8 @@ main()
 ```
 
 ```ts {{ title: 'provider.meta.ts' }}
-import { addKeyword, MemoryDB, createProvider, createFlow } from '@bot-whatsapp/bot'
-import { MetaProvider } from '@bot-whatsapp/provider-meta'
+import { addKeyword, MemoryDB, createProvider, createFlow } from '@builderbot/bot'
+import { MetaProvider } from '@builderbot/provider-meta'
 
 // ...stuff code...
 

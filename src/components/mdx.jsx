@@ -21,7 +21,7 @@ export const Image = function Img(props) {
   <>
   <img 
   onClick={showModal}
-  className='not-prose cursor-pointer aling-block my-6 overflow-hidden rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10' {...props} />
+  className='not-prose justify-center text-center cursor-pointer aling-block my-6 overflow-hidden max-h-[800px]  rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10' {...props} />
         {isOpen && (
         <Modal
           src={props.src}

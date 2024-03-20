@@ -1,3 +1,7 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
 export const description = 'Telegram is a user-friendly provider, in this article you will learn how to integrate your Telegram bots with the library.'
 
 # Telegram
@@ -6,100 +10,57 @@ export const description = 'Telegram is a user-friendly provider, in this articl
 Create your first Telegram bot if you don't have one yet [create your firts Telegram bot](https://core.telegram.org/bots/tutorial "Create your firts Telegra bot")
 </Note>
 
-To implement a chatbot on Telegram, you need to install the library `@builderbot-plugins/telegram`
+Implementing a new communication channel such as telegram without affecting the logic of your project is very simple. Below you can find the starting point to implement the new telegram provider.
 
 ## Install
-
+<CodeGroup>
+```bash {{ title: 'pnpm' }}
+    pnpm install @builderbot-plugins/telegram
+```
 ```bash {{ title: 'npm' }}
     npm install @builderbot-plugins/telegram
 ```
+</CodeGroup>
 
 ```typescript
-    import { createBot, MemoryDB, createProvider, addKeyword, createFlow, EVENTS } from '@bot-whatsapp/bot'
-    import { createShopifyFlow } from '@builderbot-plugins/shopify'
-    import { TelegramProvider } from '@builderbot-plugins/telegram'
+import { createBot, MemoryDB, createProvider, addKeyword, createFlow } from '@builderbot/bot'
+import { TelegramProvider } from '@builderbot-plugins/telegram'
 
-    const main = async () => {
-        const provider = createProvider(TelegramProvider, {
-            token: 'YOUR_TOKEN_HERE'
-        })
-
-        const { flow } = await createShopifyFlow()
-
-        await createBot({
-            database: new MemoryDB(),
-            provider,
-            flow: createFlow(flow)
-        })
-
-    }
-    main()
-```
-When running the Telegram provider, you should see something like this:
-
-![loaded](https://imgur.com/38pH9Ad.png)
-
-## Flows
-Create your first flow with Telegram.
-
-```ts
-    /* code stuff */
-
-    const provider = createProvider(TelegramProvider, {
-            token: 'YOUR_TOKEN_HERE'
+const welcomeFlow = addKeyword(['hi'])
+    .addAnswer('Ey! welcome')
+    .addAnswer('Your name is?', { capture: true }, async (ctx, { flowDynamic }) => {
+        await flowDynamic([`nice! ${ctx.body}`,'I will send you a funny image'])
     })
-    const welcome = addKeyword(EVENTS.WELCOME).addAnswer('Hi, Welcome to Telegram!');
+    .addAction(async(_ , {flowDynamic}) => {
+        const dataApi = await fetch(`https://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true`)
+        const [imageUrl] = await dataApi.json()
+        await flowDynamic([{body:'😜', media: imageUrl}])
+    })
+
+
+const main = async () => {
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(TelegramProvider, {
+        token: 'YOUR_TELEGRAM_TOKEN_HERE'
+    })
 
     await createBot({
-        database: new MemoryDB(),
-        provider,
-        flow: createFlow([welcome])
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
     })
+}
 
-    /* code stuff */
-```
-![flow](https://imgur.com/VC3NvtD.png)
-
-It seems like magic, right!
-
-## Webhook
-
-Alright, let's continue. If you need to expose a port or an API for listening to send messages, you can do it as follows.
-
-```typescript
-    import 'dotenv/config'
-    import { createBot, MemoryDB, createProvider, addKeyword, createFlow, EVENTS } from '@bot-whatsapp/bot'
-    import { createShopifyFlow } from '@builderbot-plugins/shopify'
-    import { TelegramProvider, handleCtx } from '@builderbot-plugins/telegram'
-
-    const main = async () => {
-
-        const provider = createProvider(TelegramProvider, {
-            token: "YOUR_TELEGRAM_TOKEN_HERE"
-        })
-
-        provider.initHttpServer(9000)
-            .http.server.post('/webhook', handleCtx((null, req, res) => {
-                    console.log('I am function what doing someting')
-                    res.end('ok')
-            }))
-        
-        const welcomeFlow = addKeyword('Hi!!').addAnswer('Hi!, friend.')
-
-        await createBot({
-            database: new MemoryDB(),
-            provider,
-            flow: createFlow([welcomeFlow])
-        })
-
-    }
-
-    main()
+main()
 ```
 
-here some screens from the example above
+In this way we have already implemented a new provider for Telegram keeping the same logic.
 
-![Imgur](https://imgur.com/JgXOUZw.png)
-![Imgur](https://imgur.com/4uRkIrg.png)
-![Imgur](https://imgur.com/7XFKtUc.png)
-![Imgur](https://imgur.com/2zOp2GR.png)
+---
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['Elimeleth']} />

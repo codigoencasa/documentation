@@ -50,21 +50,21 @@ flowchart LR
 Each database may need to adjust the access keys, configuration, among other properties that will be implemented as configuration of the implemented class. 
 <CodeGroup>
 ```ts {{ title: 'memory-database.ts' }}
-import { MemoryDB } from "@bot-whatsapp/bot";
+import { MemoryDB } from "@builderbot/bot";
 
 export type IDatabase = typeof MemoryDB
 export const adapterDB = new MemoryDB();
 ```
 
 ```ts {{ title: 'json-database.ts' }}
-import { JsonFileDB } from '@bot-whatsapp/database-json';
+import { JsonFileDB } from '@builderbot/database-json';
 
 export type IDatabase = typeof JsonFileDB
 export const adapterDB = new JsonFileDB({ filename: 'db.json' });
 ```
 
 ```ts {{ title: 'mongo-database.ts' }}
-import { MongoDB } from '@bot-whatsapp/database-mongo'
+import { MongoDB } from '@builderbot/database-mongo'
 
 export type IDatabase = typeof MongoDB
 export const adapterDB = new MongoDB({
@@ -74,7 +74,7 @@ export const adapterDB = new MongoDB({
 ```
 
 ```ts {{ title: 'mysql-database.ts' }}
-import { MysqlDB } from '@bot-whatsapp/database-mysql'
+import { MysqlDB } from '@builderbot/database-mysql'
 
 export type IDatabase = typeof MysqlDB
 export const adapterDB = new MysqlDB({
@@ -86,7 +86,7 @@ export const adapterDB = new MysqlDB({
 ```
 
 ```ts {{ title: 'postgres-database.ts' }}
-import { PostgreSQLDB } from '@bot-whatsapp/database-postgres'
+import { PostgreSQLDB } from '@builderbot/database-postgres'
 
 export type IDatabase = typeof PostgreSQLDB
 export const adapterDB = new PostgreSQLDB({
@@ -114,13 +114,13 @@ Remember that the following requirements must be met in order to implement the m
 
 <CodeGroup>
 ```ts {{ title: 'memory-database.ts' }}
-import { MemoryDB } from "@bot-whatsapp/bot";
+import { MemoryDB } from "@builderbot/bot";
 
 export type IDatabase = typeof MemoryDB
 export const adapterDB = new MemoryDB();
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword } from '@builderbot/bot'
 import { IProvider, adapterProvider } from './meta-provider';
 import { IDatabase, adapterDB } from './memory-database';
 
@@ -150,13 +150,13 @@ Remember that the following requirements must be met in order to implement the m
 
 <CodeGroup>
 ```ts {{ title: 'json-database.ts' }}
-import { JsonFileDB } from '@bot-whatsapp/database-json';
+import { JsonFileDB } from '@builderbot/database-json';
 
 export type IDatabase = typeof JsonFileDB
 export const adapterDB = new JsonFileDB({ filename: 'db.json' });
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword } from '@builderbot/bot'
 import { IDatabase, adapterDB } from './json-database';
 import { IProvider, adapterProvider } from './twilio-provider';
 
@@ -189,7 +189,7 @@ Remember that the following requirements must be met in order to implement the m
 
 <CodeGroup>
 ```ts {{ title: 'mongo-database.ts' }}
-import { MongoDB } from '@bot-whatsapp/database-mongo'
+import { MongoDB } from '@builderbot/database-mongo'
 
 export type IDatabase = typeof MongoDB
 export const adapterDB = new MongoDB({
@@ -198,7 +198,7 @@ export const adapterDB = new MongoDB({
 })
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
 import { IProvider, adapterProvider } from './baileys-provider';
 import { IDatabase, adapterDB } from './mongo-database';
 
@@ -232,7 +232,7 @@ Remember that the following requirements must be met in order to implement the m
 
 <CodeGroup>
 ```ts {{ title: 'mysql-database.ts' }}
-import { MysqlDB } from '@bot-whatsapp/database-mysql'
+import { MysqlDB } from '@builderbot/database-mysql'
 
 export type IDatabase = typeof MysqlDB
 export const adapterDB = new MysqlDB({
@@ -243,7 +243,7 @@ export const adapterDB = new MysqlDB({
 })
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
 import { IProvider, adapterProvider } from './venom-provider';
 import { IDatabase, adapterDB } from './mysql-database';
 
@@ -276,7 +276,7 @@ Remember that the following requirements must be met in order to implement the m
 
 <CodeGroup>
 ```ts {{ title: 'postgres-database.ts' }}
-import { PostgreSQLDB } from '@bot-whatsapp/database-postgres'
+import { PostgreSQLDB } from '@builderbot/database-postgres'
 
 export type IDatabase = typeof PostgreSQLDB
 export const adapterDB = new PostgreSQLDB({
@@ -288,7 +288,7 @@ export const adapterDB = new PostgreSQLDB({
 })
 ```
 ```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
 import { IProvider, adapterProvider } from './wppconnect-provider';
 import { IDatabase, adapterDB } from './postgres-database';
 

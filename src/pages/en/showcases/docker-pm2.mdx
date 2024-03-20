@@ -1,0 +1,65 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description = 'Implement message queues for better resource management'
+
+# Scheduled Reboots
+
+When using the free providers we will need to restart the bot to avoid accumulating temporary data that may affect its performance. In that case an easy solution to implement is to schedule restarts, these restarts will not need to scan the QR again.
+
+## Docker and Pm2
+
+One way to do it if you are using docker could be to implement in your docker image Pm2 and with pm2-runtime start your container with a cron pattern.
+
+In the following Dockerfile we can see how we start the project with a pattern `0 */12 * * *` that means that it will restart every 12 hours
+
+```docker {{ title: 'Dockerfile' }}
+# Use the official Node.js image as the base image for building the application.
+FROM node:21-alpine3.18 as builder
+
+# Enable Corepack and prepare for PNPM installation
+RUN corepack enable && corepack prepare pnpm@latest --activate
+ENV PNPM_HOME=/usr/local/bin
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package.json and pnpm-lock.yaml files to the working directory
+COPY package*.json pnpm-lock.yaml ./
+
+# Install git for potential dependencies
+RUN apk add --no-cache git
+
+# Install PM2 globally using PNPM
+RUN pnpm install pm2 -g
+
+# Copy the application source code into the container
+COPY . .
+
+# Install dependencies using PNPM
+RUN pnpm install
+
+# Create a new stage for deployment
+FROM builder as deploy
+
+# Copy only necessary files and directories for deployment
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
+
+# Install production dependencies using frozen lock file
+RUN pnpm install --frozen-lockfile --production
+
+# Define the command to start the application using PM2 runtime
+CMD ["pm2-runtime", "start", "./src/app.js", "--cron", "0 */12 * * *"]
+```
+
+Remember that this is an alternative solution, and it is possible that its implementation could be improved.
+
+----
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez','robmoncayonabux']} />

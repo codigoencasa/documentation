@@ -1,0 +1,257 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description = 'Implement message queues for better resource management'
+
+# Idle
+
+The inactivity of flows in our business logic can become a nuisance, that is why we share the following resources as an alternative solution to this situation.
+
+In this guide shared by [@goyo](https://github.com/Gregoriotecnico) he shows us how he implemented in his chatbot a sequence of flows to obtain the desired behavior.
+
+Create a file named `idle-custom.ts` and paste the following code:
+
+```ts {{ title: 'idle-custom.ts' }}
+import { EVENTS, addKeyword } from '@bot-whatsapp/bot'
+import { BotContext, TFlow } from '@bot-whatsapp/bot/dist/types';
+
+// Object to store timers for each user
+const timers = {};
+
+// Flow for handling inactivity
+const idleFlow = addKeyword(EVENTS.ACTION).addAction(
+    async (_, { endFlow }) => {
+        return endFlow("Response time has expired");
+    }
+);
+
+// Function to start the inactivity timer for a user
+const start = (ctx: BotContext, gotoFlow: (a: TFlow) => Promise<void>, ms: number) => {
+    timers[ctx.from] = setTimeout(() => {
+        console.log(`User timeout: ${ctx.from}`);
+        return gotoFlow(idleFlow);
+    }, ms);
+}
+
+// Function to reset the inactivity timer for a user
+const reset = (ctx: BotContext, gotoFlow: (a: TFlow) => Promise<void>, ms: number) => {
+    stop(ctx);
+    if (timers[ctx.from]) {
+        console.log(`reset countdown for the user: ${ctx.from}`);
+        clearTimeout(timers[ctx.from]);
+    }
+    start(ctx, gotoFlow, ms);
+}
+
+// Function to stop the inactivity timer for a user
+const stop = (ctx: BotContext) => {
+    if (timers[ctx.from]) {
+        clearTimeout(timers[ctx.from]);
+    }
+}
+
+export {
+    start,
+    reset,
+    stop,
+    idleFlow,
+}
+```
+
+
+__Remember__ to add this flow to your project's main flow array
+
+```ts {{ title: 'app.ts' }}
+import { idleFlow } from './idle-custom'
+
+const main = async () => {
+
+    const adapterFlow = createFlow([welcomeFlow, registerFlow, idleFlow])
+
+    const adapterProvider = createProvider(Provider)
+    const adapterDB = new Database()
+
+    const { httpServer } = await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+
+    httpServer(+PORT)
+
+}
+```
+---
+
+## Start Inactivity {{ not: 'true' }}
+<Row>
+  <Col>
+
+    <Properties>
+      <Property name="ctx" type="BotContext">
+Current execution context
+      </Property>
+      <Property name="gotoFlow" type="TFlow">
+Function providing the execution flow
+      </Property>
+      <Property name="ms" type="number">
+Number of milliseconds to be set
+      </Property>
+    </Properties>
+
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup>
+    ```ts
+    const questionFlow = addKeyword("hello")
+        .addAction(async (ctx, { gotoFlow }) => {
+            start(ctx, gotoFlow, 10000)
+        })
+    ```
+    </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+## Reset Inactivity {{ not: 'true' }}
+<Row>
+  <Col>
+
+    <Properties>
+      <Property name="ctx" type="BotContext">
+Current execution context
+      </Property>
+      <Property name="gotoFlow" type="TFlow">
+Function providing the execution flow
+      </Property>
+      <Property name="ms" type="number">
+Number of milliseconds to be set
+      </Property>
+    </Properties>
+
+
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup>
+    ```ts
+    // ...
+    .addAnswer(
+        "Give me your last name",
+        { capture: true },
+        async (ctx, { gotoFlow, state }) => {
+            reset(ctx, gotoFlow, 10000);
+            await state.update({ lastName: ctx.body });
+        }
+    )
+    // ...
+    ```
+    </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+## Stop Inactivity {{ not: 'true' }}
+<Row>
+  <Col>
+
+    <Properties>
+      <Property name="ctx" type="BotContext">
+Current execution context
+      </Property>
+    </Properties>
+
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup>
+    ```ts
+    // ...
+    .addAnswer(
+        "Thank you!",
+        null,
+        async (ctx, { gotoFlow, state }) => {
+            stop(ctx);
+        }
+    )
+    // ...
+    ```
+    </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword } from '@bot-whatsapp/bot'
+import { MemoryDB as Database } from '@bot-whatsapp/bot'
+import { BaileysProvider as Provider } from '@bot-whatsapp/provider-baileys'
+import { idleFlow, reset, start, stop, } from './idle-custom'
+
+const PORT = process.env.PORT ?? 3008
+
+const questionFlow = addKeyword("hello")
+    .addAction(async (ctx, { gotoFlow }) => start(ctx, gotoFlow, 10000))
+    .addAnswer(
+        [
+            "This is a test of the Home idle, if you do not respond within 10 seconds I will end the flow.",
+            "Give me your name",
+        ],
+        { capture: true },
+        async (ctx, { gotoFlow, state }) => {
+            reset(ctx, gotoFlow, 10000);
+            await state.update({ name: ctx.body });
+        }
+    )
+    .addAnswer(
+        "Give me your last name",
+        { capture: true },
+        async (ctx, { gotoFlow, state }) => {
+            reset(ctx, gotoFlow, 10000);
+            await state.update({ lastName: ctx.body });
+        }
+    )
+    .addAnswer("Finally, answer this simple question by typing the number between [1, 2].",
+        { capture: true },
+        async (ctx, { gotoFlow, endFlow, fallBack }) => {
+            reset(ctx, gotoFlow, 10000);
+            switch (ctx.body) {
+                case "1":
+                    stop(ctx);
+                    return endFlow(`Nice 1`);
+                case "2":
+                    stop(ctx);
+                    return endFlow(`Ok 2`);
+                default:
+                    return fallBack(`I only accept *numbers* that are between [1, 2].`);
+            }
+        }
+    );
+
+
+const main = async () => {
+    const adapterFlow = createFlow([questionFlow, idleFlow])
+    const adapterProvider = createProvider(Provider)
+    const adapterDB = new Database()
+
+    const { httpServer } = await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+
+    httpServer(+PORT)
+}
+
+main()
+```

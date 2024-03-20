@@ -1,0 +1,299 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description =
+  'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
+
+# Contribute
+
+Welcome to the __BuilderBot__ Contribution Guide We're glad to have you here.
+
+This page provides instructions on how to edit BuilderBot documentation. Our goal is to ensure that everyone in the community feels empowered to contribute and improve our documentation.
+
+## Quick View
+
+<Warning>
+- Make a fork of the [project](https://github.com/codigoencasa/documentation/fork) 
+- Clone the project `git clone https://github.com/USERNAME/documentation`
+- Install dependencies  `npm install`
+- Make your changes
+- Send your contributions (PullRequest)
+</Warning>
+
+
+---
+
+## Why Contribute?
+
+Open source work never ends, and neither does documentation. Contributing to the documentation is a great way for beginners to get involved in open source and for experienced developers to clarify more complex issues while sharing their knowledge with the community.
+
+By contributing to BuilderBot documentation, you help us create a more robust learning resource for all developers. If you've found a typo, a confusing section, or noticed that a particular topic is missing, your contributions are welcome and appreciated.
+## How to Contribute
+
+The content of the documentation is located in the [BuilderBot repository](https://github.com/codigoencasa/documentation). To contribute, you can edit the files directly on GitHub or clone the repository and edit the files locally.
+
+## GitHub Workflow
+
+If you're new to GitHub, we recommend you read the GitHub Open Source Guide to learn how to fork a repository, create a branch, and send a pull request.
+
+<Note>
+The code in the underlying documents lives in a private codebase that syncs with the public BuilderBot repository. This means that you cannot preview the docs locally. However, you will see your changes in builderbot.app after merging a pull request.
+</Note>
+
+## Writing MDX
+
+The docs are written in [MDX](https://mdxjs.com/), a markdown format that supports JSX syntax. This allows us to embed React components in the docs. See the [GitHub Markdown Guide](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) for a quick overview of markdown syntax.
+
+## VSCode
+
+### Previewing Changes Locally
+
+VSCode has a built-in markdown previewer that you can use to see your edits locally. To enable the previewer for MDX files, you'll need to add a configuration option to your user settings.
+
+Open the command palette (`⌘ + ⇧ + P` on Mac or `Ctrl + Shift + P` on Windows) and search from `Preferences: Open User Settings (JSON)`.
+
+Then, add the following line to your `settings.json` file:
+
+```json filename="settings.json"
+{
+  "files.associations": {
+    "*.mdx": "markdown"
+  }
+}
+```
+
+Next, open the command palette again, and search for `Markdown: Preview File` or `Markdown: Open Preview to the Side`. This will open a preview window where you can see your formatted changes.
+
+## Extensions
+
+We also recommend the following extensions for VSCode users:
+
+- [MDX](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-mdx): Intellisense and syntax highlighting for MDX.
+- [Grammarly](https://marketplace.visualstudio.com/items?itemName=znck.grammarly): Grammar and spell checker.
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode): Format MDX files on save.
+
+## Review Process
+
+Once you have submitted your contribution, a __Core Team__ member will review your changes, provide feedback and merge the pull request when ready.
+
+Please let us know if you have any questions or need further assistance in the comments of your PR. Thank you for contributing to the BuilderBot docs and for being part of our community.
+
+## File Structure
+
+Documents use file system routing. Each folder and file within [`/pages`](https://github.com/codigoencasa/documentation/tree/master/src/pages) represents a path segment. These segments are used to generate URL paths, navigation and breadcrumbs.
+
+
+```txt
+en
+├── showcases
+│   └── api-use.mdx
+└── ...
+```
+
+Each folder prefix `en`, `es`, `pt` represents the language in which the content is represented.
+
+```txt
+en
+├── showcases
+│   └── api-use.mdx
+└── ...
+es
+├── showcases
+│   └── api-use.mdx
+└── ...
+pt
+├── showcases
+│   └── api-use.mdx
+└── ...
+```
+
+## Required Fields
+
+The following fields are **required**:
+
+| Field         | Description                                                                  |
+| ------------- | ---------------------------------------------------------------------------- |
+| `description` | The page's description, used in the `<meta name="description">` tag for SEO. |
+| `title`       | The page's `<h1>` title, used for SEO and OG Images.                         |
+
+```mdx
+export const description = 'In this guide, we will talk ...'
+
+# Community
+```
+
+## Code Blocks
+
+The code blocks must contain a minimal working example that can be copied and pasted. This means that the code must be able to run without any additional configuration.
+
+For example if we want to print TS or JS code
+
+```ts {{ title: 'example.ts' }}
+const flow = addKeyword('hello')
+    .addAnswer(`What is your name?`, { capture: true }, async (ctx, { state }) => {
+        await state.update({ name: ctx.body })
+    })
+    .addAction(async (ctx, { state, flowDynamic }) => {
+        const name = state.get('name')
+        await flowDynamic(`Your name is: ${name}`)
+    })
+}
+```
+
+Always run examples locally before committing them. This will ensure that the code is up-to-date and working.
+
+## Language and Filename
+
+Code blocks should have a header that includes the language and the `filename`. Add a `filename` prop to render a special Terminal icon that helps orientate users where to input the command. For example:
+
+````mdx 
+```ts {{ title: 'example.ts' }}
+const flow = addKeyword('hello')
+    .addAnswer(`What is your name?`, { capture: true }, async (ctx, { state }) => {
+        await state.update({ name: ctx.body })
+    })
+    .addAction(async (ctx, { state, flowDynamic }) => {
+        const name = state.get('name')
+        await flowDynamic(`Your name is: ${name}`)
+    })
+}
+```
+````
+
+Most examples in the docs are written in `tsx` and `jsx`, and a few in `bash`. However, you can use any supported language, here's the [full list](https://github.com/shikijs/shiki/blob/main/docs/languages.md#all-languages).
+
+When writing JavaScript code blocks, we use the following language and extension combinations.
+
+|                                | Language | Extension |
+| ------------------------------ | -------- | --------- |
+| JavaScript files   | ```js    | .js       |
+| TypeScript files   | ```ts    | .ts       |
+
+
+## Grouped code blocks
+
+Sometimes we will need to represent a group of blocks of code grouped together even with different file names and in multiple languages we can do it in the following way
+
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { createBot } from '@builderbot/bot';
+  import { flow } from "./flow";
+  import { database } from "./database";
+  import { provider } from "./provider";
+  import { ai } from "./services/ai";
+
+  const main = async () => {
+  await createBot({
+          flow,
+          provider,
+          database,
+      },
+          extensions: {
+          ai // Dependency AI 
+      })
+
+  provider.initHttpServer(3000)
+}
+main()
+```
+```ts {{ title: 'provider/index.ts' }}
+  import { createProvider } from '@builderbot/bot';
+  import { BaileysProvider } from '@builderbot/provider-baileys';
+
+  export const provider = createProvider(BaileysProvider)
+```
+```ts {{ title: 'database/index.ts' }}
+  export const database = new MemoryDB()
+```
+```ts {{ title: 'flow/index.ts' }}
+  import { createFlow } from '@builderbot/bot';
+  import { flowWelcome } from "./welcome.flow";
+  import { byeFlow } from "./bye.flow";
+  import { mediaFlow } from "./media.flow";
+  // other flows....
+
+  export const flow =  createFlow([flowWelcome, byeFlow, mediaFlow])
+```
+```ts {{ title: 'flow/welcome.flow.ts' }}
+  import { addKeyword, EVENTS } from '@builderbot/bot';
+
+  export const flowWelcome = addKeyword(EVENTS.WELCOME)
+  .addAction(async (ctx, {flowDynamic, extensions})=> {
+    const { ai } = extensions
+    const talkWithGPT = ai.chat(ctx.body) // Dependency AI from app.ts
+    await flowDynamic(talkWithGPT)
+  })
+```
+```ts {{ title: 'services/ai.ts' }}
+  // ....
+  export const ai = new AiService(process.env.OPEN_AI_KEY);
+```
+</CodeGroup>
+
+The template already provides internally a `<CodeGroup>` component that has the ability to interpret code blocks.
+
+````mdx 
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+  import { createBot } from '@builderbot/bot';
+  import { flow } from "./flow";
+  import { database } from "./database";
+  import { provider } from "./provider";
+  import { ai } from "./services/ai";
+
+  const main = async () => {
+  await createBot({
+          flow,
+          provider,
+          database,
+      },
+          extensions: {
+          ai // Dependency AI 
+      })
+
+  provider.initHttpServer(3000)
+}
+main()
+```
+```ts {{ title: 'provider/index.ts' }}
+  import { createProvider } from '@builderbot/bot';
+  import { BaileysProvider } from '@builderbot/provider-baileys';
+
+  export const provider = createProvider(BaileysProvider)
+```
+```ts {{ title: 'database/index.ts' }}
+  export const database = new MemoryDB()
+```
+```ts {{ title: 'flow/index.ts' }}
+  import { createFlow } from '@builderbot/bot';
+  import { flowWelcome } from "./welcome.flow";
+  import { byeFlow } from "./bye.flow";
+  import { mediaFlow } from "./media.flow";
+  // other flows....
+
+  export const flow =  createFlow([flowWelcome, byeFlow, mediaFlow])
+```
+```ts {{ title: 'flow/welcome.flow.ts' }}
+  import { addKeyword, EVENTS } from '@builderbot/bot';
+
+  export const flowWelcome = addKeyword(EVENTS.WELCOME)
+  .addAction(async (ctx, {flowDynamic, extensions})=> {
+    const { ai } = extensions
+    const talkWithGPT = ai.chat(ctx.body) // Dependency AI from app.ts
+    await flowDynamic(talkWithGPT)
+  })
+```
+```ts {{ title: 'services/ai.ts' }}
+  // ....
+  export const ai = new AiService(process.env.OPEN_AI_KEY);
+```
+</CodeGroup>
+````
+---
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez','lualreye']} />

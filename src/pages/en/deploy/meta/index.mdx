@@ -1,0 +1,108 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description =
+  'In this guide, we will discuss what to do when something goes wrong while working with the API.'
+
+# Deploying Your Chatbot with Meta API
+
+This guide is designed for those who have already followed the official documentation at [Meta Provider](/providers/meta).
+ It assumes that developer accounts have been created and business and app verification has been completed.
+
+## Requirements
+
+- What a VPS is
+- How to create a simple website
+- How to use Docker and its Docker Compose plugin.
+
+---
+
+
+### Adding a Phone Number
+
+The phone number cannot be associated with any Whatsapp or Whatsapp Business account (once the phone number is added, it cannot be used in any Whatsapp app). Just follow the instructions to register the number.
+
+<Image src="https://i.imgur.com/QIWL7Of.png" />
+
+---
+
+## Adding a Payment Method
+
+Add a payment method from the first steps section to link it to your application.
+
+<Image src="https://i.imgur.com/ORr9Zrf.png" />
+
+---
+
+## Configuring Permanent Token
+
+Go to [https://developers.facebook.com/apps/](https://developers.facebook.com/apps/) and select "Business" in your app. 
+<Image src="https://i.imgur.com/5EjHuFH.png" />
+
+---
+
+This will direct you to the business configuration. Once there, select System Users in the Users tab, then click the add button and create a user with the administrator role.
+
+<Image src="https://i.imgur.com/gdMrx0b.png" />
+
+---
+
+Once the user is created, select it and click the add asset button. In the window that opens, select Apps and select your app. In the permissions menu, select full control and save the changes.
+<Image src="https://i.imgur.com/JFQDxFn.png" />
+<Image src="https://i.imgur.com/l11O1Bi.png" />
+---
+
+Then press the Generate New Token button. A window will open where you should select your app, the token expiration time (set it to permanent), and check the permission options named "whatsapp_business_messaging" and "whatsapp_business_management". Finally, click generate token.
+
+Meta does not store the token in the configuration panel, so you should store it in a safe place.
+
+
+<Image src="https://i.imgur.com/TZvxnwc.png" />
+
+Next, select the Accounts tab and select Whatsapp Accounts. If you have done everything correctly in the previous steps, you will have your Whatsapp Business account with the name of the Business. Select the business and click "add people", add the previously created administrator user and give it full control.
+
+<Image src="https://i.imgur.com/TPSwWlN.png" />
+
+---
+
+# Preparing Your App for Deployment
+
+Once your Chatbot is ready, you should upload it to a repository on GitHub or GitLab. Remember to use `.gitignore` so that folders or files with large size or sensitive content are not uploaded.
+
+``` {{title:'.gitignore'}}
+node_modules
+.env
+dist/*
+```
+
+It is recommended to use dotenv to handle Meta tokens securely. 
+Open your bot with VSCode (or your preferred editor) and configure the environment variables.
+
+### Installing dotenv
+
+```bash
+npm install dotenv --save
+```
+
+``` {{title:'.env'}}
+JWT_TOKEN='token secret'
+NUMBER_ID='id of your number'
+VERIFY_TOKEN='random string'
+```
+```ts {{title:'app.ts'}}
+import 'dotenv/config'
+const adapterProvider = createProvider(Provider, {
+    jwtToken: process.env.JWT_TOKEN,
+    numberId: process.env.NUMBER_ID,
+    verifyToken: process.env.VERIFY_TOKEN,
+    version: 'v16.0'
+})
+```
+----
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez']} />

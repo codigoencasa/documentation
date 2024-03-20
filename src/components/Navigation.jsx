@@ -210,6 +210,7 @@ export const navigation = [
       { title: 'Methods', href: '/methods' },
       { title: 'Databases', href: '/databases' },
       { title: 'Providers', href: '/providers' },
+      { title: 'Deploy', href: '/deploy' },
     ],
   },
   {
@@ -218,7 +219,10 @@ export const navigation = [
       { title: 'Queue limit', href: '/showcases/queue-limit' },
       { title: 'Modularize', href: '/showcases/modularize' },
       { title: 'Fast Entries', href: '/showcases/fast-entires' },
+      { title: 'Idle', href: '/showcases/idle-optional' },
+      { title: 'Scheduled Reboots', href: '/showcases/docker-pm2' },
       { title: 'API Rest', href: '/showcases/api-use' },
+      { title: 'In-Out messages', href: '/showcases/event-in-out-messages' },
     ],
   },
   {

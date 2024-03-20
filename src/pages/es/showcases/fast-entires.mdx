@@ -82,8 +82,8 @@ export { enqueueMessage, processMessageQueue };
 ```ts {{ title: 'app.ts' }}
 import { enqueueMessage } from './utils/fast-entires'
 
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@bot-whatsapp/bot'
-import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
 
 const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi'])
 .addAction(async(ctx) => {

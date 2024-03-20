@@ -28,13 +28,13 @@ Imaginemos el caso en el que una persona escribe la palabra `¡Gracias!`
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  import { addKeyword, EVENTS } from '@builderbot/bot'
   
   const welcomeFlow = addKeyword(EVENTS.WELCOME).addAnswer('Ey welcome?')
   const greetingFlow = addKeyword(['hello','hi']).addAnswer('Hi!')
 ```
 ```js {{ title: 'app.js' }}
-  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  const { addKeyword, EVENTS } = require('@builderbot/bot')
   
   const welcomeFlow = addKeyword(EVENTS.MEDIA).addAnswer('Message hello')
 ```
@@ -76,12 +76,12 @@ Podemos ver en el diagrama anterior que el bot realiza una búsqueda en todos lo
 Cuando un usuario envía una imagen o un video, el evento MEDIA, que es el evento predeterminado, se activará de forma predeterminada. Esto es ideal para cuando necesitamos que envíen información y necesitamos almacenarla.
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  import { addKeyword, EVENTS } from '@builderbot/bot'
   
   const mediaFlow = addKeyword(EVENTS.MEDIA).addAnswer('I received a media image/video')
 ```
 ```js {{ title: 'app.js' }}
-  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  const { addKeyword, EVENTS } = require('@builderbot/bot')
   
   const mediaFlow = addKeyword(EVENTS.MEDIA).addAnswer('I received a media image/video')
 ```
@@ -93,8 +93,8 @@ Para guardar el archivo multimedia, debe invocar la función saveFile del provee
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
-  import { BaileysProvider } from '@bot-whatsapp/provider-baileys'
+  import { addKeyword, EVENTS } from '@builderbot/bot'
+  import { BaileysProvider } from '@builderbot/provider-baileys'
 
   const mediaFlow = addKeyword<BaileysProvider>(EVENTS.MEDIA)
   .addAnswer('I received a media image/video', async (ctx, { provider }) => {
@@ -103,8 +103,8 @@ Para guardar el archivo multimedia, debe invocar la función saveFile del provee
   })
 ```
 ```js {{ title: 'app.js' }}
-  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
-  const { BaileysProvider } = require('@bot-whatsapp/bot')
+  const { addKeyword, EVENTS } = require('@builderbot/bot')
+  const { BaileysProvider } = require('@builderbot/bot')
   
   const mediaFlow = addKeyword(EVENTS.MEDIA)
   .addAnswer('I received a media image/video', async (ctx, { provider }) => {
@@ -121,7 +121,7 @@ Para guardar el archivo multimedia, debe invocar la función saveFile del provee
 Cuando un usuario envía un documento, el evento del DOCUMENT se activará de forma predeterminada, que es el evento predeterminado.
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  import { addKeyword, EVENTS } from '@builderbot/bot'
   
   const documentFlow = addKeyword(EVENTS.DOCUMENT)
   .addAnswer("Wow! I'm sorry I can't read this document right now", async (ctx, { provider }) => {
@@ -130,7 +130,7 @@ Cuando un usuario envía un documento, el evento del DOCUMENT se activará de fo
   })
 ```
 ```js {{ title: 'app.js' }}
-  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  const { addKeyword, EVENTS } = require('@builderbot/bot')
   
   const documentFlow = addKeyword(EVENTS.DOCUMENT)
   .addAnswer("Wow! I'm sorry I can't read this document right now", async (ctx, { provider }) => {
@@ -175,7 +175,7 @@ Para acceder a los datos de ubicación, puede utilizar el siguiente enfoque:
 
 <CodeGroup>
 ```ts {{ title: 'location.flow.ts' }}
-import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
+import { EVENTS, addKeyword } from "@builderbot/bot";
 
 export default addKeyword(EVENTS.LOCATION)
 .addAnswer("I have received your location!", null, async (ctx) => {
@@ -184,7 +184,7 @@ export default addKeyword(EVENTS.LOCATION)
 })
 ```
 ```js {{ title: 'location.flow.js' }}
-const { EVENTS, addKeyword } = require("@bot-whatsapp/bot");
+const { EVENTS, addKeyword } = require("@builderbot/bot");
 
 export default addKeyword(EVENTS.LOCATION)
 .addAnswer("I have received your location!", null, async (ctx) => {
@@ -202,7 +202,7 @@ Cuando un usuario envía una nota de voz, el evento VOICE_NOTE se activará de f
 
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
-  import { addKeyword, EVENTS } from '@bot-whatsapp/bot'
+  import { addKeyword, EVENTS } from '@builderbot/bot'
   
   const voiceNoteFlow = addKeyword(EVENTS.VOICE_NOTE)
   .addAnswer('Give me a second to hear you!', async (ctx, { provider }) => {
@@ -212,7 +212,7 @@ Cuando un usuario envía una nota de voz, el evento VOICE_NOTE se activará de f
   
 ```
 ```js {{ title: 'app.js' }}
-  const { addKeyword, EVENTS } = require('@bot-whatsapp/bot')
+  const { addKeyword, EVENTS } = require('@builderbot/bot')
   
   const voiceNoteFlow = addKeyword(EVENTS.VOICE_NOTE)
   .addAnswer('Give me a second to hear you!', async (ctx, { provider }) => {
