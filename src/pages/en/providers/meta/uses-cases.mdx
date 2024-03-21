@@ -1,0 +1,188 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description =
+  'In this guide, we will discuss what to do when something goes wrong while working with the API.'
+
+# Meta Uses Cases
+
+
+```ts
+import { createBot, createProvider, createFlow, addKeyword } from '@builderbot/bot'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { MetaProvider as Provider } from '@builderbot/provider-meta'
+
+const PORT = process.env.PORT ?? 3008
+
+const welcomeFlow = addKeyword<Provider, Database>(['ey', 'hola'])
+    .addAnswer('send files...')
+    .addAnswer(`Send image from URL`,
+        { media: 'https://i.imgur.com/0HpzsEm.png' }
+    )
+    .addAnswer(`Send video from URL`,
+        { media: 'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4' }
+    )
+    .addAnswer(`Send file from URL`,
+        { media: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' }
+    )
+    .addAnswer(`First Way to Send Buttons`, {
+        buttons:
+            [
+                { body: 'Order' },
+                { body: 'Register' },
+                { body: 'Catalog' }
+            ]
+    })
+    .addAction(async (ctx, { provider }) => {
+        await provider.sendButtons(ctx.from, [
+            { body: 'Option A' },
+            { body: 'Option B' },
+            { body: 'Option C' }
+        ], `Send Buttons Alternative`)
+
+    })
+    .addAction(async (ctx, { provider }) => {
+        await provider.sendButtonUrl(ctx.from, { body: 'View Doc', url: 'https://builderbot.vercel.app' }, `Send Buttons URL`)
+
+    })
+    .addAnswer('Send Contact', null, async (ctx, { provider }) => {
+        await provider.sendContacts(ctx.from, [
+            {
+                name: {
+                    formatted_name: 'Leifer',
+                    first_name: 'Leifer M'
+                },
+                phones: [{
+                    phone: '34000000',
+                    type: 'HOME'
+                }]
+            }
+        ])
+    })
+    .addAnswer('Send Location', null, async (ctx, { provider }) => {
+        await provider.sendLocation(ctx.from, {
+            address: 'CDMX Centro',
+            lat_number: '19.3909832',
+            long_number: '-99.3084209',
+            name: 'CDMX Office'
+        })
+    })
+    .addAnswer('Send List', null, async (ctx, { provider }) => {
+        const list = {
+            "header": {
+                "type": "text",
+                "text": "Weekly Promotions"
+            },
+            "body": {
+                "text": "Discover our amazing offers!"
+            },
+            "footer": {
+                "text": "Visit our website for more details"
+            },
+            "action": {
+                "button": "See more",
+                "sections": [
+                    {
+                        "title": "Clothing",
+                        "rows": [
+                            {
+                                "id": "001",
+                                "title": "Printed T-shirt",
+                                "description": "Cotton t-shirt with printed design"
+                            },
+                            {
+                                "id": "002",
+                                "title": "Slim-fit Jeans",
+                                "description": "Slim-fit denim jeans for men and women"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "Electronics",
+                        "rows": [
+                            {
+                                "id": "003",
+                                "title": "Smartphone",
+                                "description": "Smartphone with HD display and high-resolution camera"
+                            },
+                            {
+                                "id": "004",
+                                "title": "Wireless Headphones",
+                                "description": "Headphones with noise cancellation and Bluetooth connectivity"
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        await provider.sendList(ctx.from, list)
+    })
+
+
+
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(Provider, {
+        jwtToken: process.env.jwtToken,
+        numberId: process.env.numberId,
+        verifyToken: process.env.verifyToken,
+        version: 'v19.0'
+    })
+    const adapterDB = new Database()
+
+    const { handleCtx, httpServer } = await createBot<Provider>({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+
+    adapterProvider.http.server.post(
+        '/v1/samples',
+        handleCtx(async (bot, req, res) => {
+            try {
+                const { number, message, urlMedia } = req.body
+
+                await bot.sendMessage(number, message, { media: urlMedia ?? null })
+
+                await bot.provider.sendMessage(number, message, {})
+
+                await bot.provider.sendButtons(number, [
+                    { body: 'Order' },
+                    { body: 'Register' },
+                    { body: 'Catalog' }
+                ], 'Send Buttons API')
+
+                await bot.provider.sendButtonUrl(number,
+                    {
+                        body: 'View Doc',
+                        url: 'http://builderbot.app'
+                    },
+                    'Send Buttons API CTA')
+
+                return res.end('ok')
+
+            } catch (error) {
+                console.log(error)
+                return res.end('error')
+            }
+        })
+    )
+
+    httpServer(+PORT)
+
+}
+
+main()
+
+```
+
+
+----
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['leifermendez']} />
