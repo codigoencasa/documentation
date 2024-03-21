@@ -313,7 +313,7 @@ In the folowing example you can see how you can trigger a function when the user
 
   const mainFlow = addKeyword('buy')
       .addAnswer('Great! What do you want to buy?')
-      .addAction(async (_, { fowDynamic }): void => {
+      .addAction(async (_, { flowDynamic }): void => {
           return console.log('The user wants to buy something');
       })
 ```
@@ -322,7 +322,7 @@ In the folowing example you can see how you can trigger a function when the user
 
   const mainFlow = addKeyword('buy')
       .addAnswer('Great! What do you want to buy?')
-      .addAction(async (_, { fowDynamic }) => {
+      .addAction(async (_, { flowDynamic }) => {
           return console.log('The user wants to buy something');
       })
 ```
@@ -336,10 +336,10 @@ You can use the `addAction` function with `capture` as you can see in the exampl
   import { addKeyword, addAction } from '@builderbot/bot';
 
   const mainFlow = addKeyword(['Hello', 'Hi'])
-      .addAction(async (_, { fowDynamic }): void => {
+      .addAction(async (_, { flowDynamic }): void => {
           return flowDynamic('Hi! how can I help you?');
       })
-      .addAction({ capture: true }, async (ctx, { fowDynamic, state }): void => {
+      .addAction({ capture: true }, async (ctx, { flowDynamic, state }): void => {
           await state.udpate({ name: ctx.body})
           return console.flowDynamic(`The user said: ${ctx.body}`);
       })
@@ -348,7 +348,7 @@ You can use the `addAction` function with `capture` as you can see in the exampl
   import { addKeyword, addAction } from '@builderbot/bot';
 
   const mainFlow = addKeyword(['Hello', 'Hi'])
-      .addAction(async (_, { fowDynamic }) => {
+      .addAction(async (_, { flowDynamic }) => {
           return flowDynamic('The user wants to buy something');
       })
 ```
