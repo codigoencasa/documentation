@@ -1,0 +1,130 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+# How to use gotoFlow?
+
+GotoFlow es una funcionalidad diseñada para permitir la transición de un flujo a otro dentro de un bot de WhatsApp. Esta capacidad es particularmente útil cuando se tiene lógica de negocios distribuida en diferentes flujos, facilitando la organización y la modularidad del código.
+
+## How does it work?
+
+`gotoFlow` es una función que permite redirigir el flujo de conversación de un usuario de un punto a otro dentro de la lógica de un bot de WhatsApp. Esta capacidad resulta invaluable cuando se manejan distintos escenarios de interacción, como usuarios nuevos versus usuarios registrados, o cuando se desea segmentar la conversación en diferentes temas o servicios.
+
+## Conversation flows
+
+Los flujos de conversación son una forma de organizar la lógica de un bot de WhatsApp en diferentes secciones, facilitando la modularidad y la organización del código. Cada flujo puede contener una o más interacciones, y puede ser invocado desde cualquier otro flujo. 
+## Example
+
+1. `Flujo de Bienvenida (flowBienvenida):`
+Este flujo actúa como el punto de entrada. Aquí, `state.get("Registro")` verifica si el usuario ya ha sido registrado. La función state se usa para acceder a los datos almacenados en memoria relacionados con el usuario.
+Si el usuario no está registrado `(indicado por estado === undefined)`, el bot procede a actualizar su estado a no registrado `(Registro: false)` utilizando `state.update({ Registro: false })`. Luego, gotoFlow dirige al usuario al flujo de usuarios no registrados `(flujoUsuariosNORegistrados)` para comenzar el proceso de registro.
+Si el usuario está registrado `(estado === true)`, se le redirige al flujo de usuarios registrados `(flujoUsuariosRegistrados)` donde puede interactuar más profundamente con el bot.
+
+2. `Flujo para Usuarios No Registrados (flujoUsuariosNORegistrados):`
+Este flujo se inicia para usuarios que no han sido registrados. Pide al usuario su nombre completo, y una vez que esta información se captura `({ capture: true })`, el bot actualiza el estado del usuario a registrado y almacena su nombre utilizando `state.update({ Registro: true, Nombre: body })`. Posteriormente, gotoFlow mueve al usuario al flujo de usuarios registrados, demostrando una transición lógica y suave de un estado de usuario a otro.
+
+3. `Flujo para Usuarios Registrados (flujoUsuariosRegistrados):`
+En este flujo, el bot saluda al usuario por su nombre, indicando una interacción personalizada. Esto se logra recuperando el nombre del usuario de la memoria `(state.get("Nombre"))` y usando esa información para formular el saludo. Este flujo simboliza la interacción continua con usuarios que ya han completado el proceso de registro.
+
+## The Role of gotoFlow in this Context
+`gotoFlow` es crucial para orquestar la transición entre diferentes etapas de la conversación, basándose en acciones del usuario o en la lógica de negocio implementada en el bot. En este caso, facilita:
+
+`Transiciones Basadas en el Estado:` Mover a los usuarios entre flujos de registrados y no registrados según su estado actual, asegurando que reciben la interacción adecuada.
+Experiencia de Usuario Fluida: Proporcionar una experiencia de conversación coherente y sin interrupciones, personalizando las interacciones según la información almacenada sobre el usuario.
+
+`Manejo Dinámico de la Conversación:` Adaptar el flujo de conversación en tiempo real, permitiendo una gestión flexible y dinámica de la lógica de conversación basada en las necesidades del usuario y los objetivos del bot.
+
+## Conclusión
+La combinación de los flujos definidos y la utilización estratégica de `gotoFlow`, junto con la funcionalidad de `state` para almacenar y recuperar datos en memoria, proporciona una base sólida para construir bots de WhatsApp que pueden manejar conversaciones complejas, personalizadas y adaptativas con los usuarios.
+
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+import {
+  createBot,
+  createProvider,
+  createFlow,
+  addKeyword,
+  MemoryDB,
+  EVENTS,
+} from "@bot-whatsapp/bot";
+import { BaileysProvider } from "@bot-whatsapp/provider-baileys";
+
+import flujoUsuariosRegistrados from "./flows/flujoUsuariosRegistrados";
+import flujoUsuariosNORegistrados from "./flows/flujoUsuariosNORegistrados";
+
+const flowBienvenida = addKeyword(EVENTS.WELCOME).addAction(
+  async (_, { gotoFlow, state }) => {
+    const estado = await state.get("Registro");
+    if (estado === undefined) {
+      await state.update({ Registro: false });
+      return gotoFlow(flujoUsuariosNORegistrados);
+    }
+    if (estado === true) {
+      return gotoFlow(flujoUsuariosRegistrados);
+    }
+  }
+);
+
+const main = async () => {
+  const adapterDB = new MemoryDB();
+  const adapterFlow = createFlow([
+    flowBienvenida,
+    flujoUsuariosRegistrados,
+    flujoUsuariosNORegistrados,
+  ]);
+  const adapterProvider = createProvider(BaileysProvider, {
+    usePairingCode: true,
+    phoneNumber: "xxxxxxxxxxxx",
+  });
+
+  await createBot({
+    flow: adapterFlow,
+    provider: adapterProvider,
+    database: adapterDB,
+  });
+};
+
+main();
+
+```
+```ts {{ title: 'flujoUsuariosNORegistrados.ts' }}
+import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
+import flujoUsuariosRegistrados from "./flujoUsuariosRegistrados";
+
+const flujoUsuariosNORegistrados = addKeyword(EVENTS.ACTION).addAnswer(
+  "Para registrarte, necesito tu nombre completo. Por favor, ingresa tu nombre completo.",
+  { capture: true },
+  async (ctx, { state, flowDynamic, gotoFlow }) => {
+    const { body } = ctx;
+    await state.update({ Registro: true, Nombre: body });
+    await flowDynamic(`Has sido registrado con éxito.`);
+    return gotoFlow(flujoUsuariosRegistrados);
+  }
+);
+
+export default flujoUsuariosNORegistrados;
+```
+
+```ts {{ title: 'flujoUsuariosRegistrados.ts' }}
+
+import { EVENTS, addKeyword } from "@bot-whatsapp/bot";
+// Flujo de usuarios registrados
+const flujoUsuariosRegistrados = addKeyword(EVENTS.ACTION).addAction(
+  { delay: 3000 },
+  async (_, { state, flowDynamic }) => {
+    const nombre = await state.get("Nombre");
+    await flowDynamic(`Hola ${nombre}! ¿En qué puedo ayudarte?`);
+    return;
+  }
+);
+
+export default flujoUsuariosRegistrados;
+```
+</CodeGroup>
+
+
+<Guides />
+
+<Resources />
+
+<Contributors users={['C4rlos-Mor4n']} />

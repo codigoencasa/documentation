@@ -223,6 +223,7 @@ export const navigation = [
       { title: 'Scheduled Reboots', href: '/showcases/docker-pm2' },
       { title: 'API Rest', href: '/showcases/api-use' },
       { title: 'In-Out messages', href: '/showcases/event-in-out-messages' },
+      {title: 'GotoFlow Use' , href: '/showcases/gotoflow-use'}
     ],
   },
   {
