@@ -313,7 +313,7 @@ No exemplo a seguir, você pode ver como pode acionar uma função quando o usu�
 
   const mainFlow = addKeyword('buy')
       .addAnswer('Great! What do you want to buy?')
-      .addAction(async (_, { fowDynamic }): void => {
+      .addAction(async (_, { flowDynamic }): void => {
           return console.log('The user wants to buy something');
       })
 ```
@@ -322,7 +322,7 @@ No exemplo a seguir, você pode ver como pode acionar uma função quando o usu�
 
   const mainFlow = addKeyword('buy')
       .addAnswer('Great! What do you want to buy?')
-      .addAction(async (_, { fowDynamic }) => {
+      .addAction(async (_, { flowDynamic }) => {
           return console.log('The user wants to buy something');
       })
 ```
@@ -336,10 +336,10 @@ Você pode usar a função `addAction` com `capture` como você pode ver no exem
   import { addKeyword, addAction } from '@builderbot/bot';
 
   const mainFlow = addKeyword(['Hello', 'Hi'])
-      .addAction(async (_, { fowDynamic }): void => {
+      .addAction(async (_, { flowDynamic }): void => {
           return flowDynamic('Hi! how can I help you?');
       })
-      .addAction({ capture: true }, async (ctx, { fowDynamic, state }): void => {
+      .addAction({ capture: true }, async (ctx, { flowDynamic, state }): void => {
           await state.udpate({ name: ctx.body})
           return console.flowDynamic(`The user said: ${ctx.body}`);
       })
@@ -348,7 +348,7 @@ Você pode usar a função `addAction` com `capture` como você pode ver no exem
   import { addKeyword, addAction } from '@builderbot/bot';
 
   const mainFlow = addKeyword(['Hello', 'Hi'])
-      .addAction(async (_, { fowDynamic }) => {
+      .addAction(async (_, { flowDynamic }) => {
           return flowDynamic('The user wants to buy something');
       })
 ```
