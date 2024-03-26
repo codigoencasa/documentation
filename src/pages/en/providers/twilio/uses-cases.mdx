@@ -9,23 +9,22 @@ export const description =
 
 
 ```ts
-
 import { createBot, createProvider, createFlow, addKeyword } from '@builderbot/bot'
 import { MemoryDB as Database } from '@builderbot/bot'
 import { TwilioProvider as Provider } from '@builderbot/provider-twilio'
 
 const PORT = process.env.PORT ?? 3008
 
-const welcomeFlow = addKeyword<Provider, Database>(['ey', 'hola'])
+const welcomeFlow = addKeyword<Provider, Database>(['test'])
     .addAnswer('send files...')
     .addAnswer(`Send image from URL`,
-        { media: 'https://i.imgur.com/0HpzsEm.png' }
+        { media: 'https://builderbot.vercel.app/_next/static/media/logo-v2.5d15651a.png' }
     )
     .addAnswer(`Send video from URL`,
         { media: 'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4' }
     )
-    .addAnswer(`Send video from URL`,
-        { media: 'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4' }
+    .addAnswer(`Send audio from URL`,
+        { media: 'https://cdn.freesound.org/previews/728/728142_11861866-lq.mp3' }
     )
     .addAnswer(`Send file from URL`,
         { media: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' }
@@ -42,9 +41,9 @@ const welcomeFlow = addKeyword<Provider, Database>(['ey', 'hola'])
 const main = async () => {
     const adapterFlow = createFlow([welcomeFlow])
     const adapterProvider = createProvider(Provider, {
-        accountSid: process.env.accountSid,
-        authToken: process.env.authToken,
-        vendorNumber: process.env.vendorNumber,
+        accountSid: process.env.ACCOUNT_SID,
+        authToken: process.env.AUTH_TOKEN,
+        vendorNumber: process.env.VENDOR_NUMBER,
     })
     const adapterDB = new Database()
 
@@ -54,7 +53,7 @@ const main = async () => {
         database: adapterDB,
     })
 
-    adapterProvider.http.server.post(
+    adapterProvider.server.post(
         '/v1/samples',
         handleCtx(async (bot, req, res) => {
             try {
