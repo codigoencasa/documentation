@@ -41,7 +41,7 @@ const main = async () => {
 
     httpServer(+PORT)
 
-    provider.http.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
+    provider.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
         const { number, message } = req.body
         await bot.sendMessage(number, message, {})
         return res.end('send')
@@ -91,7 +91,7 @@ const main = async () => {
 
     httpServer(+PORT)
 
-    provider.http.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
+    provider.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
         const { number, message, media } = req.body
         await bot.sendMessage(number, message, { media }) // https://i.imgur.com/0HpzsEm.png
         return res.end('send')
@@ -130,7 +130,7 @@ const main = async () => {
 
     httpServer(+PORT)
 
-    provider.http.server
+    provider.server
     .use(upload.single('file'))
     .post('/v1/messages', handleCtx(async (bot, req, res) => {
         const { number, message } = req.body

@@ -6,7 +6,12 @@ export const description = 'Implement message queues for better resource managem
 
 # Fast Entires
 
-In many cases, users often write individual messages in a short period of time. The usual behavior of the bot is to respond to each message independently, which can be an annoying behavior in some use cases.
+## Issue {{not:'true'}}
+Sometimes it happens that people are impatient and write independent messages in a very short time gap preventing the bot to answer, which makes that each message is answered but not in the desired order.
+
+<Contributors users={['robertouski']} />
+
+## Possible Solution {{not:'true'}}
 
 For this other type of environments you can implement a functionality which you can create to have a margin of 3000ms for the user to write a message, and each time he writes a message in a time less than 3000ms it will accumulate all the messages and then after the margin time the bot will interpret everything as a single conversation.
 
@@ -18,8 +23,6 @@ flowchart LR
 ```
 
 Applying this implementation, what is achieved is that before passing to the processing stage, all independent messages (3) become one (1) and are processed as an independent message.
-
-Thank you __[robmoncayonabux](https://github.com/robmoncayonabux)__ for sharing this useful solution to a very particular use case.
 
 ```mermaid
 flowchart LR
@@ -119,5 +122,3 @@ Remember that this is an alternative solution, and it is possible that its imple
 <Guides />
 
 <Resources />
-
-<Contributors users={['leifermendez','robmoncayonabux']} />

@@ -11,7 +11,7 @@ You can change your provider very easily without affecting the logic of your bot
 It is as simple as implementing the connector of the provider of your choice. At the moment we have integrations with more than four suppliers.
 
 <Warning>
-Whatsapp: [Meta](providers#meta), [Twilio](providers#twilio), [Baileys](providers#baileys), [WPPConnect](providers#wpp-connect), [Venom](providers#venom). [Telegram](/plugins/telegram)
+Whatsapp: [Meta](providers#meta), [Twilio](providers#twilio), [Baileys](providers#baileys), [WPPConnect](providers#wpp-connect), [Venom](providers#venom), [Telegram](/plugins/telegram), [Custom Provider](providers#custom-provider)
 </Warning>
 
 
@@ -109,7 +109,7 @@ Below you will find more information about each of these providers.
 The [WhatsApp Business Platform](https://business.whatsapp.com/products/business-platform) enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service notifications or purchase updates, offer them a personalized level of service, and provide support through the channel of their choice.
 
 <Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information](/providers/meta)
+Remember that the following requirements must be met in order to implement the meta provider to production. [More information Meta](/providers/meta)
 </Warning>
 
 <CodeGroup>
@@ -148,6 +148,11 @@ main()
 ## Twilio
 
 [Twilio](https://www.twilio.com/en-us/messaging/channels/whatsapp) is a development platform that enables developers to build cloud communication applications and web systems. Twilio's communications APIs enable businesses to provide the right communication experience for their customers within web and mobile applications. By using Twilio APIs, developers can quickly add this functionality to an application, such as voice messaging, video calls, text messaging and more.
+
+<Warning>
+Remember that the following requirements must be met in order to implement the Twilio provider to production. [More information Twilio](/providers/twilio)
+</Warning>
+
 
 <CodeGroup>
 ```ts {{ title: 'twilio-provider.ts' }}
@@ -188,6 +193,11 @@ main()
 It is a project with great trajectory driven by people with great knowledge of the subject, you can deepen in this library directly in its documentation or [repository](https://github.com/WhiskeySockets/Baileys).
 
 Because this is a free provider that emulates the whatsapp web interface, you must scan the QR to log in.
+
+<Note>
+If you want to see more examples taking full advantage of this provider in conjunction with the builderbot library you can check this __@jorgechavarriaga__ [repository](https://github.com/jorgechavarriaga/builder_bot_baileys_examples)
+</Note>
+
 
 <CodeGroup>
 ```ts {{ title: 'baileys-provider.ts' }}
@@ -687,4 +697,3 @@ export class WaliEvents extends EventEmitterClass<ProviderEventTypes> {
 
 ---
 
-<Contributors users={['leifermendez']} />

@@ -4,9 +4,14 @@ import { Guides } from '@/components/Guides'
 
 export const description = 'Implement message queues for better resource management'
 
-# Queue
+# Queue Limit
 
-## How to implement and manage Queue Limit {{not:'true'}}
+## Issue {{not:'true'}}
+The problem was that when more than 60 people started a conversation in less than 20 seconds the bot did not respond to all the people.
+
+<Contributors users={['robertouski']} />
+
+## Possible Solution {{not:'true'}}
 
 The framework by default implements a queue manager based on per-user work promises.
 If you already understand the concept and you are in an environment where you receive a considerable number of recurring messages in a short period of time and you notice that it answers a large number of users but not all of them. You can try extending the process queue configuration.
@@ -56,5 +61,3 @@ const main = async () => {
 <Guides />
 
 <Resources />
-
-<Contributors users={['leifermendez','robmoncayonabux']} />
