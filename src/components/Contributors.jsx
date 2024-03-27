@@ -18,7 +18,7 @@ export function Contributors({users}) {
     fetchProfiles();
   }, []);
 
-  if (!listUsers.length) return <></>;
+  if (!listUsers.length) return <div className='min-h-[30px]'></div>;
 
   return (
     <div className='place-content-center'>
@@ -34,7 +34,6 @@ export function Contributors({users}) {
               className="rounded-full hover:shadow-md transition-all shadow-slate-400 m-0 bg-fuchsia-200"
             />
             </a>
-        
           </li>
         ))}
       </ul>

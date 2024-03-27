@@ -7,6 +7,10 @@ export const description =
 
 # Methods
 
+Inside each addAction or addAnswer we can execute logic and we can make use of some methods that will facilitate the development.
+
+---
+
 ## State
 
 In many occasions you will need to share data between flows and no matter if you have modularized your project in different files you can use state in the callback function to be able to access the individual state of each user.
@@ -79,8 +83,8 @@ __Remember__ that the state is independent per conversation between user and bot
 
 Each conversation history with the user is totally independent, in this way we avoid mixing conversations.
 
-
-  
+<RowCenter>
+  <Col>
 ```mermaid
 flowchart LR
     subgraph subState1[Conversation User A]
@@ -103,7 +107,8 @@ flowchart LR
     end
 
 ```
-
+  </Col>
+  <Col sticky>
 ```mermaid
 flowchart LR
     subgraph subState2[Conversation User B]
@@ -125,6 +130,11 @@ flowchart LR
       state ---> topState22
     end
 ```
+  </Col>
+</RowCenter>
+  
+
+
 
 
 

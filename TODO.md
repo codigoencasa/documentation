@@ -1,0 +1,5 @@
+- [ ] https://builderbot.vercel.app/en/events no sale el mermadi
+- [ ] cambiar video http://localhost:3000/en/quickstart
+- [ ] database custom
+- [ ] http://localhost:3000/en/providers/meta mejorar
+- [ ] http://localhost:3000/en/providers/twilio  mejorar

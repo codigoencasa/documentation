@@ -79,7 +79,7 @@ Tudo bem, vamos continuar. Se você precisar expor uma porta ou uma API para ouv
         })
 
         provider.initHttpServer(9000)
-            .http.server.post('/webhook', handleCtx((null, req, res) => {
+            .server.post('/webhook', handleCtx((null, req, res) => {
                     console.log('I am function what doing someting')
                     res.end('ok')
             }))

@@ -1,51 +1,49 @@
 import { cache } from "./cache"
 
-const GH_URL = 'https://api.github.com/repos/codigoencasa/documentation/contributors'
+const GH_URL = 'https://api.github.com/users'
+
 /**
  * Retrieve all profiles
  * @returns 
  */
 export const getProfiles = async (payload = []) => {
     payload = payload.map((c) => c.toLowerCase())
-    
-    let response
+
+    let contributors
     const cached = await cache.get('contributors')
-    
+
     if (cached) {
         console.log('***Using Cache***')
-        response = JSON.parse(cached)
-    }else{ 
-        console.log('***Using Fetching***')
-        const res = await fetch(GH_URL, {
-            next: { revalidate: 3600 },
-        })
-    
-        if (!res.ok) {
-            throw new Error('Failed to fetch API')
+        return cached
+    } else {
+        const fetchUser = async (username) => {
+            const res = await fetch(`${GH_URL}/${username}`, { next: { revalidate: 3600 } })
+            if (!res.ok) {
+                throw new Error(`Failed to fetch GitHub user: ${username}`)
+            }
+            return await res.json()
         }
 
-        response = await res.json()
-        await cache.set('contributors', JSON.stringify(response), 3600 * 1000)
+        contributors = await Promise.all(payload.map(async (username) => {
+            try {
+                const user = await fetchUser(username)
+                return {
+                    id: user.id,
+                    name: user.login.toLowerCase(),
+                    avatar: user.avatar_url,
+                    profile: user.html_url,
+                    contributions: user.contributions,
+                }
+            } catch (error) {
+                console.error(error.message)
+                return null
+            }
+        }))
     }
 
-    const contributors = response.map((contributor) => {
-        return {
-            id: contributor.id,
-            name: contributor.login,
-            avatar: contributor.avatar_url,
-            profile: contributor.html_url,
-            contributions: contributor.contributions,
-        }
-    })
 
-    const parse = contributors.reduce((prev, current) => {
-        current.name = current.name.toLowerCase()
-        if (payload.includes(current.name)) {
-            prev.push(current)
-            return prev
-        }
-        return prev
-    }, [])
-
+    const parse = contributors.filter(contributor => contributor !== null)
+    await cache.set('contributors', parse)
     return parse
 }
+

@@ -9,6 +9,7 @@ export const description =
 
 Sometimes users send messages such as an image, a video or special location messages, among others, to receive and start a conversation when a message of this type arrives we can use the events.
 
+<div>
 ```mermaid
 flowchart BT
     a(User)-.->eW((Welcome))-.->b[(BOT)]
@@ -17,6 +18,8 @@ flowchart BT
     d(User)-.->eL((Location))-.->b[(BOT)]
     e(User)-.->eV((Voice Note))-.->b[(BOT)]
 ```
+</div>
+
 
 ---
 
@@ -229,4 +232,3 @@ When a user sends a voice note, the VOICE_NOTE event will be triggered by defaul
 
 <Resources />
 
-<Contributors users={['leifermendez']} />

@@ -650,7 +650,7 @@ Imagine un caso en el que desea hablar con un contacto sin la intervención del 
     })
 
     adapterProvider.initHttpServer(3001)
-    adapterProvider.http.server.post('/mute-number', handleCtx(async (bot, req, res) => {
+    adapterProvider.server.post('/mute-number', handleCtx(async (bot, req, res) => {
         await bot.blacklist.add(`340000000`) // added to blacklist
         res.end('ok number muted')
     }))
