@@ -1,4 +1,4 @@
-import { cache } from "./cache"
+import { cache, ttl } from "./cache"
 
 const GH_URL = 'https://api.github.com/users'
 
@@ -43,7 +43,7 @@ export const getProfiles = async (payload = []) => {
 
 
     const parse = contributors.filter(contributor => contributor !== null)
-    await cache.set('contributors', parse)
+    await cache.set('contributors', parse, ttl)
     return parse
 }
 
