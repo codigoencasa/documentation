@@ -3,7 +3,95 @@ import { Resources } from '@/components/Resources'
 import { Guides } from '@/components/Guides'
 
 export const description =
-  'In this guide, we will discuss what to do when something goes wrong while working with the API.'
+  'In this guide, we will discuss how to create a Dockerfile and how to deploy your bot.'
 
 # Deploy
 
+## Docker
+
+Create your Dockerfile and run it with Docker
+
+```plaintext {{ name: 'Dockerfile' }}
+# THIS IS THE BASE IMAGE FOR THE BOT
+FROM node:21-alpine3.18 as builder
+
+# Enable Corepack and prepare for PNPM installation to increase performance
+RUN corepack enable && corepack prepare pnpm@latest --activate
+ENV PNPM_HOME=/usr/local/bin
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and pnpm-lock.yaml files to the working directory
+COPY package*.json pnpm-lock.yaml ./
+
+# Install dependencies using PNPM
+COPY . .
+RUN pnpm i
+
+# Create a new stage for deployment
+FROM builder as deploy
+
+# Copy only necessary files and directories for deployment
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
+
+RUN pnpm install
+CMD ["pnpm", "start"]
+```
+## Docker build
+
+__DOCKER BUILD__
+
+It's easy just only build the image with the following command
+
+```bash
+docker build -t bot .
+```
+
+## Docker run
+
+__DOCKER RUN__
+
+Firts we need the command to start the bot
+
+`docker rm -f bot 2>/dev/null` will remove the container if it exists beside the error message throw into /dev/null
+
+`docker run -d` will create a new container into background
+
+`--name bot` will be the name of the container
+
+`--cap-add=SYS_ADMIN` will add the SYS_ADMIN capability to the container
+
+`-e` will set an environment variable to the container you can create a lot of variables  
+    - Example:
+
+      -e OPENAI_API_KEY=YOUR_VALUE_OPENAI_API_KEY\
+      -e GOOGLE_API_KEY=YOUR_VALUE_GOOGLE_API_KEY\
+      -e TELEGRAM_TOKEN=YOUR_VALUE_TELEGRAM_TOKEN\
+      -e TELEGRAM_TOKEN=YOUR_VALUE_ENVIROMENT4\
+
+`-p` will set a port to the container
+    - Example:
+
+      -p 9000:9000
+
+`-v` will mount the bot sessions, bot sessions and tmp folders to the container
+
+`--restart always` will restart the container if it crashes
+
+
+```bash
+  docker rm -f bot 2>/dev/null
+  docker run -d \
+    --name bot \
+    --cap-add=SYS_ADMIN \
+    -e OPENAI_API_KEY=YOUR_VALUE_OPENAI_API_KEY \
+    -e PORT=9000 \
+    -v $(pwd)/bd.bin:/app/bd.bin:rw \
+    -v /root/bot_sessions:/app/bot_sessions:rw \
+    -v /root/tmp/:/app/tmp/:rw \
+    -p 9000:9000 \
+    --restart always \
+    bot
+```
