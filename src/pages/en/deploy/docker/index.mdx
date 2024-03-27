@@ -7,11 +7,12 @@ export const description =
 
 # Deploy
 
-## Docker
 
-Create your Dockerfile and run it with Docker
+Previously, you need to have [Docker installed](https://docs.docker.com/get-docker/) on your server depending on the operating system, the processes change, you can find all the official information about docker at this link.
 
-```plaintext {{ name: 'Dockerfile' }}
+Depending on the provider you have chosen, you will need a specific Docker implementation, but don't worry, as it comes automatically implemented in a file called Dockerfile, you can also view the other Dockerfiles in the templates section.
+
+```docker {{ title: 'Dockerfile' }}
 # THIS IS THE BASE IMAGE FOR THE BOT
 FROM node:21-alpine3.18 as builder
 
@@ -39,59 +40,43 @@ COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
 RUN pnpm install
 CMD ["pnpm", "start"]
 ```
-## Docker build
+---
 
-__DOCKER BUILD__
-
-It's easy just only build the image with the following command
-
-```bash
-docker build -t bot .
+## Build Image 
+In this step, we are going to build the Docker image with all the settings of your project, remember that depending on the libraries you are using, you may need to modify the `Dockerfile` for it to function correctly.
+``` {{ title:'Build Image'}}
+docker build . -t builderbot:latest
 ```
+
+You can see in your console that the image starts to build and the process logs are coming out, you must ensure that it ends with `naming to docker.io/library/builderbot:latest`
+
+```
+ => [internal] load build definition from Dockerfile                                             0.4s
+ => [internal] load metadata for docker.io/library/node:21-alpine3.18                            3.6s
+ => ....................
+ => => naming to docker.io/library/builderbot:latest
+```
+
+``` {{ title:'Run Container'}}
+docker run -d -p 3001:3001 builderbot:latest
+```
+
+---
 
 ## Docker run
 
-__DOCKER RUN__
+To run your containerized image by passing different environment variables depending on the configuration needed, you can do it in the following way.
 
-Firts we need the command to start the bot
-
-`docker rm -f bot 2>/dev/null` will remove the container if it exists beside the error message throw into /dev/null
-
-`docker run -d` will create a new container into background
-
-`--name bot` will be the name of the container
-
-`--cap-add=SYS_ADMIN` will add the SYS_ADMIN capability to the container
-
-`-e` will set an environment variable to the container you can create a lot of variables  
-    - Example:
-
-      -e OPENAI_API_KEY=YOUR_VALUE_OPENAI_API_KEY\
-      -e GOOGLE_API_KEY=YOUR_VALUE_GOOGLE_API_KEY\
-      -e TELEGRAM_TOKEN=YOUR_VALUE_TELEGRAM_TOKEN\
-      -e TELEGRAM_TOKEN=YOUR_VALUE_ENVIROMENT4\
-
-`-p` will set a port to the container
-    - Example:
-
-      -p 9000:9000
-
-`-v` will mount the bot sessions, bot sessions and tmp folders to the container
-
-`--restart always` will restart the container if it crashes
-
-
-```bash
-  docker rm -f bot 2>/dev/null
-  docker run -d \
-    --name bot \
-    --cap-add=SYS_ADMIN \
-    -e OPENAI_API_KEY=YOUR_VALUE_OPENAI_API_KEY \
-    -e PORT=9000 \
-    -v $(pwd)/bd.bin:/app/bd.bin:rw \
-    -v /root/bot_sessions:/app/bot_sessions:rw \
-    -v /root/tmp/:/app/tmp/:rw \
-    -p 9000:9000 \
-    --restart always \
-    bot
+```{{ title:'Run Container'}}
+docker rm -f bot 2>/dev/null
+docker run -d \
+  --name bot \
+  --cap-add=SYS_ADMIN \
+  -e OPENAI_API_KEY=YOUR_VALUE_OPENAI_API_KEY \
+  -e PORT=9000 \
+  -v $(pwd)/bd.bin:/app/bd.bin:rw \
+  -v /root/bot_sessions:/app/bot_sessions:rw \
+  -p 3001:3001 \
+  --restart always \
+  builderbot:latest
 ```

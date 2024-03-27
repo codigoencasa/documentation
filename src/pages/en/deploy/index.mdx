@@ -1,4 +1,3 @@
-working ... [docker](/deploy/docker)
 working ... [meta](/deploy/meta)
 
 import { Contributors } from '@/components/Contributors'
@@ -10,8 +9,11 @@ export const description =
 
 Congratulations the time has come to take your project to production and for your convenience there are several ways to achieve this from quite tenic options to other easier strategies.
 
+It should be noted that for the application to function correctly, the execution must be kept alive, which means that a server running the application code must be maintained.
+Therefore, __it is not recommended to use serverless__  services.
+
 <Note>
-Whatsapp: [Meta](providers#meta), [Twilio](providers#twilio), [Baileys](providers#baileys), [WPPConnect](providers#wpp-connect), [Venom](providers#venom), [Telegram](/plugins/telegram), [Custom Provider](providers#custom-provider)
+Deployment methods: [Railway](/deploy/railway), [Docker](/deploy/docker), [VPS](providers#baileys)
 </Note>
 
 
@@ -19,52 +21,44 @@ Whatsapp: [Meta](providers#meta), [Twilio](providers#twilio), [Baileys](provider
 
 ## Railway {{tag:'Easy'}}
 
-The [WhatsApp Business Platform](https://business.whatsapp.com/products/business-platform) enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service notifications or purchase updates, offer them a personalized level of service, and provide support through the channel of their choice.
+[Railway](https://railway.app?referralCode=jyd_0y) provides infrastructure primitives with sane defaults to manage secrets, builds, and deploys. So you can start quickly and focus on your product.
 
-<Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information Meta](/providers/meta)
-</Warning>
+Using this service, you won't have to worry about anything as it is capable of automatically reading the different packages necessary for your application to function correctly, in addition to providing you with a subdomain with HTTPS security.
+<Image label="Start a new project" src="https://i.imgur.com/Zbr5YDO.png" />
 
-<CodeGroup>
-```ts {{ title: 'meta-provider.ts' }}
-import { createProvider } from "@builderbot/bot";
-import { MetaProvider } from '@builderbot/provider-meta';
-
-export type IProvider = typeof MetaProvider
-export const adapterProvider = createProvider(MetaProvider, {
-    jwtToken: 'jwtToken',
-    numberId: 'numberId',
-    verifyToken: 'verifyToken',
-    version: 'v16.0',
-})
-```
-</CodeGroup>
+<div className="not-prose aling-block">
+  <Button
+    href="/deploy/railway"
+    variant="text"
+    arrow="right"
+    children="More info about it"
+  />
+</div>
 
 ---
 
 
 ## Docker {{tag:'Medium'}}
 
-The [WhatsApp Business Platform](https://business.whatsapp.com/products/business-platform) enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service notifications or purchase updates, offer them a personalized level of service, and provide support through the channel of their choice.
+[Dockerizing](https://docs.docker.com/engine/install/) the application is the best option if you are looking for a more personalized and scalable solution. It is also important to note that today most cloud providers support Docker containers and offer automated deployment processes.
+Bot templates come with a default `Dockerfile` for basic operation. Keep in mind that depending on other libraries you use, this file may need to be adapted for proper functioning.
 
-<Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information Meta](/providers/meta)
-</Warning>
-
-<CodeGroup>
-```ts {{ title: 'meta-provider.ts' }}
-import { createProvider } from "@builderbot/bot";
-import { MetaProvider } from '@builderbot/provider-meta';
-
-export type IProvider = typeof MetaProvider
-export const adapterProvider = createProvider(MetaProvider, {
-    jwtToken: 'jwtToken',
-    numberId: 'numberId',
-    verifyToken: 'verifyToken',
-    version: 'v16.0',
-})
+``` {{ title:'Build Image'}}
+docker build . -t builderbot:latest
 ```
-</CodeGroup>
+``` {{ title:'Run Container'}}
+docker run -d -p 3001:3001 builderbot:latest
+```
+
+<div className="not-prose aling-block">
+  <Button
+    href="/deploy/docker"
+    variant="text"
+    arrow="right"
+    children="More info about it"
+  />
+</div>
+
 
 ---
 

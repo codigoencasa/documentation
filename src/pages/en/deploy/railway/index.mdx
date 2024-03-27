@@ -1,0 +1,35 @@
+export const description =
+  'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
+
+# Railway 
+
+[Railway](https://railway.app?referralCode=jyd_0y) provides infrastructure primitives with sane defaults to manage secrets, builds, and deploys. So you can start quickly and focus on your product.
+
+Using this service, you won't have to worry about anything as it is capable of automatically reading the different packages necessary for your application to function correctly, in addition to providing you with a subdomain with HTTPS security.
+
+---
+
+## Railway Step by Step {{not:'true'}}
+
+The first thing we need to do is click on start a new project and follow the steps you will find below
+
+<Image label="Start a new project" src="https://i.imgur.com/Zbr5YDO.png" />
+
+Now with your Github account linked in railway, you will be able to see the list of all your projects available for deployment, select the one corresponding to builderbot
+
+<Image label="To begin, register and click on Start a new project" src="https://i.imgur.com/2SOCLIB.png" />
+
+Depending on whether your project requires environment variables `.env`, you should select Add variables or simply click on Deploy Now.
+
+<Image label="Select the GitHub project" src="https://i.imgur.com/p2Z2NS9.png" />
+
+After clicking on deploy, you will find a screen similar to the following where we can see the construction and deployment process of your project. Depending on the number of packages you have installed, this process may take approximately __4 to 10 minutes__. If you see that this time has elapsed and it is still running, try refreshing the browser.
+
+<Image label="Deploying" src="https://i.imgur.com/U0bdh5x.png" />
+
+In the settings section, you will find a section called "networking" which has the ability to generate a domain, click on this will generate a domain with an SSL certificate that will serve you to use as a webhook, API, or even a portal to scan the QR code.
+<Image label="HTTPS Domain" src="https://i.imgur.com/fy80sJG.png" />
+
+Now you have your project deployed on railway, you can repeat these steps for each bot you want to deploy.
+
+---

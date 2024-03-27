@@ -245,6 +245,7 @@ Sometimes we will need to turn off the bot for a certain user, so that we can ha
 const flow = addKeyword<BaileysProvider>('magic keyword')
   .addAction(async (_, { state, endFlow }) => {
       const botOffForThisUser = state.get<boolean>('botOffForThisUser')
+      await state.update({botOffForThisUser:!botOffForThisUser})
       if(botOffForThisUser) return endFlow()
   })
   .addAnswer('Hello!')
@@ -259,10 +260,12 @@ Sometimes we will need to disable the bot for all people, without the need to sh
 ```ts
 const flow = addKeyword<BaileysProvider>('botoff')
   .addAction(async (_, { globalState, endFlow }) => {
-      const botOffForEveryOne = globalState.get<boolean>('botOffForEveryOne')
-      if(botOffForEveryOne) return endFlow()
+  const botOffForEveryOne = globalState.get<boolean>('botOffForEveryOne')
+    await globalState.update({botOffForEveryOne:!botOffForEveryOne})
+    if(botOffForEveryOne) return endFlow()
   })
   .addAnswer('Hello!')
+  
 ```
 
 ---
