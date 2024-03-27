@@ -79,7 +79,7 @@ Muy bien, continuemos. Si necesita exponer un puerto o una API para escuchar y e
         })
 
         provider.initHttpServer(9000)
-            .http.server.post('/webhook', handleCtx((null, req, res) => {
+            .server.post('/webhook', handleCtx((null, req, res) => {
                     console.log('I am function what doing someting')
                     res.end('ok')
             }))

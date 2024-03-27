@@ -51,7 +51,9 @@ In this example we can see the basis of a simple bot which responds to the keywo
 import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
 import { BaileysProvider } from '@builderbot/provider-baileys'
 
-const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi'])
+    .addAnswer('Ey! welcome')
+    .addAnswer(`Send image from URL`, { media: 'https://i.imgur.com/0HpzsEm.png' })
 
 const main = async () => {
 
@@ -67,7 +69,7 @@ const main = async () => {
 
     httpServer(3000)
 
-    adapterProvider.http.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
+    adapterProvider.server.post('/v1/messages', handleCtx(async (bot, req, res) => {
         const { number, message } = req.body
         await bot.sendMessage(number, message, {})
         return res.end('send')

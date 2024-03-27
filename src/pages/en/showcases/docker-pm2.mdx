@@ -6,11 +6,16 @@ export const description = 'Implement message queues for better resource managem
 
 # Scheduled Reboots
 
+## Issue {{not:'true'}}
+Occasionally, the bot's programming seems to be unresponsive or the server does not have enough resources.
+
+<Contributors users={['']} />
+
+## Possible Solution {{not:'true'}}
+
 When using the free providers we will need to restart the bot to avoid accumulating temporary data that may affect its performance. In that case an easy solution to implement is to schedule restarts, these restarts will not need to scan the QR again.
 
-## Docker and Pm2
-
-One way to do it if you are using docker could be to implement in your docker image Pm2 and with pm2-runtime start your container with a cron pattern.
+Docker and Pm2 One way to do it if you are using docker could be to implement in your docker image Pm2 and with pm2-runtime start your container with a cron pattern.
 
 In the following Dockerfile we can see how we start the project with a pattern `0 */12 * * *` that means that it will restart every 12 hours
 

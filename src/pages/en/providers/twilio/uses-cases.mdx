@@ -1,0 +1,89 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description =
+  'In this guide, we will discuss what to do when something goes wrong while working with the API.'
+
+# Twilio Uses Cases
+
+
+```ts
+import { createBot, createProvider, createFlow, addKeyword } from '@builderbot/bot'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { TwilioProvider as Provider } from '@builderbot/provider-twilio'
+
+const PORT = process.env.PORT ?? 3008
+
+const welcomeFlow = addKeyword<Provider, Database>(['test'])
+    .addAnswer('send files...')
+    .addAnswer(`Send image from URL`,
+        { media: 'https://builderbot.vercel.app/_next/static/media/logo-v2.5d15651a.png' }
+    )
+    .addAnswer(`Send video from URL`,
+        { media: 'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4' }
+    )
+    .addAnswer(`Send audio from URL`,
+        { media: 'https://cdn.freesound.org/previews/728/728142_11861866-lq.mp3' }
+    )
+    .addAnswer(`Send file from URL`,
+        { media: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' }
+    )
+    .addAnswer(`First Way to Send Buttons`, {
+        buttons:
+            [
+                { body: 'Order' },
+                { body: 'Register' },
+                { body: 'Catalog' }
+            ]
+    })
+
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(Provider, {
+        accountSid: process.env.ACCOUNT_SID,
+        authToken: process.env.AUTH_TOKEN,
+        vendorNumber: process.env.VENDOR_NUMBER,
+    })
+    const adapterDB = new Database()
+
+    const { handleCtx, httpServer } = await createBot<Provider>({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+
+    adapterProvider.server.post(
+        '/v1/samples',
+        handleCtx(async (bot, req, res) => {
+            try {
+                const { number, message, urlMedia } = req.body
+
+                await bot.sendMessage(number, message, { media: urlMedia ?? null })
+
+                await bot.provider.sendMessage(number, message, {})
+
+                return res.end('ok')
+
+            } catch (error) {
+                console.log(error)
+                return res.end('error')
+            }
+        })
+    )
+
+    httpServer(+PORT)
+
+}
+
+main()
+
+```
+
+
+----
+
+<Guides />
+
+<Resources />
+
