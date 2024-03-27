@@ -23,6 +23,7 @@
     "acorn": "^8.11.3",
     "algoliasearch": "^4.22.1",
     "autoprefixer": "^10.4.17",
+    "cache-manager": "^5.4.0",
     "clsx": "^2.1.0",
     "focus-visible": "^5.2.0",
     "framer-motion": "^11.0.5",
