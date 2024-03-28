@@ -18,19 +18,20 @@ export const Image = function Img(props) {
   const showModal = () => setIsOpen(true)
 
   return (
-  <>
-  <img 
-  onClick={showModal}
-  className='not-prose justify-center text-center cursor-pointer aling-block my-6 overflow-hidden max-h-[800px]  rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10' {...props} />
-        {isOpen && (
-        <Modal
-          src={props.src}
-          alt="snow"
-          caption="caption"
-          onClose={() => setIsOpen(false)}
-        />
-      )}
-  </>
+  <div className='my-6 bg-gray-100 rounded-2xl dark:bg-zinc-800'>
+    {props?.label ? <div className="flex py-1 flex-wrap items-start gap-x-4 px-4  dark:border-zinc-800 dark:bg-transparent"><h3 className="mr-auto m-0 text-xs font-thin">{props.label}</h3></div> : <></> }
+    <img 
+      onClick={showModal}
+      className='not-prose justify-center text-center cursor-pointer aling-block  overflow-hidden max-h-[800px]  rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10' {...props} />
+            {isOpen && (
+            <Modal
+              src={props.src}
+              alt="snow"
+              caption="caption"
+              onClose={() => setIsOpen(false)}
+            />
+          )}
+  </div>
   )
 }
 

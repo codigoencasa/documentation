@@ -108,9 +108,6 @@ Below you will find more information about each of these providers.
 
 The [WhatsApp Business Platform](https://business.whatsapp.com/products/business-platform) enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service notifications or purchase updates, offer them a personalized level of service, and provide support through the channel of their choice.
 
-<Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information Meta](/providers/meta)
-</Warning>
 
 <CodeGroup>
 ```ts {{ title: 'meta-provider.ts' }}
@@ -143,15 +140,20 @@ main()
 ```
 </CodeGroup>
 
+<div className="not-prose aling-block">
+  <Button
+    href="/providers/meta"
+    variant="text"
+    arrow="right"
+    children="More info about Meta provider"
+  />
+</div>
+
 ---
 
 ## Twilio
 
 [Twilio](https://www.twilio.com/en-us/messaging/channels/whatsapp) is a development platform that enables developers to build cloud communication applications and web systems. Twilio's communications APIs enable businesses to provide the right communication experience for their customers within web and mobile applications. By using Twilio APIs, developers can quickly add this functionality to an application, such as voice messaging, video calls, text messaging and more.
-
-<Warning>
-Remember that the following requirements must be met in order to implement the Twilio provider to production. [More information Twilio](/providers/twilio)
-</Warning>
 
 
 <CodeGroup>
@@ -184,7 +186,14 @@ const main = async () => {
 main()
 ```
 </CodeGroup>
-
+<div className="not-prose aling-block">
+  <Button
+    href="/providers/twilio"
+    variant="text"
+    arrow="right"
+    children="More info about Twilio provider"
+  />
+</div>
 ---
 
 ## Baileys

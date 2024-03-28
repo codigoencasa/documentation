@@ -1,0 +1,86 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description =
+  'In this guide, we will discuss how to create a Dockerfile and how to deploy your bot.'
+
+# VPS (Virtual Private Server)
+
+Prioritize initiating a connection to your server using SSH or via your chosen cloud provider's preferred method. This initial step is essential to start following this entire tutorial.
+<Note>
+If you are using windows I recommend [git-scm](https://git-scm.com/download/win), otherwise if you are using Linux or Mac you already have git by default.
+</Note>
+
+```bash
+ssh root@XX.XX.XX.XXX -pXX
+sudo apt-get update && sudo apt-get upgrade -y
+```
+
+
+First you must download the [NodeJS installation](https://nodejs.org/en/download/package-manager) depending on your operating system but this guide focuses on Ubuntu 22.
+It is important to run the following commands in order for the changes to take effect
+
+```bash {{title:' Install NVM (Node Version Manager)'}}
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+```
+
+```bash {{title:' Set NVM environment variables'}}
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+```
+
+```bash {{title:' Install Node.js version 20'}}
+nvm install 20
+```
+
+Now you have node installed on your server ready to use, the following steps will be performed inside the directory of your project you are working on.
+
+We will proceed to install [pnpm](https://pnpm.io/) the node package manager that we use and we will also install [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/) that daemon which helps us to keep node applications running in the background.
+
+
+
+```bash {{title:' Install pnpm and pm2'}}
+npm i pnpm@latest pm2 --global
+```
+Now we proceed to clone the builderbot-examples project and install the dependencies necessary for its operation.
+
+<Warning>
+Remember to release the corresponding ports in your server's firewall. Example 3008
+</Warning>
+
+```bash {{title:' Clone Project'}}
+git clone https://github.com/codigoencasa/builderbot-examples-bot.git
+cd builderbot-examples-bot
+```
+```bash {{title:' Install', label:'/root/builderbot-examples-bot'}}
+pnpm install
+```
+Como es un proyecto en TypeScript necesitamos hacer el paso previo de la compilaciones y posteriormente iniciamos nuestro proyecto con pm2 ademas si quieres ver los logs puedes usar el comando `pm2 logs`
+
+```bash {{title:' Build',  label:'/root/builderbot-examples-bot'}}
+pnpm run build
+pm2 start ./dist/app.js --name bot
+pm2 logs
+```
+
+``` {{title:' Terminal'}}
+🛜  HTTP Server ON
+[POST]: http://localhost:3008/v1/messages
+[GET]: http://localhost:3008/
+
+⚡⚡ ACTION REQUIRED ⚡⚡
+You must scan the QR Code
+Remember that the QR code updates every minute
+Need help: https://link.codigoencasa.com/DISCORD
+```
+
+As we can see the project is running and ready to scan the QR code, now only remains to link your whatsapp for that step visit `http://your-ip-public:3008`.
+<Warning>
+Remember this QR code is updated every 45 seconds approximately, if you have a linking error refresh the F5 page.
+</Warning>
+<Image label="Link your whatsapp application" src="https://i.imgur.com/NqBuP2t.png" />
+
+
+---

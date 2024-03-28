@@ -1,0 +1,117 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description =
+  'In this guide, we will discuss how to create a Dockerfile and how to deploy your bot.'
+
+# Deploy
+
+
+Previously, you need to have [Docker installed](https://docs.docker.com/get-docker/) on your server depending on the operating system, the processes change, you can find all the official information about docker at this link.
+
+Depending on the provider you have chosen, you will need a specific Docker implementation, but don't worry, as it comes automatically implemented in a file called Dockerfile, you can also view the other Dockerfiles in the templates section.
+
+<Note>
+Dockerfile, [Build Image](docker#build-image), [Run Container](docker#run-container), [Portainer](docker#portainer)
+</Note>
+
+```docker {{ title: 'Dockerfile' }}
+# THIS IS THE BASE IMAGE FOR THE BOT
+FROM node:21-alpine3.18 as builder
+
+# Enable Corepack and prepare for PNPM installation to increase performance
+RUN corepack enable && corepack prepare pnpm@latest --activate
+ENV PNPM_HOME=/usr/local/bin
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and pnpm-lock.yaml files to the working directory
+COPY package*.json pnpm-lock.yaml ./
+
+# Install dependencies using PNPM
+COPY . .
+RUN pnpm i
+
+# Create a new stage for deployment
+FROM builder as deploy
+
+# Copy only necessary files and directories for deployment
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
+
+RUN pnpm install
+CMD ["pnpm", "start"]
+```
+---
+
+## Build Image 
+In this step, we are going to build the Docker image with all the settings of your project, remember that depending on the libraries you are using, you may need to modify the `Dockerfile` for it to function correctly.
+``` {{ title:'Build Image'}}
+docker build . -t builderbot:latest
+```
+
+You can see in your console that the image starts to build and the process logs are coming out, you must ensure that it ends with `naming to docker.io/library/builderbot:latest`
+
+```
+ => [internal] load build definition from Dockerfile                                             0.4s
+ => [internal] load metadata for docker.io/library/node:21-alpine3.18                            3.6s
+ => ....................
+ => => naming to docker.io/library/builderbot:latest
+```
+
+---
+
+## Run Container
+
+To run your containerized image by passing different environment variables depending on the configuration needed, you can do it in the following way.
+
+<Warning>
+Remember to release the corresponding ports in your server's firewall. Example 3008
+</Warning>
+
+<CodeGroup>
+
+```{{ title:'Run Container Full'}}
+docker rm -f bot 2>/dev/null
+docker run -d \
+  --name "amazing-bot" \
+  --env OPENAI_API_KEY="your_api_key_value" \
+  --user $(id -u):$(id -g) \
+  -p 3008:3008/tcp \
+  -v /root/sessions/bot_sessions:/app/bot_sessions:rw \
+  --cap-add SYS_ADMIN \
+  --restart always \
+  builderbot:latest
+```
+``` {{ title:'Run Container Quick'}}
+docker run -d -p 3008:3008 builderbot:latest
+```
+</CodeGroup>
+
+
+| Command                              | Explanation                                                                                                                                                                       |
+|--------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| __`docker rm -f bot 2>/dev/null`__  | Deletes any running container named "bot", if it exists. The `2>/dev/null` redirects any error message to nothing, meaning if the container doesn't exist, no error message will be displayed. |
+| __`docker run -d`__                     | Starts a new Docker container in detached mode (in the background).                                                                                                              |
+| __`--name "amazing-bot"`__             | Assigns the name "amazing-bot" to the container.                                                                                                                                  |
+| __`--env OPENAI_API_KEY="API"`__ | Sets the environment variable `OPENAI_API_KEY` inside the container to the provided value, which should be a valid API key to access OpenAI.                             |
+| __`--user $(id -u):$(id -g)`__         | Specifies the user and group under which the process will run inside the container. `$(id -u)` gets the current user ID of the system and `$(id -g)` gets the current group ID. |
+| __`-p 3008:3008/tcp`__                 | Publishes port 3008 of the container to port 3008 of the host, allowing traffic to be directed to the container's port.                                                           |
+| __`-v /root/sessions/bot_sessions:/app/bot_sessions:rw`__ | Mounts the host directory `/root/sessions/bot_sessions` to the container directory `/app/bot_sessions` with read-write permissions (`rw`).                                      |
+| __`--cap-add SYS_ADMIN`__               | Grants the container the `SYS_ADMIN` capability, providing a broad set of system administration capabilities.                                                                     |
+| __`--restart always`__                 | Configures the container to restart automatically if it stops or encounters an error.                                                                                            |
+| __`builderbot:latest`__                | Specifies the Docker image to be used for creating and running the container. In this case, `builderbot:latest` is the image tag.                                              |
+
+---
+
+## Portainer 
+
+If you are already familiar with docker and want to manage different bots mounted in containers a good OpenSource option is portainer.
+
+[Portainer](https://docs.portainer.io/) Community Edition is a user-friendly platform tailored for managing containerized applications across various environments like Docker, Swarm, Kubernetes, and ACI. With its straightforward deployment and intuitive interface, it simplifies the management of container resources such as images, volumes, and networks through a graphical interface or an API. Portainer operates within a single container, adaptable to both Linux and Windows environments.
+
+<Image label="List of bots" src="https://i.imgur.com/lNW9hH2.png" />
+
+---
