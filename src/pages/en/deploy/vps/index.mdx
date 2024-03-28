@@ -7,17 +7,13 @@ export const description =
 
 # VPS (Virtual Private Server)
 
-
-Previously, you need to have [Docker installed](https://docs.docker.com/get-docker/) on your server depending on the operating system, the processes change, you can find all the official information about docker at this link.
-
-Depending on the provider you have chosen, you will need a specific Docker implementation, but don't worry, as it comes automatically implemented in a file called Dockerfile, you can also view the other Dockerfiles in the templates section.
-
+Prioritize initiating a connection to your server using SSH or via your chosen cloud provider's preferred method. This initial step is essential to start following this entire tutorial.
 <Note>
-Dockerfile, [Build Image](docker#build-image), [Run Container](docker#run-container), [Portainer](docker#portainer)
+If you are using windows I recommend [git-scm](https://git-scm.com/download/win), otherwise if you are using Linux or Mac you already have git by default.
 </Note>
 
 ```bash
-ssh root@66.97.47.153 -p5088
+ssh root@XX.XX.XX.XXX -pXX
 sudo apt-get update && sudo apt-get upgrade -y
 ```
 

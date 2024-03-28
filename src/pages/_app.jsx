@@ -18,7 +18,6 @@ Router.events.on('hashChangeStart', onRouteChange)
 
 export default function App({ Component, pageProps }) {
   let router = useRouter()
-  console.log({pageProps})
   return (
     <>
       <Head>

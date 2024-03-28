@@ -55,27 +55,19 @@ Bot templates come with a default `Dockerfile` for basic operation. Keep in mind
 
 ---
 
-## VPS {{tag:'Medium'}}
+## VPS {{tag:'Hard'}}
 
-The [WhatsApp Business Platform](https://business.whatsapp.com/products/business-platform) enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service notifications or purchase updates, offer them a personalized level of service, and provide support through the channel of their choice.
+Should you be considering the deployment of your bot onto a private server (VPS), our comprehensive guide is tailored specifically for Ubuntu server environments. This meticulously crafted, step-by-step manual not only provides detailed instructions but also offers insightful guidance on the critical factors to consider throughout the deployment process. By following this guide, you can navigate the intricacies of VPS deployment with confidence, ensuring a smooth and successful integration of your bot into your desired hosting environment.
 
-<Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information Meta](/providers/meta)
-</Warning>
+<Image label="Run on Ubuntu VPS" src="https://i.imgur.com/FFMp4Jd.png" /> 
 
-<CodeGroup>
-```ts {{ title: 'meta-provider.ts' }}
-import { createProvider } from "@builderbot/bot";
-import { MetaProvider } from '@builderbot/provider-meta';
 
-export type IProvider = typeof MetaProvider
-export const adapterProvider = createProvider(MetaProvider, {
-    jwtToken: 'jwtToken',
-    numberId: 'numberId',
-    verifyToken: 'verifyToken',
-    version: 'v16.0',
-})
-```
-</CodeGroup>
-
+<div className="not-prose aling-block">
+  <Button
+    href="/deploy/vps"
+    variant="text"
+    arrow="right"
+    children="More info about it"
+  />
+</div>
 ---
