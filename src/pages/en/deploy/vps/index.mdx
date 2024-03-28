@@ -48,7 +48,7 @@ We will proceed to install [pnpm](https://pnpm.io/) the node package manager tha
 ```bash {{title:' Install pnpm and pm2'}}
 npm i pnpm@latest pm2 --global
 ```
-Ahora procedemos a clonar el proyecto builderbot-examples y instalar dependencies necesarios para su funcionamiento
+Now we proceed to clone the builderbot-examples project and install the dependencies necessary for its operation.
 
 <Warning>
 Remember to release the corresponding ports in your server's firewall. Example 3008
@@ -58,14 +58,14 @@ Remember to release the corresponding ports in your server's firewall. Example 3
 git clone https://github.com/codigoencasa/builderbot-examples-bot.git
 cd builderbot-examples-bot
 ```
-```bash {{title:' Install'}}
+```bash {{title:' Install', label:'/root/builderbot-examples-bot'}}
 pnpm install
 ```
 Como es un proyecto en TypeScript necesitamos hacer el paso previo de la compilaciones y posteriormente iniciamos nuestro proyecto con pm2 ademas si quieres ver los logs puedes usar el comando `pm2 logs`
 
-```bash {{title:' Build'}}
+```bash {{title:' Build',  label:'/root/builderbot-examples-bot'}}
 pnpm run build
-pm2 start ./dist/app.js --name bot2
+pm2 start ./dist/app.js --name bot
 pm2 logs
 ```
 
@@ -79,74 +79,12 @@ You must scan the QR Code
 Remember that the QR code updates every minute
 Need help: https://link.codigoencasa.com/DISCORD
 ```
----
 
-## Build Image 
-In this step, we are going to build the Docker image with all the settings of your project, remember that depending on the libraries you are using, you may need to modify the `Dockerfile` for it to function correctly.
-``` {{ title:'Build Image'}}
-docker build . -t builderbot:latest
-```
-
-You can see in your console that the image starts to build and the process logs are coming out, you must ensure that it ends with `naming to docker.io/library/builderbot:latest`
-
-```
- => [internal] load build definition from Dockerfile                                             0.4s
- => [internal] load metadata for docker.io/library/node:21-alpine3.18                            3.6s
- => ....................
- => => naming to docker.io/library/builderbot:latest
-```
-
----
-
-## Run Container
-
-To run your containerized image by passing different environment variables depending on the configuration needed, you can do it in the following way.
-
+As we can see the project is running and ready to scan the QR code, now only remains to link your whatsapp for that step visit `http://your-ip-public:3008`.
 <Warning>
-Remember to release the corresponding ports in your server's firewall. Example 3008
+Remember this QR code is updated every 45 seconds approximately, if you have a linking error refresh the F5 page.
 </Warning>
+<Image label="Link your whatsapp application" src="https://i.imgur.com/NqBuP2t.png" />
 
-<CodeGroup>
-
-```{{ title:'Run Container Full'}}
-docker rm -f bot 2>/dev/null
-docker run -d \
-  --name "amazing-bot" \
-  --env OPENAI_API_KEY="your_api_key_value" \
-  --user $(id -u):$(id -g) \
-  -p 3008:3008/tcp \
-  -v /root/sessions/bot_sessions:/app/bot_sessions:rw \
-  --cap-add SYS_ADMIN \
-  --restart always \
-  builderbot:latest
-```
-``` {{ title:'Run Container Quick'}}
-docker run -d -p 3008:3008 builderbot:latest
-```
-</CodeGroup>
-
-
-| Command                              | Explanation                                                                                                                                                                       |
-|--------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| __`docker rm -f bot 2>/dev/null`__  | Deletes any running container named "bot", if it exists. The `2>/dev/null` redirects any error message to nothing, meaning if the container doesn't exist, no error message will be displayed. |
-| __`docker run -d`__                     | Starts a new Docker container in detached mode (in the background).                                                                                                              |
-| __`--name "amazing-bot"`__             | Assigns the name "amazing-bot" to the container.                                                                                                                                  |
-| __`--env OPENAI_API_KEY="API"`__ | Sets the environment variable `OPENAI_API_KEY` inside the container to the provided value, which should be a valid API key to access OpenAI.                             |
-| __`--user $(id -u):$(id -g)`__         | Specifies the user and group under which the process will run inside the container. `$(id -u)` gets the current user ID of the system and `$(id -g)` gets the current group ID. |
-| __`-p 3008:3008/tcp`__                 | Publishes port 3008 of the container to port 3008 of the host, allowing traffic to be directed to the container's port.                                                           |
-| __`-v /root/sessions/bot_sessions:/app/bot_sessions:rw`__ | Mounts the host directory `/root/sessions/bot_sessions` to the container directory `/app/bot_sessions` with read-write permissions (`rw`).                                      |
-| __`--cap-add SYS_ADMIN`__               | Grants the container the `SYS_ADMIN` capability, providing a broad set of system administration capabilities.                                                                     |
-| __`--restart always`__                 | Configures the container to restart automatically if it stops or encounters an error.                                                                                            |
-| __`builderbot:latest`__                | Specifies the Docker image to be used for creating and running the container. In this case, `builderbot:latest` is the image tag.                                              |
-
----
-
-## Portainer 
-
-If you are already familiar with docker and want to manage different bots mounted in containers a good OpenSource option is portainer.
-
-[Portainer](https://docs.portainer.io/) Community Edition is a user-friendly platform tailored for managing containerized applications across various environments like Docker, Swarm, Kubernetes, and ACI. With its straightforward deployment and intuitive interface, it simplifies the management of container resources such as images, volumes, and networks through a graphical interface or an API. Portainer operates within a single container, adaptable to both Linux and Windows environments.
-
-<Image label="List of bots" src="https://i.imgur.com/lNW9hH2.png" />
 
 ---
