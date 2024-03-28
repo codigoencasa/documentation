@@ -5,7 +5,7 @@ import { Guides } from '@/components/Guides'
 export const description =
   'In this guide, we will discuss how to create a Dockerfile and how to deploy your bot.'
 
-# Deploy
+# VPS (Virtual Private Server)
 
 
 Previously, you need to have [Docker installed](https://docs.docker.com/get-docker/) on your server depending on the operating system, the processes change, you can find all the official information about docker at this link.
@@ -16,33 +16,68 @@ Depending on the provider you have chosen, you will need a specific Docker imple
 Dockerfile, [Build Image](docker#build-image), [Run Container](docker#run-container), [Portainer](docker#portainer)
 </Note>
 
-```docker {{ title: 'Dockerfile' }}
-# THIS IS THE BASE IMAGE FOR THE BOT
-FROM node:21-alpine3.18 as builder
+```bash
+ssh root@66.97.47.153 -p5088
+sudo apt-get update && sudo apt-get upgrade -y
+```
 
-# Enable Corepack and prepare for PNPM installation to increase performance
-RUN corepack enable && corepack prepare pnpm@latest --activate
-ENV PNPM_HOME=/usr/local/bin
 
-# Set the working directory
-WORKDIR /app
+First you must download the [NodeJS installation](https://nodejs.org/en/download/package-manager) depending on your operating system but this guide focuses on Ubuntu 22.
+It is important to run the following commands in order for the changes to take effect
 
-# Copy package.json and pnpm-lock.yaml files to the working directory
-COPY package*.json pnpm-lock.yaml ./
+```bash {{title:' Install NVM (Node Version Manager)'}}
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+```
 
-# Install dependencies using PNPM
-COPY . .
-RUN pnpm i
+```bash {{title:' Set NVM environment variables'}}
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+```
 
-# Create a new stage for deployment
-FROM builder as deploy
+```bash {{title:' Install Node.js version 20'}}
+nvm install 20
+```
 
-# Copy only necessary files and directories for deployment
-COPY --from=builder /app/src ./src
-COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
+Now you have node installed on your server ready to use, the following steps will be performed inside the directory of your project you are working on.
 
-RUN pnpm install
-CMD ["pnpm", "start"]
+We will proceed to install [pnpm](https://pnpm.io/) the node package manager that we use and we will also install [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/) that daemon which helps us to keep node applications running in the background.
+
+
+
+```bash {{title:' Install pnpm and pm2'}}
+npm i pnpm@latest pm2 --global
+```
+Ahora procedemos a clonar el proyecto builderbot-examples y instalar dependencies necesarios para su funcionamiento
+
+<Warning>
+Remember to release the corresponding ports in your server's firewall. Example 3008
+</Warning>
+
+```bash {{title:' Clone Project'}}
+git clone https://github.com/codigoencasa/builderbot-examples-bot.git
+cd builderbot-examples-bot
+```
+```bash {{title:' Install'}}
+pnpm install
+```
+Como es un proyecto en TypeScript necesitamos hacer el paso previo de la compilaciones y posteriormente iniciamos nuestro proyecto con pm2 ademas si quieres ver los logs puedes usar el comando `pm2 logs`
+
+```bash {{title:' Build'}}
+pnpm run build
+pm2 start ./dist/app.js --name bot2
+pm2 logs
+```
+
+``` {{title:' Terminal'}}
+🛜  HTTP Server ON
+[POST]: http://localhost:3008/v1/messages
+[GET]: http://localhost:3008/
+
+⚡⚡ ACTION REQUIRED ⚡⚡
+You must scan the QR Code
+Remember that the QR code updates every minute
+Need help: https://link.codigoencasa.com/DISCORD
 ```
 ---
 

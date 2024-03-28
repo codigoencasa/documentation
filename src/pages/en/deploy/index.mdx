@@ -13,7 +13,7 @@ It should be noted that for the application to function correctly, the execution
 Therefore, __it is not recommended to use serverless__  services.
 
 <Note>
-Deployment methods: [Railway](/deploy/railway), [Docker](/deploy/docker), [VPS](providers#baileys)
+Deployment methods: [Railway](/deploy/railway), [Docker](/deploy/docker), [VPS](/deploy/vps)
 </Note>
 
 
@@ -43,12 +43,7 @@ Using this service, you won't have to worry about anything as it is capable of a
 [Dockerizing](https://docs.docker.com/engine/install/) the application is the best option if you are looking for a more personalized and scalable solution. It is also important to note that today most cloud providers support Docker containers and offer automated deployment processes.
 Bot templates come with a default `Dockerfile` for basic operation. Keep in mind that depending on other libraries you use, this file may need to be adapted for proper functioning.
 
-``` {{ title:'Build Image'}}
-docker build . -t builderbot:latest
-```
-``` {{ title:'Run Container'}}
-docker run -d -p 3001:3001 builderbot:latest
-```
+<Image label="List of bots" src="https://i.imgur.com/lNW9hH2.png" />
 
 <div className="not-prose aling-block">
   <Button
@@ -62,7 +57,7 @@ docker run -d -p 3001:3001 builderbot:latest
 
 ---
 
-## VPS {{tag:'Hard'}}
+## VPS {{tag:'Medium'}}
 
 The [WhatsApp Business Platform](https://business.whatsapp.com/products/business-platform) enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service notifications or purchase updates, offer them a personalized level of service, and provide support through the channel of their choice.
 
@@ -82,118 +77,6 @@ export const adapterProvider = createProvider(MetaProvider, {
     verifyToken: 'verifyToken',
     version: 'v16.0',
 })
-```
-</CodeGroup>
-
----
-
-
-
-Providers are in charge of providing the communication bridge between your bot and __whatsapp__, __telegram__ or custom provider.
-
-You can change your provider very easily without affecting the logic of your bot. 
-It is as simple as implementing the connector of the provider of your choice. At the moment we have integrations with more than four suppliers.
-
-<Warning>
-Whatsapp: [Meta](providers#meta), [Twilio](providers#twilio), [Baileys](providers#baileys), [WPPConnect](providers#wpp-connect), [Venom](providers#venom), [Telegram](/plugins/telegram), [Custom Provider](providers#custom-provider)
-</Warning>
-
-
-Each provider may need to adjust access keys, settings, among other properties that are usually passed as an object in the `createProvider` function.
-
-<CodeGroup>
-```ts {{ title: 'meta-provider.ts' }}
-import { createProvider } from "@builderbot/bot";
-import { MetaProvider } from '@builderbot/provider-meta';
-
-export type IProvider = typeof MetaProvider
-export const adapterProvider = createProvider(MetaProvider, {
-    jwtToken: 'jwtToken',
-    numberId: 'numberId',
-    verifyToken: 'verifyToken',
-    version: 'v16.0',
-})
-```
-
-```ts {{ title: 'twilio-provider.ts' }}
-import { createProvider } from "@builderbot/bot";
-import { TwilioProvider } from '@builderbot/provider-twilio';
-
-export type IProvider = typeof TwilioProvider
-export const adapterProvider = createProvider(TwilioProvider, {
-    accountSid: 'YOUR_ACCOUNT_SID',
-    authToken: 'YOUR_ACCOUNT_TOKEN',
-    vendorNumber: '+14155238886',
-    publicUrl: "public_url", //optional
-});
-```
-
-```ts {{ title: 'baileys-provider.ts' }}
-import { createProvider } from "@builderbot/bot";
-import { BaileysProvider } from '@builderbot/provider-baileys';
-
-export type IProvider = typeof BaileysProvider
-export const adapterProvider = createProvider(BaileysProvider)
-```
-
-```ts {{ title: 'venom-provider.ts' }}
-import { createProvider } from "@builderbot/bot";
-import { VenomProvider } from '@builderbot/provider-venom';
-
-export type IProvider = typeof VenomProvider
-export const adapterProvider = createProvider(VenomProvider)
-```
-
-```ts {{ title: 'wppconnect-provider.ts' }}
-import { createProvider } from "@builderbot/bot";
-import { WPPConnectProvider } from '@builderbot/provider-wppconnect';
-
-export type IProvider = typeof WPPConnectProvider
-export const adapterProvider = createProvider(WPPConnectProvider)
-```
-
-</CodeGroup>
-
-Below you will find more information about each of these providers.
-
----
-
-## Meta
-
-The [WhatsApp Business Platform](https://business.whatsapp.com/products/business-platform) enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service notifications or purchase updates, offer them a personalized level of service, and provide support through the channel of their choice.
-
-<Warning>
-Remember that the following requirements must be met in order to implement the meta provider to production. [More information Meta](/providers/meta)
-</Warning>
-
-<CodeGroup>
-```ts {{ title: 'meta-provider.ts' }}
-import { createProvider } from "@builderbot/bot";
-import { MetaProvider } from '@builderbot/provider-meta';
-
-export type IProvider = typeof MetaProvider
-export const adapterProvider = createProvider(MetaProvider, {
-    jwtToken: 'jwtToken',
-    numberId: 'numberId',
-    verifyToken: 'verifyToken',
-    version: 'v16.0',
-})
-```
-```ts {{ title: 'app.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
-import { IProvider, adapterProvider } from './meta-provider';
-
-const welcomeFlow = addKeyword<IProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
-
-const main = async () => {
-    await createBot({
-        flow: createFlow([welcomeFlow]),
-        provider: adapterProvider,
-        database: new MemoryDB()
-    })
-}
-
-main()
 ```
 </CodeGroup>
 
