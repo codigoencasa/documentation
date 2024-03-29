@@ -29,9 +29,14 @@ This page provides instructions on how to edit BuilderBot documentation. Our goa
 Open source work never ends, and neither does documentation. Contributing to the documentation is a great way for beginners to get involved in open source and for experienced developers to clarify more complex issues while sharing their knowledge with the community.
 
 By contributing to BuilderBot documentation, you help us create a more robust learning resource for all developers. If you've found a typo, a confusing section, or noticed that a particular topic is missing, your contributions are welcome and appreciated.
+
+---
+
 ## How to Contribute
 
 The content of the documentation is located in the [BuilderBot repository](https://github.com/codigoencasa/documentation). To contribute, you can edit the files directly on GitHub or clone the repository and edit the files locally.
+
+---
 
 ## GitHub Workflow
 
@@ -41,9 +46,13 @@ If you're new to GitHub, we recommend you read the GitHub Open Source Guide to l
 The code in the underlying documents lives in a private codebase that syncs with the public BuilderBot repository. This means that you cannot preview the docs locally. However, you will see your changes in builderbot.app after merging a pull request.
 </Note>
 
+---
+
 ## Writing MDX
 
 The docs are written in [MDX](https://mdxjs.com/), a markdown format that supports JSX syntax. This allows us to embed React components in the docs. See the [GitHub Markdown Guide](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) for a quick overview of markdown syntax.
+
+---
 
 ## VSCode
 
@@ -65,6 +74,8 @@ Then, add the following line to your `settings.json` file:
 
 Next, open the command palette again, and search for `Markdown: Preview File` or `Markdown: Open Preview to the Side`. This will open a preview window where you can see your formatted changes.
 
+---
+
 ## Extensions
 
 We also recommend the following extensions for VSCode users:
@@ -73,11 +84,15 @@ We also recommend the following extensions for VSCode users:
 - [Grammarly](https://marketplace.visualstudio.com/items?itemName=znck.grammarly): Grammar and spell checker.
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode): Format MDX files on save.
 
+---
+
 ## Review Process
 
 Once you have submitted your contribution, a __Core Team__ member will review your changes, provide feedback and merge the pull request when ready.
 
 Please let us know if you have any questions or need further assistance in the comments of your PR. Thank you for contributing to the BuilderBot docs and for being part of our community.
+
+---
 
 ## File Structure
 
@@ -108,6 +123,8 @@ pt
 └── ...
 ```
 
+---
+
 ## Required Fields
 
 The following fields are **required**:
@@ -122,6 +139,8 @@ export const description = 'In this guide, we will talk ...'
 
 # Community
 ```
+
+---
 
 ## Code Blocks
 
@@ -142,6 +161,8 @@ const flow = addKeyword('hello')
 ```
 
 Always run examples locally before committing them. This will ensure that the code is up-to-date and working.
+
+---
 
 ## Language and Filename
 
@@ -170,6 +191,8 @@ When writing JavaScript code blocks, we use the following language and extension
 | JavaScript files   | ```js    | .js       |
 | TypeScript files   | ```ts    | .ts       |
 
+
+---
 
 ## Grouped code blocks
 
@@ -295,5 +318,3 @@ main()
 <Guides />
 
 <Resources />
-
-<Contributors users={['leifermendez','lualreye']} />

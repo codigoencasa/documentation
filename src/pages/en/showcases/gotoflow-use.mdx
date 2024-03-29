@@ -6,13 +6,17 @@ import { Guides } from '@/components/Guides'
 
 
 ## Issue {{not:'true'}}
-Sometimes it happens that people are impatient and write independent messages in a very short time gap preventing the bot to answer, which makes that each message is answered but not in the desired order.
+I needed to be able to detect users that were already registered in my system so I need to make a get http query to my external system to check if that number was registered or not and depending on that divert it to a convenient flow.
 
-<Contributors users={['C4rlos-Mor4n']} />
+<Contributors mode users={['C4rlos-Mor4n']} />
+
+---
 
 ## Possible Solution {{not:'true'}}
 
-In my use case I needed to be able to detect users that were already registered in my system so I need to make a get http query to my external system to check if that number was registered or not and depending on that divert it to a convenient flow.
+A possible solution is to make use of the gotoFlow to be able to divert the logic depending on the response of the http request to be able to verify if the user is registered in the database or is a new user.
+registered in the database or is a new user.
+
 <CodeGroup>
 ```ts {{ title: 'app.ts' }}
 import { createBot, createProvider, createFlow, addKeyword, MemoryDB, EVENTS } from "@bot-whatsapp/bot";

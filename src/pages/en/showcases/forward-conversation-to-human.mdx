@@ -3,10 +3,22 @@ import { Resources } from '@/components/Resources'
 import { Guides } from '@/components/Guides'
 
 # Forward conversation to human
+## Issue {{not:'true'}}
+I need to be able to stop the bot to continue the conversation with one person but still allow other people to see it.
 
-Some business logics need at some point to divert the conversational flow to a human agent who can continue talking to the person but without the bot interfering, using the bot as a bridge.
+<Contributors mode users={['vicente1992']} />
 
-In this example we have the function `blackListFlow` which waits for a message coming from the __ADMIN__ number which has to send a message `Mute +34000000` indicating the number you want to mute this means that the bot will not answer to that person and to unmute it sends again the same phrase.
+---
+
+## Possible Solution {{not:'true'}}
+
+In this example let's imagine that the bot number is `ADMIN_NUMBER` the idea is that if a user writes me the bot will answer this is correct, but 
+I want to pause the bot for that user, what I do is write to my own number from the whatsapp with a phrase `Mute +34000000` assuming that the number 
+of the user I want to pause is `+34000000` and the logic I perform is to clean characters to only get 
+`34000000` and check if it exists in a __blackList__ if it is not found I add it in this way the bot stops responding to that
+ user and I can continue talking to the person and when I want to reactivate the bot for this person I write again `Mute +34000000`
+ and if it is found it removes it from the blacklist is basically a switch.
+
 
 <CodeGroup>
 
@@ -19,19 +31,20 @@ import { numberClean } from './utils'
 const PORT = process.env.PORT ?? 3008
 const ADMIN_NUMBER = process.env.ADMIN_NUMBER 
 
-const blackListFlow = addKeyword<Provider, Database>('mute').addAction(async (ctx, { blacklist, flowDynamic }) => {
-    if (ctx.from === ADMIN_NUMBER) {
-        const toMute = numberClean(ctx.body) //Mute +34000000 message incoming
-        const check = blacklist.checkIf(toMute)
-        if (!check) {
-            blacklist.add(toMute)
-            await flowDynamic(`❌ ${toMute} muted`)
+const blackListFlow = addKeyword<Provider, Database>('mute')
+    .addAction(async (ctx, { blacklist, flowDynamic }) => {
+        if (ctx.from === ADMIN_NUMBER) {
+            const toMute = numberClean(ctx.body) //Mute +34000000 message incoming
+            const check = blacklist.checkIf(toMute)
+            if (!check) {
+                blacklist.add(toMute)
+                await flowDynamic(`❌ ${toMute} muted`)
+                return
+            }
+            blacklist.remove(toMute)
+            await flowDynamic(`🆗 ${toMute} unmuted`)
             return
         }
-        blacklist.remove(toMute)
-        await flowDynamic(`🆗 ${toMute} unmuted`)
-        return
-    }
 })
 
 const fullSamplesFlow = addKeyword<Provider, Database>(['samples', utils.setEvent('SAMPLES')])
@@ -50,7 +63,6 @@ const main = async () => {
     })
 
     httpServer(+PORT)
-
 }
 
 main()
@@ -70,5 +82,3 @@ export const numberClean = (raw: string): string => {
 <Guides />
 
 <Resources />
-
-<Contributors users={['leifermendez','lualreye']} />
