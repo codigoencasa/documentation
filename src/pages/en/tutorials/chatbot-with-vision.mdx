@@ -33,7 +33,7 @@ import imageFlow from "./flows/image.flow"
 await createbot({
     database: new MemoryDB(),
     provider: createProvider(BaileysProvider),
-    flow: createFlow([imageFlow])
+    flow: createFlow([...othersFlows, imageFlow])
 })
 
 ```

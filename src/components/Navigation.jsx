@@ -206,6 +206,8 @@ export const navigation = [
     title: 'Tutorials',
     links: [
       { title: 'Vision', href: '/tutorials/chatbot-with-vision' },
+      { title: 'Context', href: '/tutorials/chatbot-with-context' },
+
     ]
   },
   {
