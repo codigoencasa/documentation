@@ -199,8 +199,16 @@ export const navigation = [
       { title: 'Quickstart', href: '/quickstart' },
       { title: 'Concepts', href: '/concepts' },
       { title: 'Examples', href: '/uses-cases' },
-      { title: 'Events', href: '/events' },
+      { title: 'Events', href: '/events' }
     ],
+  },
+  {
+    title: 'Tutorials',
+    links: [
+      { title: 'Vision', href: '/tutorials/chatbot-with-vision' },
+      { title: 'Context', href: '/tutorials/chatbot-with-context' },
+
+    ]
   },
   {
     title: 'Features',
