@@ -5,7 +5,16 @@ import { Resources } from '@/components/Resources'
 export const description =
   'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
 
-# Concepts
+
+# Why BuilderBot?
+
+__BuilderBot is the framework__ for the creation of ChatBots focused on low-frequency communication channels, whatsapp, telegram, etc.
+We implement an architecture focused on improving the developer experience and the reuse of logic at all times, 
+if you need to create chatbots for whatsapp quickly, without limits and easy connection between different providers then BuilderBot is for you.
+
+
+
+---
 
 The library is based on three key components for its correct functioning: the Flow, in charge of building the context of the conversation and offering a friendly interface to the developer; the Provider, which acts as a connector allowing to easily switch between WhatsApp providers without the risk of affecting other parts of the bot; and the Database, which in line with this connector philosophy, facilitates changing the data persistence layer without the need to rewrite the workflow.
 
@@ -14,7 +23,7 @@ flowchart LR
     a{Flow}-->b[(Database)]-->c(((Provider)))
 ```
 
----
+
 
 ## Flow
 
@@ -62,7 +71,7 @@ For a quick understanding of the operation we have prepared a basic example of h
 
 ## Provider
 
-It is a key piece used to deliver the message to the chosen supplier. In a case you are building a bot for whatsapp you should use an adapter like __Meta__, __Twilio__, __Baileys__, etc or even if you want to connect to Telegram.
+It is a key piece used to deliver the message to the chosen supplier. In a case you are building a bot for whatsapp you should use an adapter like __[Meta](/providers#meta)__, __[Twilio](/providers#twilio)__, __[Baileys](/providers#baileys)__, etc or even if you want to connect to Telegram.
 
 
 <CodeGroup>

@@ -13,6 +13,7 @@ import { useMobileNavigationStore } from '@/components/MobileNavigation'
 import { ModeToggle } from '@/components/ModeToggle'
 import { MobileSearch, Search } from '@/components/Search'
 import LanguageSelector from './LanguajeSelector'
+import { TopBar } from './TopBar'
 
 function TopLevelNavItem({ href, children, target }) {
   return (
@@ -53,6 +54,7 @@ export const Header = forwardRef(function Header({ className }, ref) {
         '--bg-opacity-dark': bgOpacityDark,
       }}
     >
+  
       <div
         className={clsx(
           'absolute inset-x-0 top-full h-px transition',

@@ -193,52 +193,69 @@ function NavigationGroup({ group, className }) {
 
 export const navigation = [
   {
-    title: 'Guides',
+    title: 'Start here',
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
       { title: 'Concepts', href: '/concepts' },
       { title: 'Examples', href: '/uses-cases' },
-      { title: 'Events', href: '/events' }
     ],
   },
   {
-    title: 'Tutorials',
+    title: 'Basics',
     links: [
-      { title: 'Vision', href: '/tutorials/chatbot-with-vision' },
-      { title: 'Context', href: '/tutorials/chatbot-with-context' },
-
+      { title: 'Functions', href: '/add-functions' },
+      { title: 'Context', href: '/context' },
+      { title: 'Methods', href: '/methods' },
+      { title: 'Events', href: '/events' },
     ]
   },
   {
-    title: 'Features',
+    title: 'Built-in',
     links: [
-      { title: 'Add Functions', href: '/add-functions' },
-      { title: 'Context', href: '/context' },
-      { title: 'Methods', href: '/methods' },
       { title: 'Databases', href: '/databases' },
       { title: 'Providers', href: '/providers' },
-      { title: 'Deploy', href: '/deploy' },
-    ],
+    ]
   },
   {
-    title: 'Showcases',
+    title: 'Deploy',
+    links: [
+      { title: 'Resume', href: '/deploy' },
+      { title: 'Railway', href: '/deploy/railway' },
+      { title: 'Docker', href: '/deploy/docker' },
+      { title: 'VPS', href: '/deploy/vps' },
+    ]
+  },
+  {
+    title: 'Recipes',
     links: [
       { title: 'Queue limit', href: '/showcases/queue-limit' },
       { title: 'Modularize', href: '/showcases/modularize' },
       { title: 'Fast Entries', href: '/showcases/fast-entires' },
       { title: 'Idle', href: '/showcases/idle-optional' },
       { title: 'Scheduled Reboots', href: '/showcases/docker-pm2' },
-      { title: 'API Rest', href: '/showcases/api-use' },
       { title: 'In-Out messages', href: '/showcases/event-in-out-messages' },
       { title: 'Forward to human', href: '/showcases/forward-conversation-to-human' },
       {title: 'GotoFlow Use' , href: '/showcases/gotoflow-use'}
     ],
   },
   {
+    title: 'Tutorials',
+    links: [
+      { title: 'API Rest', href: '/tutorials/api-use' },
+      { title: 'Gemini', href: '/tutorials/chatbot-with-gemini' },
+    ]
+  },
+  {
+    title: 'Community Contribute',
+    links: [
+      { title: 'Documentation', href: '/contribute' },
+      { title: 'Core', href: '/contribute/core' },
+    ],
+  },
+  {
     title: 'Plugins',
     links: [
-      { title: 'Contributing', href: '/plugins' },
       { title: 'Telegram', href: '/plugins/telegram' },
       { title: 'Shopify', href: '/plugins/shopify' },
       { title: 'Agents', href: '/plugins/agents' },
