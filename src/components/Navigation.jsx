@@ -244,6 +244,7 @@ export const navigation = [
     links: [
       { title: 'API Rest', href: '/tutorials/api-use' },
       { title: 'Gemini', href: '/tutorials/chatbot-with-gemini' },
+      { title: 'Meta', href: '/tutorials/tricks-meta' },
     ]
   },
   {
