@@ -1,0 +1,139 @@
+# Builderbot x Langchain
+
+```bash {{title: 'pnpm'}}
+    pnpm install @builderbot-plugins/langchain
+```
+
+This is a series of utilities that use AI based on the langchain framework
+
+each class returns an addkeyword like the one we know, with 3 important methods
+
+`setKeyword` create a new addkeyword
+
+`setAIModel` create a model based on openai or gemini
+
+`create` create a new flow
+
+
+
+<Warning>
+    each flow update the state and save the response that you expected user like `await state.update({  })`
+</Warning>
+
+
+<CodeGroup>
+
+```ts {{title: 'routingFlow.ts'}}
+import "dotenv/config"
+import { EVENTS, MemoryDB, createBot, createFlow, createProvider } from "@builderbot/bot"
+import { TelegramProvider } from "@builderbot-plugins/telegram"
+import { createFlowRouting, structuredOutput } from "src"
+import z from "zod"
+
+const welcome = createFlowRouting
+    .setKeyword(EVENTS.WELCOME)
+    .setIntentions({ 
+        intentions: ['greeting','closure'], 
+        description: `GREETING: if the user greets\nCLOSURE: if the user says goodbye or thanks for anything`
+    })
+    .setAIModel({ modelName: 'gemini' })
+    .create({
+        afterEnd(flow) {
+            return flow.addAction((_, { state }) => {
+                console.log(state.get('intention'))
+                state.clear()
+            })
+        },
+    })
+
+const main = async () => {
+    const provider = createProvider(TelegramProvider)
+
+    createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow([welcome])
+    })
+}
+
+main()
+```
+
+```ts {{title: 'structuredFlow.ts'}}
+import "dotenv/config"
+import { EVENTS, MemoryDB, createBot, createFlow, createProvider } from "@builderbot/bot"
+import { TelegramProvider } from "@builderbot-plugins/telegram"
+import { createFlowRouting, structuredOutput } from "src"
+import z from "zod"
+
+
+const welcome = structuredOutput
+    .setKeyword(EVENTS.WELCOME)
+    .setAIModel({ modelName: 'gemini' })
+    .setZodSchema(z.object({ 
+        name: z.string()
+        .nullable()
+        .describe('The name of the person interacting') }))
+    .create({
+        afterEnd(flow) {
+            return flow.addAction((_, { state }) => {
+                console.log(state.get('schema'))
+                state.clear()
+            })
+        },
+    })
+
+const main = async () => {
+    const provider = createProvider(TelegramProvider)
+
+    createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow([welcome])
+    })
+}
+
+main()
+
+```
+
+```ts {{ title: 'aiFlow.ts'}}
+import "dotenv/config"
+import { EVENTS, MemoryDB, createBot, createFlow, createProvider } from "@builderbot/bot"
+import { TelegramProvider } from "@builderbot-plugins/telegram"
+import { createFlowRouting, structuredOutput } from "src"
+import z from "zod"
+
+
+const welcome = createAIFlow
+    .setKeyword(EVENTS.WELCOME)
+    .setAIModel({ modelName: 'gemini' })
+    .setZodSchema(
+        z.object({
+            name: z.string().nullable().describe('The name of the person the user is asking about'),
+            age: z.number().nullable().describe('The age of the person the user is asking about')
+        })
+    )
+    .create({
+        afterEnd(flow) {
+            return flow.addAction((_, { state }) => {
+                console.log(state.get('aiAnswer'))
+                state.clear()
+            })
+        }
+    })
+const main = async () => {
+    const provider = createProvider(TelegramProvider)
+
+    createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow([welcome])
+    })
+}
+
+main()
+
+```
+
+</CodeGroup>
