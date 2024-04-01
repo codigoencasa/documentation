@@ -22,7 +22,7 @@
     "@vercel/analytics": "^1.1.4",
     "acorn": "^8.11.3",
     "algoliasearch": "^4.22.1",
-    "autoprefixer": "^10.4.17",
+    "autoprefixer": "^10.4.19",
     "cache-manager": "^5.4.0",
     "clsx": "^2.1.0",
     "focus-visible": "^5.2.0",
