@@ -261,6 +261,7 @@ export const navigation = [
       { title: 'Telegram', href: '/plugins/telegram' },
       { title: 'Shopify', href: '/plugins/shopify' },
       { title: 'Agents', href: '/plugins/agents' },
+      { title: 'langchain', href: '/plugins/langchain' }
     ],
   },
 ]
