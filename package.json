@@ -21,7 +21,7 @@
     "@tailwindcss/typography": "^0.5.10",
     "@vercel/analytics": "^1.1.4",
     "acorn": "^8.11.3",
-    "algoliasearch": "^4.22.1",
+    "algoliasearch": "^4.23.2",
     "autoprefixer": "^10.4.17",
     "cache-manager": "^5.4.0",
     "clsx": "^2.1.0",
