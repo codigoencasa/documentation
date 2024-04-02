@@ -23,9 +23,9 @@ export default function App({ Component, pageProps }) {
     <>
       <Head>
         {router.pathname === '/' ? (
-          <title>API Reference</title>
+          <title>BuilderBot.app Create a WhatsApp Chatbot, Without Limit</title>
         ) : (
-          <title>{`${pageProps?.title || 'Documentation'} - API Reference`}</title>
+          <title>{`${pageProps?.title || 'Documentation'} - BuilderBot.app`}</title>
         )}
 
         <meta name="description" content={pageProps.description} />
