@@ -1,0 +1,103 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+
+# External API Call
+
+Firstly, let's create a script named 'get_joke.ts' inside a folder called 'services'. This script will handle the API call to the external service and return the response. 
+Then, in our 'app.ts', we import it, make the call, and display the response accordingly.
+
+<Contributors mode users={['jorgechavarriaga']} />
+
+<CodeGroup>
+```ts {{ title: 'services/get_joke.ts' }}
+import axios from 'axios'
+import { config } from 'dotenv'
+config()
+
+const apiKey = process.env.X_RapidAPI_Key
+export async function generate_joke() {
+    try {
+        const options = {
+            method: 'GET',
+            url: 'https://jokeapi-v2.p.rapidapi.com/joke/Any',
+            params: {
+                format: 'json',
+                idRange: '0-150'
+            },
+            headers: {
+                'X-RapidAPI-Key': apiKey,
+                'X-RapidAPI-Host': 'jokeapi-v2.p.rapidapi.com'
+            }
+        }
+        const response = await axios.request(options)
+
+        if (response.data.type === 'single') {
+            return { joke: response.data.joke, delivery: null };
+        } else if (response.data.type === 'twopart') {
+            return { joke: response.data.setup, delivery: response.data.delivery };
+        } else {
+            return { error: true, message: 'Tipo de chiste no reconocido' };
+        }
+    } catch (error) {
+        return { error: true, message: `API error: ${error}` };
+    }
+}
+
+```
+
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, EVENTS } from '@builderbot/bot'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+import { generate_joke } from './api'
+import { config } from 'dotenv'
+config()
+
+const PHONE_NUMBER = process.env.PHONE_NUMBER
+
+const welcomeFlow = addKeyword<Provider, Database>(EVENTS.WELCOME)
+    .addAnswer(`💡Example *EXTERNAL API call*`)
+    .addAnswer(
+        '*Here\'s a Joke from the API:*',
+        null,
+        async (_, { flowDynamic }) => {
+            const { joke, delivery, error, message } = await generate_joke()
+            if (!error) {
+                if (delivery) {
+                    await flowDynamic(joke)
+                    await flowDynamic(delivery, { delay: 5000 })
+                } else {
+                    await flowDynamic(joke)
+                }
+            } else {
+                await flowDynamic(`Error: ${message}`)
+            }
+        }
+    )
+
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(Provider, { usePairingCode: true, phoneNumber: PHONE_NUMBER })
+    const adapterDB = new Database()
+    const botResult = await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+
+}
+
+main()
+```
+
+</CodeGroup>
+
+<img style={{minHeight:'450px'}} className="rounded-2xl bg-zinc-900 w-full shadow-md dark:ring-1 dark:ring-white/10" src="/assets/examples/api_call.png" alt="API Call Example" />
+
+---
+
+<Guides />
+
+<Resources />
