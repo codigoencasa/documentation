@@ -3,4 +3,5 @@
 - [ ] database custom
 - [ ] http://localhost:3000/en/providers/meta mejorar
 - [ ] http://localhost:3000/en/providers/twilio  mejorar
+- [ ] node cron  recordatorio
 - [ ] footer cajas
