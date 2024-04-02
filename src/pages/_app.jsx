@@ -27,7 +27,7 @@ export default function App({ Component, pageProps }) {
         ) : (
           <title>{`${pageProps?.title || 'Documentation'} - BuilderBot.app Chatbot for Whatsapp, Telegram and more`}</title>
         )}
-
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="description" content={pageProps.description} />
         <meta property="og:url" content="https://builderbot.app/"/>
         <meta property="og:type" content="website"/>
