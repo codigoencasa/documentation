@@ -8,7 +8,7 @@ import { useMobileNavigationStore } from '@/components/MobileNavigation'
 
 import '@/styles/tailwind.css'
 import 'focus-visible'
-import { TopBar } from '@/components/TopBar';
+// import { TopBar } from '@/components/TopBar';
 
 function onRouteChange() {
   useMobileNavigationStore.getState().close()
@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }) {
         {router.pathname === '/' ? (
           <title>BuilderBot.app Create a WhatsApp Chatbot, Without Limit</title>
         ) : (
-          <title>{`${pageProps?.title || 'Documentation'} - BuilderBot.app`}</title>
+          <title>{`${pageProps?.title || 'Documentation'} - BuilderBot.app Chatbot for Whatsapp, Telegram and more`}</title>
         )}
 
         <meta name="description" content={pageProps.description} />
