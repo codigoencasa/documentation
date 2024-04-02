@@ -1,0 +1,124 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Warning } from "@/components/mdx"
+import { Guides } from '@/components/Guides'
+
+# Welcome to Builderbot x Langchain
+
+When we want something more personality and intelligence in our assistants, the first thing we think about is Openai, what if I tell you that there is a simple way to get the most out of your LLM?
+
+<Contributors mode users={['elimeleth']} />
+
+---
+
+## Firts steps
+
+
+let's look at a simple but very valuable trick. to be able to know the user's intention, we have tried it before with DialogFlow but what a headache, let's go for something easier
+
+<Warning>
+first of all you need to install these libs
+
+```bash
+pnpm i @langchain/openai @langchain/core zod
+```
+</Warning>
+
+<CodeGroup>
+```ts {{title:'./ai/catch-intention.ts'}}
+import { z } from "zod";
+import { ChatOpenAI } from "@langchain/openai";
+
+export const openAiGP4Model = new ChatOpenAI({
+    modelName: 'gpt-4',
+    openAIApiKey: 'YOUR_API_KEY_HERE',
+})
+
+const SYSTEM_STRUCT = `just only history based: 
+{history}
+
+Answer the users question as best as possible.`
+
+
+export const PROMPT_STRUCT = ChatPromptTemplate.fromMessages([
+    ["system", SYSTEM_STRUCT],
+    ["human", "{question}"]
+]);
+
+
+
+const catchIntention = z.object({
+    intention: z.enum(['UNKNOWN', 'SALES', 'GREETING', 'CLOSURE'])
+        .describe('Categorize the following conversation and decide what the intention is')
+})
+.describe('Given the following products, you should structure it in the best way, do not alter or edit anything')
+
+const llmWithToolsCatchIntention = openAiGP4Model.withStructuredOutput(catchIntention, {
+    name: "CatchIntention",
+});
+
+export const getIntention = (text: string): Promise<string> => {
+    try {
+        const { intention } = await PROMPT_STRUCT.pipe(llmWithToolsCatchIntention).invoke({
+            question: text,
+            history: await history.getHistory(state)
+        })
+        
+        return String(intention).toLocaleLowerCase()
+    } catch (errorIntention) {
+        return 'unknown'
+    }
+}  
+
+
+```
+```ts {{title:'app.ts'}}
+import { createBot, MemoryDB, createProvider } from '@builderbot/bot'
+import { MetaProvider } from '@builderbot/provider-meta'
+import { getIntention } from './ai/catch-intention'
+
+const PORT = process.env.PORT ?? 3001
+
+const welcome = addKeyword(EVENTS.WELCOME)
+    .addAction(async (ctx, { gotoflow }) => {
+        const intention = getIntention(ctx.body)
+
+        if (intention === 'greeting') {
+            return gotoFlow(anyFlowThatYouDecide)
+        }else if (intention === 'sales') {
+            /* sales flow */
+            /* any flow */
+        }
+    })
+
+const main = async () => {
+    const provider = createProvider(MetaProvider)
+
+    const { handleCtx, httpServer } = await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow([welcome]),
+    })
+
+    httpServer(+PORT)
+
+    provider.server.post('/v1/register', handleCtx(async (bot, req, res) => {
+        const { number, name } = req.body
+        await bot.dispatch('EVENT_REGISTER', { from: number, name })
+        return res.end('trigger')
+    }))
+}
+
+main()
+
+```
+</CodeGroup>
+
+That way you can validate the intentions of your end customer and set up your own purchase flow as easy as that
+
+
+---
+
+<Guides />
+
+<Resources />
