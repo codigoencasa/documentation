@@ -22,11 +22,20 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        {router.pathname === '/' ? (
+        {router.pathname === '/en' || router.pathname === '/es' || router.pathname === '/pt' ? (
           <title>BuilderBot.app Create a WhatsApp Chatbot, Without Limit</title>
         ) : (
+          <>
+          {(pageProps?.title) ? <>
+            <meta
+            property="og:image"
+            content={'https://builderbot.vercel.app/api/og?title='+pageProps?.title }
+          />
+          </> : <></>}
           <title>{`${pageProps?.title || 'Documentation'} - BuilderBot.app Chatbot for Whatsapp, Telegram and more`}</title>
+          </>
         )}
+     
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="description" content={pageProps.description} />
         <meta property="og:url" content="https://builderbot.app/"/>

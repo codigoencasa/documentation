@@ -221,7 +221,7 @@ export const navigation = [
     links: [
       { title: 'Meta', href: '/providers/meta' },
       { title: 'Twilio', href: '/providers/twilio' },
-      { title: 'Baileys', href: '/providers#baileys' },
+      { title: 'Baileys', href: '/providers/baileys' },
       { title: 'Venom', href: '/providers#venom' },
       { title: 'WPPConnect', href: '/providers#wpp-connect' },
     ]
