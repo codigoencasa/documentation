@@ -35,6 +35,15 @@ export const Image = function Img(props) {
   )
 }
 
+export function Video(props) {
+  return (
+  <div className='my-6 bg-gray-100 rounded-2xl dark:bg-zinc-800'>
+    {props?.label ? <div className="flex py-1 flex-wrap items-start gap-x-4 px-4  dark:border-zinc-800 dark:bg-transparent"><h3 className="mr-auto m-0 text-xs font-thin">{props.label}</h3></div> : <></> }
+    <iframe width="800" className='rounded-2xl ' height="450" src={'https://www.youtube.com/embed/'+props.yt} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />    
+  </div>
+  )
+}
+
 function InfoIcon(props) {
   return (
     <svg viewBox="0 0 16 16" aria-hidden="true" {...props}>
