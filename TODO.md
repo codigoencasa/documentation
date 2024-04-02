@@ -5,3 +5,6 @@
 - [ ] http://localhost:3000/en/providers/twilio  mejorar
 - [ ] node cron  recordatorio
 - [ ] footer cajas
+- [ ] responsive
+- [ ] twitter link
+- [ ] langchain minusucla
