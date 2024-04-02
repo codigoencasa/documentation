@@ -14,7 +14,7 @@ import { MetaProvider as Provider } from '@builderbot/provider-meta'
 
 const PORT = process.env.PORT ?? 3008
 
-const welcomeFlow = addKeyword<Provider, Database>(['ey','test')
+const welcomeFlow = addKeyword<Provider, Database>(['ey','test'])
     .addAnswer('send files...')
     .addAnswer(`Send image from URL`,
         { media: 'https://i.imgur.com/0HpzsEm.png' }
@@ -45,7 +45,7 @@ const welcomeFlow = addKeyword<Provider, Database>(['ey','test')
 
     })
     .addAction(async (ctx, { provider }) => {
-        await provider.sendButtonUrl(ctx.from, { body: 'View Doc', url: 'https://builderbot.vercel.app' }, `Send Buttons URL`)
+        await provider.sendButtonUrl(ctx.from, { body: 'View Doc', url: 'https://builderbot.vercel.app' }, 'Send Buttons URL')
 
     })
     .addAnswer('Send Contact', null, async (ctx, { provider }) => {
@@ -189,6 +189,65 @@ const main = async () => {
 
     httpServer(+PORT)
 
+}
+
+main()
+```
+
+There are several features that the default provider does not provide and you can create them along the way
+
+today I want to teach you a very basic but effective, the double tick or popcorn in English
+<Contributors mode users={['elimeleth']} />
+
+---
+
+## Send Double Tick
+
+
+to send the double tick or double popcorn you only need the ID of each new message that arrives, simple no?
+
+let's see a clear example of this
+
+```ts {{title:'app.ts'}}
+import { createBot, MemoryDB, createProvider } from '@builderbot/bot'
+import { MetaProvider } from '@builderbot/provider-meta'
+
+const PORT = process.env.PORT ?? 3001
+
+const welcome = addKeyword(EVENTS.WELCOME)
+    .addAction(async (ctx) => {
+         /*
+           {
+            "messaging_product": "whatsapp",
+            "status": "read",
+            "message_id": "MESSAGE_ID"
+            }
+        */
+    
+       //all you need to add is the ID of each new message
+        provider.sendMessageToApi({
+            "messaging_product": "whatsapp",
+            "status": "read",
+            message_id: ctx?.message_id
+            } as any)
+    })
+
+const main = async () => {
+    const provider = createProvider(MetaProvider)
+
+    const { handleCtx, httpServer } = await createBot({
+        database: new MemoryDB(),
+        provider,
+        flow: createFlow([welcome]),
+    })
+
+    httpServer(+PORT)
+
+    provider.server.post('/v1/register', handleCtx(async (bot, req, res) => {
+        const { number, name } = req.body
+        await bot.dispatch('EVENT_REGISTER', { from: number, name })
+        return res.end('trigger')
+    }))
 }
 
 main()
