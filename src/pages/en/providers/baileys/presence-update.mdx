@@ -1,0 +1,77 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+
+# Presence Update
+
+This method lets the person/group with id know whether you're online, offline, typing etc.
+
+
+```
+(property) sendPresenceUpdate: (type: WAPresence, toJid?: string) => Promise<void>
+```
+
+WAPresence can be one of the following:
+
+```
+type WAPresence = 'unavailable' | 'available' | 'composing' | 'recording' | 'paused'
+```
+
+<Contributors mode users={['jorgechavarriaga']} />
+
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, EVENTS } from '@builderbot/bot'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+import { config } from 'dotenv'
+config()
+
+const PHONE_NUMBER = process.env.PHONE_NUMBER
+
+const waitT = (ms: number) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(ms)
+        }, ms)
+    })
+}
+
+const welcomeFlow = addKeyword<Provider, Database>(EVENTS.WELCOME)
+    .addAnswer(`💡 Example *Sending Presence Update*`)
+    .addAction(
+        async (ctx, { provider, flowDynamic }) => {
+            await flowDynamic('This is an example of presence update')
+            await provider.vendor.sendPresenceUpdate('recording', ctx.key.remoteJid)
+            await waitT(5000)
+            await provider.vendor.sendPresenceUpdate('composing', ctx.key.remoteJid)
+            await waitT(5000)
+            await flowDynamic('Great!')
+        }
+    )
+
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(Provider, { usePairingCode: true, phoneNumber: PHONE_NUMBER })
+    const adapterDB = new Database()
+    const botResult = await createBot(
+        {
+            flow: adapterFlow,
+            provider: adapterProvider,
+            database: adapterDB,
+        }
+    )
+
+}
+
+main()
+
+```
+<iframe style={{minWidth: '800px', minHeight: '480px'}} src="https://www.youtube.com/embed/lknNwerosHQ?autoplay=1&loop=1" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
+
+
+---
+
+<Guides />
+
+<Resources />
