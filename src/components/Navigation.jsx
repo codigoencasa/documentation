@@ -214,7 +214,16 @@ export const navigation = [
     title: 'Built-in',
     links: [
       { title: 'Databases', href: '/databases' },
-      { title: 'Providers', href: '/providers' },
+    ]
+  },
+  {
+    title: 'Providers',
+    links: [
+      { title: 'Meta', href: '/providers/meta' },
+      { title: 'Twilio', href: '/providers/twilio' },
+      { title: 'Baileys', href: '/providers#baileys' },
+      { title: 'Venom', href: '/providers#venom' },
+      { title: 'WPPConnect', href: '/providers#wpp-connect' },
     ]
   },
   {
