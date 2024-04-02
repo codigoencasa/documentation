@@ -1,0 +1,79 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description = 'Implement message queues for better resource management'
+
+# Reminder (cron)
+
+## Issue {{not:'true'}}
+I need to send individual reminders every so often to users, reminding them to perform a task or complete a purchase.
+
+<Contributors mode users={['leifermendez']} />
+
+---
+
+## Possible Solution {{not:'true'}}
+
+For this we will need to install some dependencies that will facilitate the work of the scheduled tasks, we will use [node-cron](https://www.npmjs.com/package/node-cron) below you will find the instructions on how to install
+install
+
+```bash
+pnpm i node-cron
+pnpm i @types/node-cron -D
+```
+
+We have seen how we declare a logic that runs every 12 hours `0 */12 * * *` [cron guru](https://crontab.guru/every-12-hours) where it makes a request to an api that can also be a query to the database to retrieve which are those user numbers to which we want to send a message.
+
+<Warning>
+It is recommended that you have a varied list of welcome messages to avoid possible bans.
+</Warning>
+
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, utils } from '@builderbot/bot'
+import { schedule } from 'node-cron'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+
+const PORT = process.env.PORT ?? 3008
+
+const welcomeFlow = addKeyword<Provider, Database>(['hi', 'hello', 'hola'])
+    .addAnswer(`🙌 Hello welcome to this *Chatbot*`)
+  
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow])
+
+    const adapterProvider = createProvider(Provider)
+    const adapterDB = new Database()
+
+    const { httpServer } = await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+
+    httpServer(+PORT)
+
+    /**
+     * It is recommended to have an array of messages with which you will 
+     * greet or make that first contact with the user to
+     * avoid robotic behavior and possible bans
+     */
+
+    schedule('0 */12 * * *', async () => {
+        console.log('running a task twelve hours');
+        const usersApi = await fetch('http://your.api/users')
+        const users = await usersApi.json()
+        const listMessages = [`Your message!`, 'Ey how are you?', 'How do you doing?']
+
+        for (const user of users) {
+            const randomMessage = listMessages[Math.floor(Math.random() * listMessages.length)]
+            await adapterProvider.sendMessage(user.number, randomMessage, {})
+            await utils.delay(5000)
+        }
+    });
+}
+
+main()
+```
+---

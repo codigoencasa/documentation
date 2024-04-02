@@ -3,7 +3,7 @@ import { Resources } from '@/components/Resources'
 import { Warning } from "@/components/mdx"
 import { Guides } from '@/components/Guides'
 
-# Welcome to Builderbot x Langchain
+# Langchain
 
 When we want something more personality and intelligence in our assistants, the first thing we think about is Openai, what if I tell you that there is a simple way to get the most out of your LLM?
 
@@ -11,81 +11,73 @@ When we want something more personality and intelligence in our assistants, the 
 
 ---
 
-## Firts steps
+## Install
 
 
 let's look at a simple but very valuable trick. to be able to know the user's intention, we have tried it before with DialogFlow but what a headache, let's go for something easier
 
-<Warning>
-first of all you need to install these libs
-
 ```bash
 pnpm i @langchain/openai @langchain/core zod
 ```
-</Warning>
 
 <CodeGroup>
-```ts {{title:'./ai/catch-intention.ts'}}
+```ts {{title:'ai/catch-intention.ts'}}
 import { z } from "zod";
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatOpenAI, ChatPromptTemplate } from "@langchain/openai";
 
-export const openAiGP4Model = new ChatOpenAI({
+export const openAI = new ChatOpenAI({
     modelName: 'gpt-4',
     openAIApiKey: 'YOUR_API_KEY_HERE',
-})
+});
 
 const SYSTEM_STRUCT = `just only history based: 
 {history}
 
-Answer the users question as best as possible.`
-
+Answer the users question as best as possible.`;
 
 export const PROMPT_STRUCT = ChatPromptTemplate.fromMessages([
     ["system", SYSTEM_STRUCT],
     ["human", "{question}"]
 ]);
 
+const catchIntention = z.object(
+    {
+        intention: z.enum(['UNKNOWN', 'SALES', 'GREETING', 'CLOSURE'])
+            .describe('Categorize the following conversation and decide what the intention is')
+    }
+).describe('Given the following products, you should structure it in the best way, do not alter or edit anything');
 
-
-const catchIntention = z.object({
-    intention: z.enum(['UNKNOWN', 'SALES', 'GREETING', 'CLOSURE'])
-        .describe('Categorize the following conversation and decide what the intention is')
-})
-.describe('Given the following products, you should structure it in the best way, do not alter or edit anything')
-
-const llmWithToolsCatchIntention = openAiGP4Model.withStructuredOutput(catchIntention, {
+const llmWithToolsCatchIntention = openAI.withStructuredOutput(catchIntention, {
     name: "CatchIntention",
 });
 
-export const getIntention = (text: string): Promise<string> => {
+export const getIntention = async (text: string): Promise<string> => {
     try {
         const { intention } = await PROMPT_STRUCT.pipe(llmWithToolsCatchIntention).invoke({
             question: text,
             history: await history.getHistory(state)
-        })
-        
-        return String(intention).toLocaleLowerCase()
+        });
+
+        return Promise.resolve(String(intention).toLocaleLowerCase());
     } catch (errorIntention) {
-        return 'unknown'
+        return Promise.resolve('unknown');
     }
-}  
-
-
+};
 ```
 ```ts {{title:'app.ts'}}
-import { createBot, MemoryDB, createProvider } from '@builderbot/bot'
+import { createBot, MemoryDB, createProvider, createFlow } from '@builderbot/bot'
 import { MetaProvider } from '@builderbot/provider-meta'
 import { getIntention } from './ai/catch-intention'
 
 const PORT = process.env.PORT ?? 3001
 
 const welcome = addKeyword(EVENTS.WELCOME)
-    .addAction(async (ctx, { gotoflow }) => {
+    .addAction(async (ctx, { gotoFlow }) => {
         const intention = getIntention(ctx.body)
 
         if (intention === 'greeting') {
             return gotoFlow(anyFlowThatYouDecide)
-        }else if (intention === 'sales') {
+        } else if (intention === 'sales') {
             /* sales flow */
             /* any flow */
         }
@@ -110,7 +102,6 @@ const main = async () => {
 }
 
 main()
-
 ```
 </CodeGroup>
 

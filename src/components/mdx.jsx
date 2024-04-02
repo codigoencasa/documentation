@@ -22,7 +22,7 @@ export const Image = function Img(props) {
     {props?.label ? <div className="flex py-1 flex-wrap items-start gap-x-4 px-4  dark:border-zinc-800 dark:bg-transparent"><h3 className="mr-auto m-0 text-xs font-thin">{props.label}</h3></div> : <></> }
     <img 
       onClick={showModal}
-      className='not-prose justify-center object-contain text-center cursor-pointer aling-block  overflow-hidden max-h-[800px]  rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10' {...props} />
+      className='not-prose justify-center text-center cursor-pointer aling-block max-w-full h-auto overflow-hidden max-h-[800px]  rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10' {...props} />
             {isOpen && (
             <Modal
               src={props.src}

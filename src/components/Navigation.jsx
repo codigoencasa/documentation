@@ -214,7 +214,16 @@ export const navigation = [
     title: 'Built-in',
     links: [
       { title: 'Databases', href: '/databases' },
-      { title: 'Providers', href: '/providers' },
+    ]
+  },
+  {
+    title: 'Providers',
+    links: [
+      { title: 'Meta', href: '/providers/meta' },
+      { title: 'Twilio', href: '/providers/twilio' },
+      { title: 'Baileys', href: '/providers#baileys' },
+      { title: 'Venom', href: '/providers#venom' },
+      { title: 'WPPConnect', href: '/providers#wpp-connect' },
     ]
   },
   {
@@ -235,6 +244,7 @@ export const navigation = [
       { title: 'Idle', href: '/showcases/idle-optional' },
       { title: 'Scheduled Reboots', href: '/showcases/docker-pm2' },
       { title: 'In-Out messages', href: '/showcases/event-in-out-messages' },
+      { title: 'Reminder', href: '/showcases/cron-reminder' },
       { title: 'Forward to human', href: '/showcases/forward-conversation-to-human' },
       {title: 'GotoFlow Use' , href: '/showcases/gotoflow-use'}
     ],
