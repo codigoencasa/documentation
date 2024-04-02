@@ -75,12 +75,12 @@ Remember to release the corresponding ports in your server's firewall. Example 3
 
 ```{{ title:'Run Container Full'}}
 docker rm -f bot 2>/dev/null
-docker run -d \
-  --name "amazing-bot" \
+docker run \
+  --name "bot" \
   --env OPENAI_API_KEY="your_api_key_value" \
-  --user $(id -u):$(id -g) \
+  --env PORT=3008 \
   -p 3008:3008/tcp \
-  -v /root/sessions/bot_sessions:/app/bot_sessions:rw \
+  -v "$(pwd)/bot_sessions:/app/bot_sessions:rw" \
   --cap-add SYS_ADMIN \
   --restart always \
   builderbot:latest
@@ -95,11 +95,11 @@ docker run -d -p 3008:3008 builderbot:latest
 |--------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | __`docker rm -f bot 2>/dev/null`__  | Deletes any running container named "bot", if it exists. The `2>/dev/null` redirects any error message to nothing, meaning if the container doesn't exist, no error message will be displayed. |
 | __`docker run -d`__                     | Starts a new Docker container in detached mode (in the background).                                                                                                              |
-| __`--name "amazing-bot"`__             | Assigns the name "amazing-bot" to the container.                                                                                                                                  |
+| __`--name "bot"`__             | Assigns the name "amazing-bot" to the container.                                                                                                                                  |
 | __`--env OPENAI_API_KEY="API"`__ | Sets the environment variable `OPENAI_API_KEY` inside the container to the provided value, which should be a valid API key to access OpenAI.                             |
 | __`--user $(id -u):$(id -g)`__         | Specifies the user and group under which the process will run inside the container. `$(id -u)` gets the current user ID of the system and `$(id -g)` gets the current group ID. |
 | __`-p 3008:3008/tcp`__                 | Publishes port 3008 of the container to port 3008 of the host, allowing traffic to be directed to the container's port.                                                           |
-| __`-v /root/sessions/bot_sessions:/app/bot_sessions:rw`__ | Mounts the host directory `/root/sessions/bot_sessions` to the container directory `/app/bot_sessions` with read-write permissions (`rw`).                                      |
+| __`-v $(pwd)/bot_sessions:/app/bot_sessions:rw`__ | Mounts the host directory `/root/sessions/bot_sessions` to the container directory `/app/bot_sessions` with read-write permissions (`rw`).                                      |
 | __`--cap-add SYS_ADMIN`__               | Grants the container the `SYS_ADMIN` capability, providing a broad set of system administration capabilities.                                                                     |
 | __`--restart always`__                 | Configures the container to restart automatically if it stops or encounters an error.                                                                                            |
 | __`builderbot:latest`__                | Specifies the Docker image to be used for creating and running the container. In this case, `builderbot:latest` is the image tag.                                              |
