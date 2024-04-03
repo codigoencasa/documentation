@@ -31,8 +31,16 @@ export default function App({ Component, pageProps }) {
             property="og:image"
             content={'https://builderbot.vercel.app/api/og?title='+pageProps?.title }
           />
+          <meta property="og:image:secure_url" content={'https://builderbot.vercel.app/api/og?title='+pageProps?.title } />
+          <meta name="twitter:image" content={'https://builderbot.vercel.app/api/og?title='+pageProps?.title }/>
+
           </> : <></>}
+
           <title>{`${pageProps?.title || 'Documentation'} - BuilderBot.app Chatbot for Whatsapp, Telegram and more`}</title>
+          <meta property="og:image" content={pageProps?.ogImage ?? 'https://builderbot.vercel.app/assets/og-image-v4.png'}/>
+          <meta property="og:image:secure_url" content="https://builderbot.vercel.app/assets/og-image-v4.png" />
+          <meta name="twitter:image" content="https://builderbot.vercel.app/assets/og-image-v4.png"/>
+
           </>
         )}
      
@@ -42,8 +50,6 @@ export default function App({ Component, pageProps }) {
         <meta property="og:type" content="website"/>
         <meta property="og:title" content={pageProps?.title} />
         <meta property="og:description" content={pageProps.description}/>
-        <meta property="og:image" content={pageProps?.ogImage ?? 'https://builderbot.vercel.app/assets/og-image-v4.png'}/>
-        <meta property="og:image:secure_url" content="https://builderbot.vercel.app/assets/og-image-v4.png" />
         <meta property="og:image:width" content="1200"></meta>
         <meta property="og:image:height" content="630"></meta>
         <meta property="og:image:type" content="image/png"></meta>
@@ -52,7 +58,6 @@ export default function App({ Component, pageProps }) {
         <meta property="twitter:url" content="https://builderbot.app/"/>
         <meta name="twitter:title" content="builderbot.app - a powerful workflow automation tool"/>
         <meta name="twitter:description" content="Get started with BuilderBot - a free and open source framework with an intuitive and extensible way to create chatbot and smart apps that connect to different communication channels like Whatsapp, Telegram and others. We have made an intuitive framework so you can have your first chatbot in minutes"/>
-        <meta name="twitter:image" content="https://builderbot.vercel.app/assets/og-image-v4.png"/>
 
       </Head>
       <MDXProvider components={mdxComponents}>
