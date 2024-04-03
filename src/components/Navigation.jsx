@@ -221,7 +221,7 @@ export const navigation = [
     links: [
       { title: 'Meta', href: '/providers/meta' },
       { title: 'Twilio', href: '/providers/twilio' },
-      { title: 'Baileys', href: '/providers#baileys' },
+      { title: 'Baileys', href: '/providers/baileys' },
       { title: 'Venom', href: '/providers#venom' },
       { title: 'WPPConnect', href: '/providers#wpp-connect' },
     ]
@@ -254,8 +254,7 @@ export const navigation = [
     links: [
       { title: 'API Rest', href: '/tutorials/api-use' },
       { title: 'Gemini', href: '/tutorials/chatbot-with-gemini' },
-      { title: 'Meta', href: '/tutorials/tricks-meta' },
-      { title: 'Langchain', href: '/tutorials/langchain' },
+      { title: 'Langchain', href: '/tutorials/langchain' }
     ]
   },
   {
@@ -271,7 +270,7 @@ export const navigation = [
       { title: 'Telegram', href: '/plugins/telegram' },
       { title: 'Shopify', href: '/plugins/shopify' },
       { title: 'Agents', href: '/plugins/agents' },
-      { title: 'langchain', href: '/plugins/langchain' }
+      { title: 'Langchain', href: '/plugins/langchain' }
     ],
   },
 ]
