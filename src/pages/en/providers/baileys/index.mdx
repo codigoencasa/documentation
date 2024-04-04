@@ -22,7 +22,7 @@ The [Baileys](https://whiskeysockets.github.io/Baileys/) library originated as a
 
 ---
 
-## QR Code 
+### QR Code 
 Link device QR Code In the code below you can see the standard way to link a device by scanning the QR code with the whatsapp application.
 
 ```ts {{title:'app.ts'}}
@@ -52,7 +52,7 @@ main()
 
 ---
 
-## Pairing code
+### Pairing code
  Link device pairing code, In the code below you can see the alternative way to link the whatsapp account through a pairing code.
 
 ```ts {{title:'app.ts'}}
@@ -79,15 +79,318 @@ const main = async () => {
 }
 
 main()
+```
+
+---
+
+## Profile Picture
+
+The method <strong>profilePictureUrl</strong> allows us to retrieve the profile picture of a given number. 
+This method has the following signature:
+
+```
+(property) profilePictureUrl: (jid: string, type?: "image" | "preview", timeoutMs?: number) => Promise<string>
+```
+
+<Contributors mode users={['jorgechavarriaga']} />
+
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, EVENTS } from '@builderbot/bot'
+import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { config } from 'dotenv'
+config()
+
+const PHONE_NUMBER = process.env.PHONE_NUMBER
+
+const welcomeFlow = addKeyword<Provider, Database>(EVENTS.WELCOME)
+    .addAnswer(`💡 Example *profile Picture*`)
+    .addAnswer(
+        'Enter number to check image profile: ', { capture: true },
+        async (ctx, { provider, flowDynamic, fallBack, endFlow }) => {
+            const check = ctx.body + '@s.whatsapp.net'
+            try {
+                const imageProfile = await provider.vendor.profilePictureUrl(check.replace(/\+/g, ''), 'image', 10000)
+                await flowDynamic([
+                    {
+                        body: '*Profile Picture:*',
+                        media: imageProfile
+                    }
+                ])
+                return endFlow('End.')
+            } catch (error) {
+                await flowDynamic(`Error: ${error.message}`)
+                return fallBack('Try it again.')
+            }
+
+        }
+    )
+
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(Provider, { usePairingCode: true, phoneNumber: PHONE_NUMBER })
+    const adapterDB = new Database()
+    const botResult = await createBot(
+        {
+            flow: adapterFlow,
+            provider: adapterProvider,
+            database: adapterDB,
+        }
+    )
+}
+
+main()
+```
+
+<img style={{minHeight:'450px'}} className="rounded-2xl bg-zinc-900 w-full shadow-md dark:ring-1 dark:ring-white/10" src="/assets/examples/imageProfile.png" alt="API Call Example" />
+
+---
+
+## Modifying Chats
+
+The chatModify method provides various options to modify a chat, including:
+* Archive a chat
+* Mute/unmute a chat
+* Mark a chat read/unread
+* Delete a message for me
+* Delete a chat
+* Pin/unpin a chat
+* Star/unstar a message
+
+This method has the following signature:
+
+```
+(property) chatModify: (mod: ChatModification, jid: string) => Promise<void>
+```
+
+<strong>Delete a message for me</strong> when the received message does not comply with my business logic rules. (Develop your own logic rules)
+
+<Contributors mode users={['jorgechavarriaga']} />
+
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, EVENTS } from '@builderbot/bot'
+import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { config } from 'dotenv'
+config()
+
+const PHONE_NUMBER = process.env.PHONE_NUMBER
+
+const badWords = ['fuck', 'ass hole', 'motherfucker']
+
+const waitT = (ms: number) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(ms);
+        }, ms)
+    })
+}
+
+const welcomeFlow = addKeyword<Provider, Database>(EVENTS.WELCOME)
+    .addAnswer(`💡 Example *Delete User Message:*`)
+    .addAction(
+        async (ctx, { provider, flowDynamic }) => {
+            const resp = ctx.body.toLocaleLowerCase()
+            const containsBadWord = badWords.some(word => resp.includes(word))
+            const id = ctx.key.id
+            const fromMe = ctx.key.fromMe
+            const timeStamp = ctx.messageTimestamp
+            if (containsBadWord) {
+                await flowDynamic('Your message is going to be deleted as you are sending inappropriate language.')
+                await waitT(3500)
+                try {
+                    await provider.vendor.chatModify(
+                        { clear: { messages: [{ id: id, fromMe: fromMe, timestamp: timeStamp }] } },
+                        ctx.key.remoteJid
+                    )
+                    await flowDynamic(`Message deleted successfully.`)
+                } catch (error) {
+                    await flowDynamic(`Error: ${JSON.stringify(error, null, 3)}`)
+                }
+            }
+            await flowDynamic('Welcome!')
+        }
+    )
+
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(Provider, { usePairingCode: true, phoneNumber: PHONE_NUMBER })
+    const adapterDB = new Database()
+    const botResult = await createBot(
+        {
+            flow: adapterFlow,
+            provider: adapterProvider,
+            database: adapterDB,
+        }
+    )
+}
+
+main()
+```
+
+<iframe style={{minWidth: '800px', minHeight: '480px'}} src="https://www.youtube.com/embed/c0fQtjIYFVU" ></iframe>
+
+---
+
+## Send Presence Update
+
+The method <strong>sendPresenceUpdate</strong> lets the person/group with id know whether you're online, offline, typing etc. 
+This method has the following signature:
+
+```
+(property) sendPresenceUpdate: (type: WAPresence, toJid?: string) => Promise<void>
+```
+
+WAPresence can be one of the following:
+
+```
+type WAPresence = 'unavailable' | 'available' | 'composing' | 'recording' | 'paused'
+```
+
+<Contributors mode users={['jorgechavarriaga']} />
+
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, EVENTS } from '@builderbot/bot'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+import { config } from 'dotenv'
+config()
+
+const PHONE_NUMBER = process.env.PHONE_NUMBER
+
+const waitT = (ms: number) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(ms)
+        }, ms)
+    })
+}
+
+const welcomeFlow = addKeyword<Provider, Database>(EVENTS.WELCOME)
+    .addAnswer(`💡 Example *Sending Presence Update*`)
+    .addAction(
+        async (ctx, { provider, flowDynamic }) => {
+            await flowDynamic('This is an example of presence update')
+            await provider.vendor.sendPresenceUpdate('recording', ctx.key.remoteJid)
+            await waitT(5000)
+            await provider.vendor.sendPresenceUpdate('composing', ctx.key.remoteJid)
+            await waitT(5000)
+            await flowDynamic('Great!')
+        }
+    )
+
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(Provider, { usePairingCode: true, phoneNumber: PHONE_NUMBER })
+    const adapterDB = new Database()
+    const botResult = await createBot(
+        {
+            flow: adapterFlow,
+            provider: adapterProvider,
+            database: adapterDB,
+        }
+    )
+
+}
+
+main()
 
 ```
 
-# Below, you'll find various examples to use with Baileys:
+<iframe style={{minWidth: '800px', minHeight: '480px'}} src="https://www.youtube.com/embed/lknNwerosHQ" ></iframe>
 
-* [Blocked Users on Bot](/providers/baileys/blocked-users) - fetchBlocklist()
-* [External API Call](/providers/baileys/external-api) 
-* [Number Exists on WhatsApp](/providers/baileys/number-onwhatsapp) - onWhatsApp()
-* [Send Presence Update](/providers/baileys/presence-update) - sendPresenceUpdate()
+---
+
+
+## Number Exists on WhatsApp
+
+To check if an entered number exists on WhatsApp, you use the <strong>onWhatsApp</strong> method of the provider. 
+This method has the following signature:
+
+```
+onWhatsApp: (...jids: string[]) => Promise<{
+    exists: boolean;
+    jid: string;
+}[]>
+```
+
+This method accepts one or more phone numbers (JIDs) as arguments and returns a promise that resolves to an array of objects containing 
+the existence status (exists) and JID (jid) for each number.
+
+<Contributors mode users={['jorgechavarriaga']} />
+
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, EVENTS } from '@builderbot/bot'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+import { config } from 'dotenv'
+config()
+
+const PHONE_NUMBER = process.env.PHONE_NUMBER
+
+const welcomeFlow = addKeyword<Provider, Database>(EVENTS.WELCOME)
+    .addAnswer(`💡 Example *Number Exist on Whatsapp*`)
+    .addAnswer(
+        '*Enter the number to check:*',
+        { capture: true },
+        async (ctx, { provider, flowDynamic }) => {
+            const checkNumber = ctx.body
+            try {
+                const onWhats = await provider.vendor.onWhatsApp(checkNumber)
+                if (onWhats[0]?.exists) {
+                    await flowDynamic([`*Exists:* ${onWhats[0].exists}\n*JID:* ${onWhats[0].jid}`, `*Object:* ${JSON.stringify(onWhats, null, 6)}`])
+                }
+                else {
+                    await flowDynamic(`The number *${checkNumber}* does not exists on Whatsapp.`)
+                }
+            } catch (error) {
+                await flowDynamic(`*Error:* ${error}`);
+            }
+        }
+    )
+
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(Provider, { usePairingCode: true, phoneNumber: PHONE_NUMBER })
+    const adapterDB = new Database()
+    const botResult = await createBot(
+        {
+            flow: adapterFlow,
+            provider: adapterProvider,
+            database: adapterDB,
+        }
+    )
+}
+
+main()
+
+```
+
+<img style={{minHeight:'450px'}} className="rounded-2xl bg-zinc-900 w-full shadow-md dark:ring-1 dark:ring-white/10" src="/assets/examples/onWhatsapp.png" alt="API Call Example" />
+
+---
+
+
+# Below you will find several examples that you can implement in your project:
+<br></br>
+
+<table style={{ borderCollapse: 'collapse', width: '100%' }}>
+  <tbody>
+    <tr>
+      <td style={{ border: '1px solid black', paddingLeft: '12px' }}>[External API Call](/providers/baileys/external-api)</td>
+      <td style={{ border: '1px solid black', paddingLeft: '12px' }}>[Blocked Users on Bot](/providers/baileys/blocked-users) - fetchBlocklist()</td>
+      <td style={{ border: '1px solid black', paddingLeft: '12px' }}>[Contacts on Bot](/providers/baileys/contacts-on-bot) </td>
+    </tr>
+    <tr>
+      <td style={{ border: '1px solid black', paddingLeft: '12px' }}>[Delete Bot Message](/providers/baileys/delete-bot-message) - sendMessage()</td>
+      <td style={{ border: '1px solid black', paddingLeft: '12px' }}>[Fetch Status](/providers/baileys/fetchStatus) - fetchStatus()</td>
+      <td style={{ border: '1px solid black', paddingLeft: '12px' }}>[Basic Menu](/providers/baileys/menu)</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
 
 ----
 

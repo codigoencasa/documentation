@@ -1,0 +1,107 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+
+# Basic Menu
+
+Basic menu navigating to two sub-menus with the option to return to the main menu.
+
+<Contributors mode users={['jorgechavarriaga']} />
+
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+import { createBot, createProvider, createFlow } from '@builderbot/bot'
+import { MemoryDB as Database } from '@builderbot/bot'
+import welcomeFlow from './flows/welcomeFlow'
+import option1 from './flows/flowOption1'
+import option2 from './flows/flowOption2'
+
+import { config } from 'dotenv'
+config()
+
+const PHONE_NUMBER = process.env.PHONE_NUMBER
+
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow, option1, option2])
+    const adapterProvider = createProvider(Provider, { usePairingCode: true, phoneNumber: PHONE_NUMBER })
+    const adapterDB = new Database()
+    const botResult = await createBot(
+        {
+            flow: adapterFlow,
+            provider: adapterProvider,
+            database: adapterDB,
+        }
+    )
+}
+
+main()
+```
+
+```ts {{ title: 'flows/flowOption1.ts' }}
+import { addKeyword, EVENTS } from '@builderbot/bot'
+import welcomeFlow from './welcomeFlow'
+import option2 from './flowOption2'
+import moment from 'moment'
+
+const option1 = addKeyword(EVENTS.ACTION)
+    .addAnswer(`Date: ${moment().format('YYYY - MMMM - DD')}`)
+    .addAnswer(['Select an option:\n\n*SubMenu 1*\n', '1 Go back', '2 Go to SubMenu2', '3 End'])
+    .addAction(
+        { capture: true },
+        async (ctx, { gotoFlow, endFlow, fallBack }) => {
+            const resp = ctx.body
+            if (resp === "1") {
+                return gotoFlow(welcomeFlow)
+            } else if (resp === "2") {
+                return gotoFlow(option2)
+            } else if (resp === "3") {
+                return endFlow('End')
+            } else {
+                return fallBack(`Option ${resp} is not valid, try it again.`)
+            }
+        }
+    )
+
+export default option1
+```
+
+```ts {{ title: 'flows/flowOpton2.ts' }}
+import { addKeyword, EVENTS } from '@builderbot/bot'
+import welcomeFlow from './welcomeFlow'
+import option1 from './flowOption1'
+import moment from 'moment'
+
+const now = moment().format('HH:MM:ss')
+
+const option2 = addKeyword(EVENTS.ACTION)
+    .addAnswer(`*Time:* ${now}`)
+    .addAnswer(['Select an option:\n\n*SubMenu 2*\n', '1 Go back', '2 Go to SubMenu 1', '3 End'])
+    .addAction(
+        { capture: true },
+        async (ctx, { gotoFlow, endFlow, fallBack }) => {
+            const resp = ctx.body
+            if (resp === "1") {
+                return gotoFlow(welcomeFlow)
+            } else if (resp === "2") {
+                return gotoFlow(option1)
+            } else if (resp === "3") {
+                return endFlow('End')
+            } else {
+                return fallBack(`Option ${resp} is not valid, try it again.`)
+            }
+        }
+    )
+
+export default option2
+```
+</CodeGroup>
+
+<iframe style={{minWidth: '800px', minHeight: '480px'}} src="https://www.youtube.com/embed/ud_Qebbrbx8" ></iframe>
+
+---
+
+<Guides />
+
+<Resources />
