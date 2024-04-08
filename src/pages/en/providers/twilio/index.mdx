@@ -3,122 +3,68 @@ import { Resources } from '@/components/Resources'
 import { Guides } from '@/components/Guides'
 
 export const description =
-  'In this guide, we will talk about what happens when something goes wrong while you work with the API.'
+  'In this guide, we will discuss what to do when something goes wrong while working with the API.'
 
 # Twilio Provider
 
 Twilio is a development platform that enables developers to build cloud communication applications and web systems. Twilio's communication APIs empower businesses to provide the appropriate communication experience for their customers within web and mobile applications. By leveraging Twilio's APIs, developers can swiftly integrate functionalities such as voice messages, video calls, text messages, and more into an application.
+<Contributors mode users={['leifermendez']} />
 
 <Note>
 Twilio provides you with a Sandbox account so you can try the service for free. [Register a Twilio account](https://www.twilio.com/try-twilio).
 </Note>
 
-### Requirements
+If you want to take a closer look at the process of setting up your Twilio environment to start creating your chatbot, click here.
 
-We must accept the terms and conditions and then activate the sandbox account.
+<div className="not-prose aling-block">
+  <Button
+    href="/providers/twilio/deploy"
+    variant="text"
+    arrow="right"
+    children="More info about Twilio Deploy"
+  />
+</div>
+---
 
-<Image label="Sandbox" src="https://i.imgur.com/53RyhZD.png" />
+## Send Buttons
+One of the most requested functions by users is the fact of __sending buttons__ to generate more interactivity and more dynamic chatbots.
 
-We note that we now have a WhatsApp number and a phrase. The number provided is a <strong>trial number</strong> that Twilio offers you, after you activate a payment plan you can purchase a number for your use. Save that number as a WhatsApp contact on your mobile and then send it the message assigned to you. In the example on the screen, <strong>join score-state appears</strong>
-
-<Image label="Join to sandbox" src="https://i.imgur.com/Eb69grk.png" />
-
-Twilio then responds with a message confirming the connection verification. <strong>This step is only necessary when you are in Sandbox mode</strong>.
-
-<Image label="Test your Whatsapp" src="https://i.imgur.com/cTWNxBF.png" />
-
-Now go to the WhatsApp Settings section located in the Twilio console.
-
-<Image src="https://i.imgur.com/UQG8LkW.png" />
-
-In this section, you can configure the <strong>Webhooks</strong> that connect to the chatbot.
-
-<strong>Don't know what your link is?</strong> Continue reading this guide later you will understand.
-
-<Image src="https://i.imgur.com/WovZGPm.png" />
-
-You will also need the <strong>Account SID and Auth Token</strong>, these data are obtained from [console.twilio.com](https://console.twilio.com/).
-
-<strong>What do I do with this data?</strong> Save them or have them located because we will need them on the following screens.
-
-<Image src="https://i.imgur.com/RxlxEEm.png" />
-
-In the <strong>main file</strong> of the bot where you are implementing the Twilio adapter function you are going to place the following data:
-
-- <strong>ACC_SID:</strong> You will find it in the Twilio console, you can see the previous screen.
-- <strong>ACC_TOKEN:</strong> You will find it in the Twilio console, you can see the previous screen.
-- <strong>ACC_VENDOR:</strong> It is the WhatsApp number (if you already have the Twilio payment plan, use the number you purchased), if you are still in sandbox mode, use the number provided in step number 2.
-
-<Note>In the example below you can see a suggestion of what it can be like using environment variables</Note>
-
-<CodeGroup>
-```ts {{ title: 'main.ts' }}
-import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
-import { TwilioProvider } from '@builderbot/provider-twilio'
-
-const welcomeFlow = addKeyword<TwilioProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
-
-const main = async () => {
-
-    const adapterDB = new MemoryDB()
-    const adapterFlow = createFlow([welcomeFlow])
-    const adapterProvider = createProvider(TwilioProvider, {
-        accountSid: process.env.ACC_SID, //AC4695aa720b4d700a***************
-        authToken: process.env.ACC_TOKEN, //3f6fae09f7a1c3534***************
-        vendorNumber: process.env.ACC_VENDOR, //+14155238886
+```ts {{title:'app.ts'}}
+const welcomeFlow = addKeyword<Provider, Database>(['template','plantilla'])
+    .addAction(async (ctx) => {
+       await provider.send(ctx.from,
+        'Agregar dos botones que permiten al cliente dar una respuesta mas rapida',
+            {
+                contentSid: 'HXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+            }
+        )
     })
-
-    adapterProvider.initHttpServer(3000)
-
-    await createBot({
-        flow: adapterFlow,
-        provider: adapterProvider,
-        database: adapterDB,
-    })
-}
-
-main()
-
 ```
-</CodeGroup>
 
-After running the bot you will find a message in the console similar to the following. Where you can find the URL for your <strong>webhook</strong>
 
-<CodeGroup>
-```sh
-$ npm start
+<Note>
+Remember that the use of buttons, lists and other featured Whatsapp functionality needs to be a template authorized by the provider.
+`contentSid` is the id of the approved template you can use.
+</Note>
 
-> bot-whatsapp-base-twilio-memory@1.0.0 start
-> node app.js
+<Image label="Content Quick" src="https://i.imgur.com/RYnLCAy.png" />
 
-[Twilio]: Agregar esta url "WHEN A MESSAGE COMES IN"
-[Twilio]: POST http://localhost:3000/twilio-hook
-[Twilio]: Más información en la documentacion
-```
-</CodeGroup>
+Remember for correct functionality you must have the message comply with the message template constructed.
 
-### What do I do now?
-
-You will see that the bot starts an HTTP service (endpoint) that must be on an online server so you can connect it to Twilio.
-
-### Option 1
-
-You can test locally through a tunnel proxy server. Download [ngork](https://ngrok.com/download) is a free tool that will help us with this.
-
-<Image src="https://i.imgur.com/TjjBtRh.png" />
-
-This generates an inline URL that we can use in the <strong>WebHook</strong> part of Twilio
-
-<Image src="https://i.imgur.com/S9zXROt.png" />
-
-### Option 2
-
-If you already have your bot deployed on a server, you have to obtain the public IP or subdomain that they provided you. Example, if you are using [Railway](https://railway.app/) you can go to the settings section and generate a subdomain. We would already have the WebHook `https://base-twilio-memory-production.up.railway.app/twilio-hook`
-
-<Image src="https://i.imgur.com/Yg2BYqB.png" />
-
-<Image src="https://i.imgur.com/dpv6RTR.png" />
+<Image label="Buttons Examples" src="https://i.imgur.com/zama25v.png" />
 
 ---
 
-<Contributors users={['leifermendez', 'hhsm95']} />
+## Content Template Builder
+
+The Content Template Builder is a Twilio product designed to create template messages and content-rich messages. It has an easy-to-use graphical interface built on a publicly accessible API. With the Content Template Builder, both engineers and non-technical users can create, approve and manage templates from the Twilio Console.
+With this system, it is possible to create templates faster, with fewer errors, while empowering the entire team to contribute. Both developers and non-technical users can build and submit templates for approval from the Twilio Console without writing a single line of code.
+
+<Image label="Content Templates" src="https://i.imgur.com/14aes3Z.png" />
+
+---
+
+<Guides />
+
+<Resources />
+
