@@ -31,7 +31,7 @@ One of the most requested functions by users is the fact of __sending buttons__ 
 
 ```ts {{title:'app.ts'}}
 const welcomeFlow = addKeyword<Provider, Database>(['template','plantilla'])
-    .addAction(async () => {
+    .addAction(async (ctx) => {
        await provider.send(ctx.from,
         'Agregar dos botones que permiten al cliente dar una respuesta mas rapida',
             {
