@@ -6,14 +6,15 @@ import { Guides } from '@/components/Guides'
 # Fetch Status
 
  This method has the following signature:
-```
+<Contributors mode users={['jorgechavarriaga']} />
+
+```ts
 (property) fetchStatus: (jid: string) => Promise<{
     status: string;
     setAt: Date;
 }>
 ```
 
-<Contributors mode users={['jorgechavarriaga']} />
 
 ```ts {{ title: 'app.ts' }}
 import { createBot, createProvider, createFlow, addKeyword, EVENTS } from '@builderbot/bot'

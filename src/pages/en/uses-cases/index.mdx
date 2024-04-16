@@ -121,12 +121,15 @@ const flow = addKeyword('hello')
 
 ## Send File
 
-When you want to send an image, audio, file or any other file you can do it this way. It is __important__ to note that the URL must be __publicly accessible__.
+When you want to **send an image, audio**, file or any other file you can do it this way. It is __important__ to note that the URL must be __publicly accessible__.
 
 ```ts
 const flow = addKeyword('hello')
     .addAnswer(`Send image from URL`, 
         { media: 'https://i.imgur.com/0HpzsEm.png' }
+    )
+    .addAnswer(`Send video from Local`, 
+        { media: join(process.cwd(), 'assets', 'sample.png') }
     )
     .addAnswer(`Send video from URL`, 
         { media: 'https://media.giphy.com/media/KWZKwdBC2ODWlQ8kgt/giphy.mp4' }

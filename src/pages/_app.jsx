@@ -24,9 +24,9 @@ export default function App({ Component, pageProps }) {
       <Head>
         {router.pathname === '/en' || router.pathname === '/es' || router.pathname === '/pt' ? (
           <title>BuilderBot.app Create a WhatsApp Chatbot, Without Limit</title>
-        ) : (
-          <>
-          {(pageProps?.title) ? <>
+        ) : (<>
+          {(pageProps?.title) ? 
+          (<>
             <meta
             property="og:image"
             content={'https://builderbot.vercel.app/api/og?title='+pageProps?.title }
@@ -34,12 +34,14 @@ export default function App({ Component, pageProps }) {
           <meta property="og:image:secure_url" content={'https://builderbot.vercel.app/api/og?title='+pageProps?.title } />
           <meta name="twitter:image" content={'https://builderbot.vercel.app/api/og?title='+pageProps?.title }/>
 
-          </> : <></>}
-
-          <title>{`${pageProps?.title || 'Documentation'} - BuilderBot.app Chatbot for Whatsapp, Telegram and more`}</title>
+          </>): (
+          <>
           <meta property="og:image" content={pageProps?.ogImage ?? 'https://builderbot.vercel.app/assets/og-image-v4.png'}/>
           <meta property="og:image:secure_url" content="https://builderbot.vercel.app/assets/og-image-v4.png" />
           <meta name="twitter:image" content="https://builderbot.vercel.app/assets/og-image-v4.png"/>
+          </>
+          )}
+          <title>{`${pageProps?.title || 'Documentation'} - BuilderBot.app Chatbot for Whatsapp, Telegram and more`}</title>
 
           </>
         )}

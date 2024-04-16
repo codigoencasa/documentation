@@ -10,10 +10,10 @@ import { UsersIcon } from '@/components/icons/UsersIcon'
 
 const resources = [
   {
-    href: '/contacts',
-    name: 'Contact',
+    href: '/showcases/modularize',
+    name: 'Modularize',
     description:
-      'Learn about the contact model and how to create, retrieve, update, delete, and list contacts.',
+      'Learn how to modularise flows so that you can have a more maintainable bot.',
     icon: UserIcon,
     pattern: {
       y: 16,
@@ -24,10 +24,10 @@ const resources = [
     },
   },
   {
-    href: '/conversations',
-    name: 'Conversations',
+    href: '/tutorials/api-use',
+    name: 'Send Message',
     description:
-      'Learn about the conversation model and how to create, retrieve, update, delete, and list conversations.',
+      'How to send a message via HTTP to start conversations, you can send multimedia as well.',
     icon: ChatBubbleIcon,
     pattern: {
       y: -6,
@@ -38,10 +38,10 @@ const resources = [
     },
   },
   {
-    href: '/messages',
-    name: 'Messages',
+    href: '/deploy/docker',
+    name: 'Dockerizer',
     description:
-      'Learn about the message model and how to create, retrieve, update, delete, and list messages.',
+      'A good practice is to dockerise your bots to make them more maintainable and effective.',
     icon: EnvelopeIcon,
     pattern: {
       y: 32,
@@ -52,10 +52,10 @@ const resources = [
     },
   },
   {
-    href: '/groups',
-    name: 'Groups',
+    href: '/events',
+    name: 'Events',
     description:
-      'Learn about the group model and how to create, retrieve, update, delete, and list groups.',
+      'Learning about events will make us more fluent when creating chatbots.',
     icon: UsersIcon,
     pattern: {
       y: 22,

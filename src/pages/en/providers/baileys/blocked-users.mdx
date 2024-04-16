@@ -7,12 +7,11 @@ import { Guides } from '@/components/Guides'
 
 To check the blocked users on the BOT, you should use the 'fetchBlocklist()' method of the provider.
 This method has the following signature:
+<Contributors mode users={['jorgechavarriaga']} />
 
-```
+```ts
 (property) fetchBlocklist: () => Promise<string[]>
 ```
-
-<Contributors mode users={['jorgechavarriaga']} />
 
 ```ts {{ title: 'app.ts' }}
 import { createBot, createProvider, createFlow, addKeyword, EVENTS } from '@builderbot/bot'
