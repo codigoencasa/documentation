@@ -201,7 +201,7 @@ function SmallPrint() {
         &copy; Copyright {new Date().getFullYear()}. All rights reserved.
       </p>
       <div className="flex gap-4">
-        <SocialLink href="#" icon={TwitterIcon}>
+        <SocialLink href="https://x.com/@LeiferMendez" icon={TwitterIcon}>
           Follow us on Twitter
         </SocialLink>
         <SocialLink href="https://github.com/codigoencasa/bot-whatsapp" icon={GitHubIcon}>
