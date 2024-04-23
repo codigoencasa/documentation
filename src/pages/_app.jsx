@@ -8,7 +8,6 @@ import { useMobileNavigationStore } from '@/components/MobileNavigation'
 
 import '@/styles/tailwind.css'
 import 'focus-visible'
-// import { TopBar } from '@/components/TopBar';
 
 function onRouteChange() {
   useMobileNavigationStore.getState().close()
