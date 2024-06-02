@@ -1,0 +1,102 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+export const description = 'Implement a debounce decorator to prevent the bot from responding multiple times in a short period of time'
+
+# Multiple messages
+
+## Issue {{not:'true'}}
+Sometimes, you need the bot to generate responses based on an event such as receiving images from users, but you don't want the bot to throw multiple and redundant responses if the user quickly sends several images.
+
+<Contributors mode users={['Jorgelet']} />
+
+---
+
+## Possible Solution {{not:'true'}}
+To ensure that the bot responds only once despite receiving too many calls in a short period of time, a debounce decorator could be implemented around the gotoFlow and endFlow methods.
+
+In the example below I will show you how I implemented this solution in my bot to analyze several images and depending on whether they are images of furniture or not, terminate the flow with an error message or send it to another registration flow
+
+<CodeGroup>
+```ts {{ title: 'media-flow.ts' }}
+import path from "node:path";
+import fs from "node:fs/promises";
+import process from "node:process";
+import { addKeyword, EVENTS } from "@builderbot/bot";
+import { BaileysProvider } from "@builderbot/provider-baileys";
+import { UrlToBase64 } from "@builderbot-plugins/url-to-base64";
+
+import { PROMPT_IMAGE } from "./prompt";
+import { debounce } from "~/utils/debounce";
+import AIClass from "~/services/OpenAIService";
+import { registerFlow } from "../order/register.flow";
+
+
+const localPaths = [];
+let debouncedEndFlow:(...args: any[]) => void;
+let debouncedGoToFlow:(...args: any[]) => void;
+const filePath = path.join(process.cwd(), 'src', 'database', 'images');
+
+export const mediaFlow = addKeyword<BaileysProvider>(EVENTS.MEDIA)
+.addAction(async(ctx, { provider, queue }) => { 
+  await queue.enqueue('processImage', async () => {
+    const localPath = await provider.saveFile(ctx, { path: filePath });
+    localPaths.push(localPath);
+  }, 'imageProcessingTask');
+
+  await queue.processQueue('processImage');
+  await queue.clearQueue('processImage');
+  queue.clearAndDone('processImage', {fingerIdRef: 'imageProcessingTask'});
+})
+.addAction(async (_, { extensions, gotoFlow, endFlow }) => {
+
+  const ai = extensions.ai as AIClass;  
+  if(!debouncedEndFlow && !debouncedGoToFlow){
+    debouncedEndFlow = debounce(endFlow, 1500);
+    debouncedGoToFlow = debounce(gotoFlow, 1500);
+  }
+    
+  for(const path of localPaths) {
+    const { data, mimetype } = UrlToBase64.fromFilePath(path);    
+    const aiResponse = await ai.readImage(data, PROMPT_IMAGE, mimetype);
+
+    if(aiResponse.includes('NOT_FURNITURE')) {
+      for(const filePath of localPaths) {
+        await fs.unlink(filePath);
+      }
+      localPaths.length = 0;
+      return debouncedEndFlow('Ups! Asegurate de enviar una foto correcta de un mueble');
+    }   
+  }
+
+  localPaths.length = 0;
+  return debouncedGoToFlow(registerFlow)
+})
+
+```
+```ts {{ title: 'debounce.ts' }}
+import { TFlow } from "@builderbot/bot/dist/types";
+
+type DebounceFunction<P = any> = 
+((message?: string) => void) | // this is the endFlow type
+((flow: TFlow<P>, step?: number) => Promise<void>) // this is the gotoFlow type
+
+export function debounce(func: DebounceFunction, ms: number) {
+  let timeout:NodeJS.Timeout;
+  return function(...args: any[]) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), ms)
+  }
+}
+
+```
+</CodeGroup>
+
+Remember that this is an alternative solution, and it is possible that its implementation could be improved.
+
+----
+
+<Guides />
+
+<Resources />
