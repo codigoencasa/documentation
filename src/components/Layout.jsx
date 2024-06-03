@@ -11,8 +11,8 @@ import { TopBar } from './TopBar'
 export function Layout({ children, sections = [] }) {
   return (
     <SectionProvider sections={sections}>
-      <TopBar />
-      <div className='translate-y-0'>
+      {/* <TopBar /> */}
+      <div className=''>
       <div className="lg:ml-72 xl:ml-80">
         <motion.header
           layoutScroll
