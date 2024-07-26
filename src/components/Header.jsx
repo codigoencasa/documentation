@@ -82,9 +82,9 @@ export const Header = forwardRef(function Header({ className }, ref) {
           <MobileSearch />
           <ModeToggle />
         </div>
-        {/* <div className="hidden min-[416px]:contents">
-          <Button href="#">Sign in</Button>
-        </div> */}
+        <div className="hidden min-[416px]:contents">
+          <Button href="https://builderbot.cloud">Get started</Button>
+        </div>
       </div>
     </motion.div>
   )
