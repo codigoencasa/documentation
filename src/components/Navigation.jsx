@@ -246,7 +246,8 @@ export const navigation = [
       { title: 'In-Out messages', href: '/showcases/event-in-out-messages' },
       { title: 'Reminder', href: '/showcases/cron-reminder' },
       { title: 'Forward to human', href: '/showcases/forward-conversation-to-human' },
-      {title: 'GotoFlow Use' , href: '/showcases/gotoflow-use'}
+      { title: 'GotoFlow Use' , href: '/showcases/gotoflow-use'},
+      { title: 'Multiple messages', href: '/showcases/multiple-messages'}
     ],
   },
   {

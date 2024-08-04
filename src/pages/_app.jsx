@@ -5,10 +5,10 @@ import { Analytics } from '@vercel/analytics/react';
 import { Layout } from '@/components/Layout'
 import * as mdxComponents from '@/components/mdx'
 import { useMobileNavigationStore } from '@/components/MobileNavigation'
+import { TopBar } from '@/components/TopBar'
 
 import '@/styles/tailwind.css'
 import 'focus-visible'
-// import { TopBar } from '@/components/TopBar';
 
 function onRouteChange() {
   useMobileNavigationStore.getState().close()
@@ -64,9 +64,12 @@ export default function App({ Component, pageProps }) {
       </Head>
       <MDXProvider components={mdxComponents}>
       <Analytics />
+      <TopBar />
+      <div className='translate-y-0 h-[calc(100vh-40px)] overflow-y-auto'>
         <Layout {...pageProps}>
           <Component {...pageProps} />
         </Layout>
+        </div>
       </MDXProvider>
     </>
   )
