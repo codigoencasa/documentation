@@ -363,6 +363,156 @@ main()
 
 ---
 
+## Improve performance with Baileys
+
+Baileys is a powerful provider for WhatsApp, but its ability to listen and process a wide range of events in real-time can lead to significant resource consumption, especially for highly active accounts. This guide will help you optimize your builderbot.app bot's performance when using Baileys as a provider.
+
+<Warning>
+### Quickly optimize your Baileys provider
+
+Activate these options in your Baileys provider configuration to improve performance:
+
+```typescript
+const adapterProvider = createProvider(Provider, { 
+    experimentalStore: true,  // Significantly reduces resource consumption
+    timeRelease: 10800000,    // Cleans up data every 3 hours (in milliseconds)
+})
+```
+
+In addition to this configuration I recommend a reboot every 12 or 24 hours depending on how active your bot is. You can follow this guide to [configure the restarts](/showcases/docker-pm2)
+
+### Benefits:
+- `experimentalStore: true`: Limits processing to individual messages only, drastically reducing resource usage.
+- `timeRelease: 10800000`: Performs periodic cleanups of accumulated data every 3 hours.
+
+**Note**: `experimentalStore` may limit some advanced WhatsApp functionalities, especially for groups.
+</Warning>
+
+### Types of monitored events
+
+Baileys constantly monitors various types of events, including:
+
+1. **Individual messages**: Sending and receiving messages in one-on-one chats.
+2. **Group messages**: All activity in WhatsApp groups.
+3. **Read states**: Updates when messages are read.
+4. **Contact stories**: Posting and viewing of statuses/stories.
+5. **Message editing and deletion**: Changes to existing messages.
+6. **Reactions**: Emojis and other reactions to messages.
+7. **Profile updates**: Changes in profile pictures, statuses, etc.
+8. **Calls**: Notifications of incoming and outgoing calls.
+
+### Impact on resources
+
+1. **Constant processing**: Each event triggers processes in the bot, consuming CPU.
+2. **Data storage**: Events are recorded in "baileys_store.json", increasing storage usage.
+3. **Frequent overwriting**: The file is updated with each new event, which can be I/O intensive.
+4. **Exponential growth**: In very active accounts, the volume of events can grow rapidly.
+
+### Optimization strategies
+
+### 1. Using ExperimentalStore
+
+The `experimentalStore: true` option is an advanced feature in builderbot.app designed to significantly optimize the bot's resource usage.
+
+#### How it works:
+
+- Limits listening and processing to only individual message events.
+- Drastically reduces resource consumption by ignoring other types of events.
+
+#### Implementation:
+
+```typescript
+const adapterProvider = createProvider(Provider, { 
+    experimentalStore: true,
+    timeRelease: 10800000, // 3 hours in milliseconds
+})
+```
+
+#### Important limitations:
+
+- **Only for individual messages**: Works exclusively with "message" type events for individual chats.
+- **Not compatible with group functions**: Not suitable for bots requiring group functionalities.
+- **Feature restriction**: Some advanced WhatsApp features may not work correctly.
+
+### 2. Event filtering
+
+Configure Baileys to ignore non-essential events for your bot. This can be done through provider configuration or by selectively handling events in your code.
+
+### 3. Periodic cleanup
+
+Use the `timeRelease` option or scheduled restarts to clear accumulated data. This helps keep the storage file size under control.
+
+### 4. Selective monitoring
+
+If possible, limit the number of chats or groups actively monitored. This can significantly reduce the number of processed events.
+
+### Implementation example
+
+Here's an example of how to implement these strategies in your bot:
+
+This example uses `experimentalStore` and `timeRelease` to optimize the bot's performance.
+
+<CodeGroup>
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword } from '@builderbot/bot'
+import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { config } from 'dotenv'
+config()
+
+
+const welcomeFlow = addKeyword<Provider, Database>(['hi', 'hello', 'hola'])
+    .addAnswer(`🙌 Hello welcome to this *Chatbot*`)
+
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(Provider, { 
+        timeRelease: 10800000, // 3 hours in milliseconds
+    })
+
+    const adapterDB = new Database()
+    const botResult = await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+```
+```ts {{ title: 'app-experimental.ts' }}
+import { createBot, createProvider, createFlow, addKeyword } from '@builderbot/bot'
+import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
+import { MemoryDB as Database } from '@builderbot/bot'
+import { config } from 'dotenv'
+config()
+
+
+const welcomeFlow = addKeyword<Provider, Database>(['hi', 'hello', 'hola'])
+    .addAnswer(`🙌 Hello welcome to this *Chatbot*`)
+
+const main = async () => {
+    const adapterFlow = createFlow([welcomeFlow])
+    const adapterProvider = createProvider(Provider, { 
+        experimentalStore: true,
+        timeRelease: 10800000, // 3 hours in milliseconds
+    })
+
+    const adapterDB = new Database()
+    const botResult = await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+```
+</CodeGroup>
+
+
+---
+
 ## More examples
 If you want to see more examples applying Baiely's functions you can check the links below
 
