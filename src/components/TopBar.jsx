@@ -1,15 +1,14 @@
 export function TopBar(){
     return(
-        <>
         <a
-          target='_blank'
-          href={`https://a.cstmapp.com/voteme/974264/712365893?lc=es-es&ep1=ws`}>
-          <div className="bg-gradient-to-r animate-fadeIn from-pink-300 from-10% via-pink-700 via-50% to-fuchsia-600 to-90%">
-            <div className='text-center flex text-white  static gap-1 place-content-center top-0 font-secondary p-2 text-sm w-full r-0 '>
-              🎖️¡Nos encontramos nominados para OpenExpo <span className="bg-pink-600 px-2 rounded-xl">¡Vota ahora!</span>
-            </div>
+          href="https://builderbot.cloud"
+          target="_blank"
+          rel="noopener noreferrer"
+          className=" block bg-gradient-to-r from-teal-400 via-emerald-500 to-green-600    transition-colors duration-300"
+        >
+          <div className="container mx-auto py-2 px-4 text-center text-white ">
+            🚀 ¡Nuevo! builderbot cloud para No-code <span className="underline font-semibold">¡Pruébalo gratis!</span>
           </div>
         </a>
-      </>
-        )
+    )
 }
