@@ -10,19 +10,19 @@ The WhatsApp Business Platform enables medium and large businesses to communicat
 <CodeGroup>
 ```ts {{ title: 'main.ts' }}
 import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
-import { BaileysProvider } from '@builderbot/provider-baileys'
+import { WppConnectProvider } from '@builderbot/provider-wppconnect'
 
 /** send static messages */
-const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
+const welcomeFlow = addKeyword<WppConnectProvider, MemoryDB>(['hello', 'hi']).addAnswer('Ey! welcome')
 
 /** send dynamic message from db or other sources */
-const infoFlow = addKeyword<BaileysProvider, MemoryDB>('info')
+const infoFlow = addKeyword<WppConnectProvider, MemoryDB>('info')
     .addAction(async (ctx, { flowDynamic }) => {
         await flowDynamic(`Welcome ${ctx.name}`)
     })
 
 /** send media files */
-const mediaFlow = addKeyword<BaileysProvider, MemoryDB>('image')
+const mediaFlow = addKeyword<WppConnectProvider, MemoryDB>('image')
     .addAnswer(`Send Image A`, { media: 'https://i.imgur.com/AsvWfUX.png' })
     .addAction(async (ctx, { flowDynamic }) => {
         await flowDynamic(`Welcome ${ctx.name}`)
@@ -41,7 +41,7 @@ const main = async () => {
 
     const adapterDB = new MemoryDB()
     const adapterFlow = createFlow([welcomeFlow, infoFlow, mediaFlow])
-    const adapterProvider = createProvider(BaileysProvider)
+    const adapterProvider = createProvider(WppConnectProvider)
 
     adapterProvider.initHttpServer(3000)
 
@@ -58,7 +58,7 @@ main()
 
 ```js {{ title: 'main.js' }}
 const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@builderbot/bot')
-const { BaileysProvider } = require('@builderbot/bot')
+const { WppConnectProvider } = require('@builderbot/provider-wppconnect')
 
 /** send static messages */
 const welcomeFlow = addKeyword(['hello', 'hi']).addAnswer('Ey! welcome')
@@ -89,7 +89,7 @@ const main = async () => {
 
     const adapterDB = new MemoryDB()
     const adapterFlow = createFlow([welcomeFlow, infoFlow])
-    const adapterProvider = createProvider(BaileysProvider)
+    const adapterProvider = createProvider(WppConnectProvider)
 
     adapterProvider.initHttpServer(3000)
 
