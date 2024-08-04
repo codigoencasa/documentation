@@ -51,7 +51,7 @@ function NavLink({ href, tag, active, isAnchorLink = false, children }) {
   )
 }
 
-function parseLocation({link ,pathname}){
+function parseLocation({ link, pathname }) {
   return link === pathname.slice(3)
 }
 
@@ -76,7 +76,7 @@ function VisibleSectionHighlight({ group, pathname }) {
     ? Math.max(1, visibleSections.length) * itemHeight
     : itemHeight
   let top =
-    group.links.findIndex((link) => parseLocation({link:link.href, pathname})) * itemHeight +
+    group.links.findIndex((link) => parseLocation({ link: link.href, pathname })) * itemHeight +
     firstVisibleSectionIndex * itemHeight
 
   return (
@@ -94,7 +94,7 @@ function VisibleSectionHighlight({ group, pathname }) {
 function ActivePageMarker({ group, pathname }) {
   let itemHeight = remToPx(2)
   let offset = remToPx(0.25)
-  let activePageIndex = group.links.findIndex((link) => parseLocation({link:link.href, pathname}))
+  let activePageIndex = group.links.findIndex((link) => parseLocation({ link: link.href, pathname }))
   let top = offset + activePageIndex * itemHeight
 
   return (
@@ -124,7 +124,7 @@ function NavigationGroup({ group, className }) {
   useEffect(() => setLocale(language), [language])
 
   let isActiveGroup =
-    group.links.findIndex((link) => parseLocation({link:link.href, pathname:router.pathname})) !== -1
+    group.links.findIndex((link) => parseLocation({ link: link.href, pathname: router.pathname })) !== -1
 
   return (
     <li className={clsx('relative mt-6', className)}>
@@ -152,11 +152,11 @@ function NavigationGroup({ group, className }) {
         <ul role="list" className="border-l border-transparent">
           {group.links.map((link) => (
             <motion.li key={link.href} layout="position" className="relative">
-              <NavLink href={`${link.href}`} active={parseLocation({link:link.href, pathname:router.pathname})}>
+              <NavLink href={`${link.href}`} active={parseLocation({ link: link.href, pathname: router.pathname })}>
                 {link.title}
               </NavLink>
               <AnimatePresence mode="popLayout" initial={false}>
-                {parseLocation({link:link.href, pathname:router.pathname}) && sections.length > 0 && (
+                {parseLocation({ link: link.href, pathname: router.pathname }) && sections.length > 0 && (
                   <motion.ul
                     role="list"
                     initial={{ opacity: 0 }}
@@ -176,7 +176,7 @@ function NavigationGroup({ group, className }) {
                           tag={section.tag}
                           isAnchorLink
                         >
-                        {section.title}
+                          {section.title}
                         </NavLink>
                       </li>
                     ))}
@@ -246,13 +246,14 @@ export const navigation = [
       { title: 'In-Out messages', href: '/showcases/event-in-out-messages' },
       { title: 'Reminder', href: '/showcases/cron-reminder' },
       { title: 'Forward to human', href: '/showcases/forward-conversation-to-human' },
-      { title: 'GotoFlow Use' , href: '/showcases/gotoflow-use'},
-      { title: 'Multiple messages', href: '/showcases/multiple-messages'}
+      { title: 'GotoFlow Use', href: '/showcases/gotoflow-use' },
+      { title: 'Multiple messages', href: '/showcases/multiple-messages' }
     ],
   },
   {
     title: 'Tutorials',
     links: [
+      { title: 'Migrate from bot-whatsapp', href: '/tutorials/migrate-to-builderbot' },
       { title: 'API Rest', href: '/tutorials/api-use' },
       { title: 'Gemini', href: '/tutorials/chatbot-with-gemini' },
       { title: 'Langchain', href: '/tutorials/langchain' }

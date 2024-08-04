@@ -1,0 +1,180 @@
+import { Contributors } from '@/components/Contributors'
+import { Resources } from '@/components/Resources'
+import { Guides } from '@/components/Guides'
+
+# Migrating from bot-whatsapp to builderbot: A Simple Guide
+
+builderbot is the next evolution of bot-whatsapp, maintaining 99% compatibility while introducing significant improvements. This guide will walk you through the straightforward migration process.
+
+## Key Differences
+
+1. **Name Change**: From bot-whatsapp to builderbot
+2. **Enhanced Language Support**: Now includes TypeScript in addition to JavaScript
+3. **Improved Features**: New functionalities while maintaining familiar concepts
+
+<Contributors mode users={['leifermendez']} />
+
+---
+
+## Easy Migration Steps
+
+### Update Dependencies
+
+First, install the latest builderbot core:
+
+```sh
+npm install @builderbot/bot@latest
+# or
+pnpm add @builderbot/bot@latest
+```
+
+### Install Your Preferred Provider
+
+Choose and install the provider you're using:
+
+<CodeGroup>
+```bash {{ title: 'baileys' }}
+pnpm install @builderbot/provider-baileys@latest
+```
+```bash {{ title: 'meta' }}
+pnpm install @builderbot/provider-meta@latest
+```
+```bash {{ title: 'twilio' }}
+pnpm install @builderbot/provider-twilio@latest
+```
+```bash {{ title: 'venom' }}
+pnpm install @builderbot/provider-venom@latest
+```
+```bash {{ title: 'wppconnect' }}
+pnpm install @builderbot/provider-wppconnect@latest
+```
+```bash {{ title: 'whatsapp-web' }}
+pnpm install @builderbot/provider-whatsapp-web@latest
+```
+</CodeGroup>
+
+### Update Imports
+
+Modify your imports to use builderbot:
+
+```javascript
+// Old
+const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot')
+
+// New
+const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@builderbot/bot')
+```
+
+### Update Provider
+
+Change the provider import and initialization:
+
+```javascript
+// Old
+const WebWhatsappProvider = require('@bot-whatsapp/provider/web-whatsapp')
+
+// New
+const { BaileysProvider } = require('@builderbot/bot')
+
+// When initializing:
+const adapterProvider = createProvider(BaileysProvider)
+adapterProvider.initHttpServer(3000) // New feature in builderbot
+```
+
+### Update Database
+
+Update your database adapter:
+
+```javascript
+// Old
+const MockAdapter = require('@bot-whatsapp/database/mock')
+const adapterDB = new MockAdapter()
+
+// New
+const { MemoryDB } = require('@builderbot/bot')
+const adapterDB = new MemoryDB()
+```
+
+### Review and Update Flows
+
+While most of your flows will work as-is, consider using new features like `addAction` for more complex logic:
+
+```javascript
+const infoFlow = addKeyword('info')
+    .addAction(async (ctx, { flowDynamix }) => {
+        await flowDynamix(`Welcome ${ctx.name}`)
+    })
+```
+
+## Code Comparison
+
+Here's a side-by-side comparison of a basic bot setup in bot-whatsapp and builderbot:
+
+
+<CodeGroup>
+```javascript {{ title: 'bot-whatsapp' }}
+const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot')
+
+const BaileysProvider = require('@bot-whatsapp/provider/baileys')
+const MockAdapter = require('@bot-whatsapp/database/mock')
+
+const flowPrincipal = addKeyword(['hola', 'alo'])
+    .addAnswer(['Hola, bienvenido a mi tienda', '¿Como puedo ayudarte?'])
+    .addAnswer(['Tengo:', 'Zapatos', 'Bolsos', 'etc ...'])
+
+const main = async () => {
+    const adapterDB = new MockAdapter()
+    const adapterFlow = createFlow([flowPrincipal])
+    const adapterProvider = createProvider(BaileysProvider)
+    createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+```
+
+
+```javascript {{ title: 'builderbot' }}
+const { createBot, createProvider, createFlow, addKeyword, MemoryDB } = require('@builderbot/bot')
+const { BaileysProvider } = require('@builderbot/provider-baileys')
+
+const welcomeFlow = addKeyword(['hello', 'hi']).addAnswer('Ey! welcome')
+
+const infoFlow = addKeyword('info')
+    .addAction(async (ctx, { flowDynamic }) => {
+        await flowDynamic(`Welcome ${ctx.name}`)
+    })
+
+const main = async () => {
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([welcomeFlow, infoFlow])
+    const adapterProvider = createProvider(BaileysProvider)
+    adapterProvider.initHttpServer(3000)
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+```
+
+</CodeGroup>
+
+## Final Considerations
+
+- Migration should be relatively straightforward due to high compatibility
+- Take advantage of new builderbot features, especially if you opt to use TypeScript
+- Maintain your existing development practices and patterns, as they remain valid
+
+---
+
+<Guides />
+
+<Resources />
+
+<Contributors />
