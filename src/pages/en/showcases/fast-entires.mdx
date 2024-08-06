@@ -4,27 +4,18 @@ import { Guides } from '@/components/Guides'
 
 export const description = 'Implement message queues for better resource management'
 
-# Fast Entires
+# Fast Entries
 
-## Issue {{not:'true'}}
+## Issue
 Sometimes it happens that people are impatient and write independent messages in a very short time gap preventing the bot to answer, which makes that each message is answered but not in the desired order.
 
-<Contributors mode users={['robertouski']} />
+<Contributors mode users={['robertouski','leifermendez']} />
 
 ---
 
-## Possible Solution {{not:'true'}}
+## Improved Solution
 
-For this other type of environments you can implement a functionality which you can create to have a margin of 3000ms for the user to write a message, and each time he writes a message in a time less than 3000ms it will accumulate all the messages and then after the margin time the bot will interpret everything as a single conversation.
-
-```mermaid
-flowchart LR
-    n(User) -.m1.-> B((Bot)) -.-> p(Process) --a1--> a(Answers) --> u(User 3 answers)
-    n(User) -.m2.-> B((Bot)) -.-> p(Process) --a2--> a(Answers) --> u(User 3 answers)
-    n(User) -.m3.-> B((Bot)) -.-> p(Process) --a3--> a(Answers) --> u(User 3 answers)
-```
-
-Applying this implementation, what is achieved is that before passing to the processing stage, all independent messages (3) become one (1) and are processed as an independent message.
+For this type of environment, we've implemented an enhanced functionality that introduces a margin of 3000ms for the user to write messages. Each time a user writes a message within this 3000ms window, it accumulates all the messages. After the margin time expires, the bot interprets everything as a single conversation.
 
 ```mermaid
 flowchart LR
@@ -33,73 +24,109 @@ flowchart LR
     n(User) -.m3.-> Q
 ```
 
-In this example we say __3000ms__ which is equal to 3 seconds but you can modify this to your liking in `MESSAGE_GAP_SECONDS`
+This implementation ensures that before passing to the processing stage, all independent messages (e.g., 3) become one (1) and are processed as a single message.
+
+In this example, we use __3000ms__ (equal to 3 seconds) as the default gap, but you can modify this to your liking by adjusting the `gapSeconds` in the `QueueConfig`.
+
+<VideoVertical label="Video Fast Entries" yt="hGTgQDALEmE"/>
 
 <CodeGroup>
 
 ```ts {{ title: 'fast-entires.ts' }}
+/**
+ * @file messageQueue.ts
+ * @description A functional implementation of a message queueing system with debounce functionality.
+ */
+
 interface Message {
     text: string;
     timestamp: number;
 }
 
-const messageQueue: Message[] = [];
-
-const MESSAGE_GAP_SECONDS = 3000;
-
-let messageTimer: NodeJS.Timeout | null = null;
-
-/**
-* Adds a message to the queue for later processing.
-* @param messageText The text of the message to add to the queue.
-* @returns A promise that resolves when the message queue is processed.
-*/
-async function enqueueMessage(messageText: string): Promise<string> {
-    messageQueue.push({ text: messageText, timestamp: Date.now() });
-
-    return new Promise((resolve) => {
-        if (messageTimer) {
-            clearTimeout(messageTimer);
-        }
-
-        messageTimer = setTimeout(() => {
-            resolve(processMessageQueue());
-        }, MESSAGE_GAP_SECONDS);
-    });
+interface QueueConfig {
+    gapSeconds: number;
 }
 
-/**
-* Processes the message queue by combining all messages into a single string and clearing the queue.
-* @returns The combined string of all messages in the queue.
-*/
-function processMessageQueue(): string {
-    if (messageQueue.length === 0) {
-        return '';
+interface QueueState {
+    queue: Message[];
+    timer: NodeJS.Timeout | null;
+    callback: ((body: string) => void) | null;
+}
+
+function createInitialState(): QueueState {
+    return {
+        queue: [],
+        timer: null,
+        callback: null
+    };
+}
+
+function resetTimer(state: QueueState): QueueState {
+    if (state.timer) {
+        clearTimeout(state.timer);
     }
-
-    const combinedMessage = messageQueue.map(message => message.text).join(" ");
-    messageQueue.length = 0;
-    return combinedMessage;
+    return { ...state, timer: null };
 }
 
-export { enqueueMessage, processMessageQueue };
+function processQueue(state: QueueState): [string, QueueState] {
+    const result = state.queue.map(message => message.text).join(" ");
+    console.log('Accumulated messages:', result);
 
+    const newState = {
+        ...state,
+        queue: [],
+        timer: null
+    };
+
+    return [result, newState];
+}
+
+function createMessageQueue(config: QueueConfig) {
+    let state = createInitialState();
+
+    return function enqueueMessage(messageText: string, callback: (body: string) => void): void {
+        console.log('Enqueueing:', messageText);
+
+        state = resetTimer(state);
+        state.queue.push({ text: messageText, timestamp: Date.now() });
+        state.callback = callback;
+
+        state.timer = setTimeout(() => {
+            const [result, newState] = processQueue(state);
+            state = newState;
+            if (state.callback) {
+                state.callback(result);
+                state.callback = null;
+            }
+        }, config.gapSeconds);
+    };
+}
+
+export { createMessageQueue, QueueConfig };
 ```
+
 ```ts {{ title: 'app.ts' }}
-import { enqueueMessage } from './utils/fast-entires'
+import { createMessageQueue, QueueConfig } from './fast-entires'
 
 import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
 import { BaileysProvider } from '@builderbot/provider-baileys'
 
-const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi'])
-.addAction(async(ctx) => {
-  const body = await enqueueMessage(ctx.body) // all message merged!
-  console.log(body)
-})
+const queueConfig: QueueConfig = { gapSeconds: 3000 };
+const enqueueMessage = createMessageQueue(queueConfig);
 
+const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi'])
+.addAction(async (ctx, { flowDynamic }) => {
+    try {
+        enqueueMessage(ctx.body, async (body) => {
+            console.log('Processed messages:', body);
+            await flowDynamic(`Received messages: ${body}`);
+        });
+    } catch (error) {
+        console.error('Error processing message:', error);
+    }
+});
 
 const main = async () => {
-
     const adapterDB = new MemoryDB()
     const adapterFlow = createFlow([welcomeFlow])
     const adapterProvider = createProvider(BaileysProvider)
@@ -117,7 +144,27 @@ main()
 ```
 </CodeGroup>
 
-Remember that this is an alternative solution, and it is possible that its implementation could be improved.
+### Key Improvements in the New Implementation:
+
+1. **Functional Approach**: The new implementation uses a functional programming style, which can lead to more predictable and testable code.
+
+2. **Immutable State**: The state of the queue is managed immutably, which helps prevent unexpected side effects.
+
+3. **Flexible Configuration**: The `QueueConfig` interface allows for easy adjustment of the gap time.
+
+4. **Enhanced Error Handling**: The implementation includes try-catch blocks for better error management.
+
+5. **Callback-based Processing**: Instead of returning a promise, the new implementation uses a callback function, allowing for more flexible message processing.
+
+6. **Detailed Logging**: Console logs have been added at key points to aid in debugging and understanding the message flow.
+
+Remember that while this implementation offers significant improvements, it's always possible to further optimize based on specific use cases and requirements.
+
+----
+
+<Guides />
+
+<Resources />
 
 ----
 
