@@ -264,6 +264,7 @@ export const navigation = [
     links: [
       { title: 'Documentation', href: '/contribute' },
       { title: 'Core', href: '/contribute/core' },
+      { title: 'Brand and Logos', href: '/resources' },
     ],
   },
   {
