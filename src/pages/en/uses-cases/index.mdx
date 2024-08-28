@@ -293,6 +293,38 @@ const flow = addKeyword<BaileysProvider>('botoff')
 
 ---
 
+## Bot Self-Interaction {{ tag: 'state'  }}
+
+In certain scenarios, it is necessary for the bot's phone number (host) to be able to interact within logical flows. To achieve this, we have several configurable options:
+- **host:** This is used when you want the bot to be able to respond to messages in the same chat with itself. For example, if the bot's number is 0000, it will be able to send and receive messages to/from 0000.
+- **both:** This option allows both the bot and you (the developer/administrator) to intervene in the chat of a person interacting with the bot.
+- **none:** (default option) Only allows interaction between the user and the bot, without intervention from the host number.
+
+```ts {{ title: 'app.ts' }}
+import { createBot, createProvider, createFlow, addKeyword, MemoryDB } from '@builderbot/bot'
+import { BaileysProvider } from '@builderbot/provider-baileys'
+
+const main = async () => {
+    const adapterDB = new MemoryDB()
+    const adapterFlow = createFlow([...])
+    const adapterProvider = createProvider(BaileysProvider, {
+          writeMyself: 'host' as 'none' | 'host' | 'both'
+    })
+
+    adapterProvider.initHttpServer(3000)
+
+    await createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+}
+
+main()
+```
+
+---
+
 <Guides />
 
 <Resources />
