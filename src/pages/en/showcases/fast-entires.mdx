@@ -115,29 +115,29 @@ const queueConfig: QueueConfig = { gapSeconds: 3000 };
 const enqueueMessage = createMessageQueue(queueConfig);
 
 const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(['hello', 'hi'])
-.addAction(async (ctx, { flowDynamic }) => {
-    try {
-        enqueueMessage(ctx.body, async (body) => {
-            console.log('Processed messages:', body);
-            await flowDynamic(`Received messages: ${body}`);
-        });
-    } catch (error) {
-        console.error('Error processing message:', error);
-    }
-});
+    .addAction(async (ctx, { flowDynamic }) => {
+        try {
+            enqueueMessage(ctx.body, async (body) => {
+                console.log('Processed messages:', body);
+                await flowDynamic(`Received messages: ${body}`);
+            });
+        } catch (error) {
+            console.error('Error processing message:', error);
+        }
+    });
 
 const main = async () => {
     const adapterDB = new MemoryDB()
     const adapterFlow = createFlow([welcomeFlow])
     const adapterProvider = createProvider(BaileysProvider)
 
-    adapterProvider.initHttpServer(3000)
-
-    await createBot({
+    const bot = await createBot({
         flow: adapterFlow,
         provider: adapterProvider,
         database: adapterDB,
     })
+
+    bot.httpServer(3000)
 }
 
 main()
