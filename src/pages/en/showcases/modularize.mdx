@@ -19,7 +19,7 @@ As our projects grow we will need to implement a better way to maintain the proj
 In the following example we will show how we have migrated the modules to a directory, as well as the provider and the database.
 
 <CodeGroup>
-```ts {{ title: 'app.ts' }}
+```ts {{ title: 'app.ts' }}+
   import { createBot } from '@builderbot/bot';
   import { flow } from "./flow";
   import { database } from "./database";
@@ -47,6 +47,7 @@ main()
   export const provider = createProvider(BaileysProvider)
 ```
 ```ts {{ title: 'database/index.ts' }}
+  import { MemoryDB } from "@builderbot/bot";
   export const database = new MemoryDB()
 ```
 ```ts {{ title: 'flow/index.ts' }}
