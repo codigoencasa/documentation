@@ -1,7 +1,4 @@
 {
-  "framework": "nextjs",
-  "engines": {
-    "node": "24.x"
-  }
+  "framework": "nextjs"
 }
 

@@ -10,7 +10,7 @@
     "deploy": "vercel deploy --prod"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": "24.x"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
