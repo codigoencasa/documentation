@@ -9,6 +9,9 @@
     "lint": "next lint",
     "deploy": "vercel deploy --prod"
   },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
     "@algolia/autocomplete-core": "^1.17.0",
