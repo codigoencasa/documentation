@@ -1,0 +1,42 @@
+import { Templates } from '@/components/Templates'
+
+export const wide = true
+
+export const description =
+  'Plantillas completas de BuilderBot: un agente con herramientas, ventas por WhatsApp con catálogo, preguntas sobre un PDF o un enlace y soporte con paso a una persona. Un solo archivo para pegar, y corre en tu navegador.'
+
+# Plantillas
+
+Estos son los diez bots que la gente termina construyendo a mano. Un asistente que consulta un dato antes de responder, un bot de ventas con catálogo y total real, un bot que lee un PDF o un enlace, y un bot de soporte que sabe cuándo pasar el chat.
+
+Cada una es un flow completo: el `state` que guarda, el paso que hace el trabajo y lo que dice el bot cuando el cliente responde algo que el camino feliz no esperaba. Pulsa **Probar en vivo** para hablar con el mismo flow en tu navegador: las llamadas de red se sustituyen por datos fijos, así que no necesitas claves.
+
+<Templates locale="es" />
+
+## Qué tienen en común
+
+- **Un archivo por plantilla.** Lo pones en `src/flows` y lo importas en `app.ts`. Sin nodos que conectar, sin pasos escondidos.
+- **El camino infeliz está escrito.** Si la cantidad no es un número, el enlace no carga o el cliente pide una persona, el bot responde algo útil en lugar de quedarse mudo.
+- **Todas acaban igual:** `addKeyword` + `addAnswer({ capture: true })` + `addAction`, los cuatro [métodos](/methods) que cubre esta documentación. Lo que cambia es el [state](/methods#state), los [eventos](/events) y la llamada a tu API.
+
+## Convertir una tarjeta en un bot que corre
+
+<CodeGroup>
+```bash {{ title: 'pnpm' }}
+pnpm create builderbot@latest
+```
+
+```bash {{ title: 'npm' }}
+npm create builderbot@latest
+```
+</CodeGroup>
+
+Elige `baileys` como provider y `memory` como base de datos, luego copia el flow de la tarjeta en `src/flows` e impórtalo en `app.ts`. Si necesitas persistencia, cambia `MemoryDB` por [Mongo, MySQL o Postgres](/databases) sin tocar el flow.
+
+<Note>
+La tarjeta muestra la versión que llama a la red. La demo en vivo es el mismo flow con las llamadas sustituidas por datos fijos, y por eso contesta las mismas preguntas sin claves.
+</Note>
+
+## ¿Tienes una plantilla que nos falta?
+
+Si construiste algo que resuelve un problema real y quieres que aparezca aquí, abre un PR en el [repo de documentación](https://github.com/codigoencasa/documentation) o compártela en el Discord. Revisamos dos cosas: que funcione con la versión actual de `@builderbot/bot` y que explique el flow, no solo el objetivo.

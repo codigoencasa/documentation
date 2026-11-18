@@ -250,10 +250,12 @@ function EngineLog({ entries, t }) {
   )
 }
 
-export function Playground({ locale = 'en', example = EXAMPLES[0].id, single = false }) {
+export function Playground({ locale = 'en', example = EXAMPLES[0].id, single = false, custom = null }) {
   const t = COPY[locale] ?? COPY.en
-  const [exampleId, setExampleId] = useState(example)
-  const current = findExample(exampleId)
+  const items0 = custom ? [custom] : EXAMPLES
+  const resolve = (id) => (custom && id === custom.id ? custom : findExample(id))
+  const [exampleId, setExampleId] = useState(custom ? custom.id : example)
+  const current = resolve(exampleId)
   const [code, setCode] = useState(current.code)
   const [ranCode, setRanCode] = useState(null)
   const [items, setItems] = useState([])
@@ -304,7 +306,7 @@ export function Playground({ locale = 'en', example = EXAMPLES[0].id, single = f
   )
 
   useEffect(() => {
-    const next = findExample(exampleId).code
+    const next = resolve(exampleId).code
     setCode(next)
     run(next, { fresh: true })
   }, [exampleId]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -364,7 +366,7 @@ export function Playground({ locale = 'en', example = EXAMPLES[0].id, single = f
                 onChange={(e) => setExampleId(e.target.value)}
                 className="h-11 w-full min-w-0 appearance-none truncate rounded-full sm:h-10 sm:w-auto sm:max-w-[260px] bg-bb-bg2 pl-4 pr-9 font-mono text-sm text-bb-head ring-1 ring-inset ring-bb-line transition hover:ring-bb-line2 focus:outline-none focus:ring-bb-l2"
               >
-                {EXAMPLES.map((item) => (
+                {items0.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.title[locale] ?? item.title.en}
                   </option>
@@ -408,7 +410,7 @@ export function Playground({ locale = 'en', example = EXAMPLES[0].id, single = f
             className="hidden min-h-0 flex-col gap-1 overflow-y-auto rounded-2xl bg-bb-bg2 px-3 py-4 ring-1 ring-inset ring-bb-line 2xl:row-span-2 2xl:flex"
           >
             <p className={clsx('mb-2 ml-2.5 text-bb-mute', KICKER)}>{t.examples}</p>
-            {EXAMPLES.map((item) => (
+            {items0.map((item) => (
               <button
                 key={item.id}
                 type="button"

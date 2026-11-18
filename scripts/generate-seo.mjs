@@ -15,6 +15,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
+import { TEMPLATES, UPDATED } from '../src/lib/templates.mjs'
+
 const ROOT = process.cwd()
 const PAGES = path.join(ROOT, 'src/pages')
 const OUT_ROUTES = path.join(ROOT, 'src/lib/generated/routes.json')
@@ -49,10 +51,45 @@ function truncateClean(text, max = 220) {
   return `${(lastSpace > 80 ? sliced.slice(0, lastSpace) : sliced).replace(/[.,;:!?-]+$/, '')}...`
 }
 
+/**
+ * Renders the template catalog (src/lib/templates.mjs) as Markdown, so the generated
+ * `.md` route, llms.txt and llms-full.txt carry the same content as the React page.
+ */
+function buildTemplatesMarkdown(locale) {
+  const heads = {
+    en: { file: 'File', code: 'BuilderBot implementation', docs: 'Docs', updated: 'Updated' },
+    es: { file: 'Archivo', code: 'Implementación en BuilderBot', docs: 'Documentación', updated: 'Actualizado' },
+    pt: { file: 'Arquivo', code: 'Implementação em BuilderBot', docs: 'Documentação', updated: 'Atualizado' },
+  }[locale] ?? { file: 'File', code: 'BuilderBot implementation', docs: 'Docs', updated: 'Updated' }
+
+  const blocks = TEMPLATES.map((template) => {
+    const summary = template.summary[locale] ?? template.summary.en
+    const recipe = template.recipe[locale] ?? template.recipe.en
+    return [
+      `### ${template.title}`,
+      '',
+      `- **${heads.file}:** \`${template.file}\``,
+      `- **${heads.docs}:** ${template.docs}`,
+      '',
+      summary,
+      '',
+      `**${heads.code}:**`,
+      '',
+      '```ts',
+      template.code,
+      '```',
+      '',
+      recipe,
+    ].join('\n')
+  })
+
+  return [`_${heads.updated} ${UPDATED}._`, '', ...blocks].join('\n\n')
+}
+
 const NAV_GROUPS = [
   {
     title: 'Start here',
-    routes: ['/', '/quickstart', '/concepts', '/uses-cases', '/playground'],
+    routes: ['/', '/quickstart', '/concepts', '/uses-cases', '/templates', '/playground'],
   },
   {
     title: 'Basics',
@@ -226,7 +263,7 @@ function parseMdxFile(absPath, route, locale) {
       continue
     }
     if (/^\s*import\s+/.test(line)) continue
-    if (/^\s*export\s+const\s+(description|title|sections|sourcePath)\s*=/.test(line)) {
+    if (/^\s*export\s+const\s+(description|title|sections|sourcePath|wide)\s*=/.test(line)) {
       const afterEq = line.split('=').slice(1).join('=').trim()
       if (!afterEq || !/['"`].*['"`]/.test(afterEq)) {
         inExport = true
@@ -262,6 +299,13 @@ function parseMdxFile(absPath, route, locale) {
   // Replace <TerminalDemo ... /> with a clear CLI command note
   md = md.replace(/<TerminalDemo[^>]*\/>/g, '\n```bash\npnpm create builderbot@latest\n```\n')
 
+  // Expand <Templates locale="xx" /> into the real catalog so .md routes and llms-full.txt
+  // include the ranked list (the React component is client-side only).
+  if (/<Templates\b/.test(md)) {
+    const localeMatch = /<Templates[^>]*locale=["']([a-z]{2})["']/.exec(md)
+    md = md.replace(/<Templates\b[^>]*\/>/g, buildTemplatesMarkdown(localeMatch?.[1] || locale))
+  }
+
   // Remove purely decorative or layout wrapper tags outside code fences
   const stripTagNames = [
     'HeroPattern',
@@ -278,6 +322,7 @@ function parseMdxFile(absPath, route, locale) {
     'Properties',
     'Property',
     'Playground',
+    'Templates',
   ]
   const selfClosingRe = new RegExp(`<(${stripTagNames.join('|')})(\\s[^>]*)?\\/>`, 'g')
   const openCloseRe = new RegExp(`<\/?(${stripTagNames.join('|')})(\\s[^>]*)?>`, 'g')

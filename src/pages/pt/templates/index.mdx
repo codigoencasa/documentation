@@ -1,0 +1,42 @@
+import { Templates } from '@/components/Templates'
+
+export const wide = true
+
+export const description =
+  'Templates completos do BuilderBot: um agente com ferramentas, vendas no WhatsApp com catálogo, perguntas sobre um PDF ou um link e suporte com passagem para uma pessoa. Um arquivo para colar, e roda no seu navegador.'
+
+# Templates
+
+Estes são os dez bots que as pessoas acabam construindo à mão. Um assistente que consulta um dado antes de responder, um bot de vendas com catálogo e total real, um bot que lê um PDF ou um link, e um bot de suporte que sabe quando passar o chat.
+
+Cada um é um flow completo: o `state` que guarda, o passo que faz o trabalho e o que o bot diz quando o cliente responde algo que o caminho feliz não esperava. Clique em **Testar ao vivo** para falar com o mesmo flow no seu navegador — as chamadas de rede são substituídas por dados fixos, então você não precisa de chaves.
+
+<Templates locale="pt" />
+
+## O que eles têm em comum
+
+- **Um arquivo por template.** Você coloca em `src/flows` e importa em `app.ts`. Sem nós para ligar, sem passos escondidos.
+- **O caminho infeliz está escrito.** Se a quantidade não for um número, o link não carregar ou o cliente pedir uma pessoa, o bot responde algo útil em vez de ficar mudo.
+- **Todos terminam igual:** `addKeyword` + `addAnswer({ capture: true })` + `addAction`, os quatro [métodos](/methods) que esta documentação cobre. O que muda é o [state](/methods#state), os [eventos](/events) e a chamada à sua API.
+
+## Transformar um card em um bot rodando
+
+<CodeGroup>
+```bash {{ title: 'pnpm' }}
+pnpm create builderbot@latest
+```
+
+```bash {{ title: 'npm' }}
+npm create builderbot@latest
+```
+</CodeGroup>
+
+Escolha `baileys` como provider e `memory` como banco de dados, depois copie o flow do card para `src/flows` e importe em `app.ts`. Se precisar de persistência, troque `MemoryDB` por [Mongo, MySQL ou Postgres](/databases) sem tocar no flow.
+
+<Note>
+O card mostra a versão que chama a rede. A demo ao vivo é o mesmo flow com as chamadas substituídas por dados fixos, e por isso responde as mesmas perguntas sem chaves.
+</Note>
+
+## Tem um template que falta aqui?
+
+Se você construiu algo que resolve um problema real e quer que apareça aqui, abra um PR no [repositório da documentação](https://github.com/codigoencasa/documentation) ou compartilhe no Discord. Revisamos duas coisas: que funcione com a versão atual do `@builderbot/bot` e que explique o flow, não só o objetivo.

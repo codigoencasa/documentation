@@ -17,6 +17,7 @@ Key facts for coding agents and LLMs:
 - [Quickstart](https://www.builderbot.app/en/quickstart.md): Creating a bot is as simple as running the following command and following the instructions
 - [Why BuilderBot?](https://www.builderbot.app/en/concepts.md): BuilderBot is the framework for the creation of ChatBots focused on low-frequency communication channels, whatsapp, telegram, etc. We implement an architecture focused on improving the developer experience and the reuse...
 - [Examples](https://www.builderbot.app/en/uses-cases.md): Below you will find different examples showing the implementation in different use cases. These examples have been compiled based on the community, feel free to post an example that you like or that you think would be...
+- [Templates](https://www.builderbot.app/en/templates.md): Complete BuilderBot templates: an AI agent with tools, a WhatsApp sales bot with a catalog, PDF and link Q&A, and support with handoff to a person. Each one is a single file you can paste, and runs in your browser.
 - [Playground](https://www.builderbot.app/en/playground.md): Write BuilderBot flows with addKeyword, addAnswer and addAction and chat with them in the browser, powered by the real @builderbot/bot core.
 
 ## Basics

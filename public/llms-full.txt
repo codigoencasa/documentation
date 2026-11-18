@@ -1,6 +1,6 @@
 # BuilderBot Documentation Corpus
 
-> Index: https://www.builderbot.app/llms.txt · Locale: en · Pages: 58
+> Index: https://www.builderbot.app/llms.txt · Locale: en · Pages: 59
 
 # Get started with BuilderBot
 Source: https://www.builderbot.app/en
@@ -783,14 +783,531 @@ main()
 
 ---
 
+# Templates
+Source: https://www.builderbot.app/en/templates
+Markdown: https://www.builderbot.app/en/templates.md
+Description: Complete BuilderBot templates: an AI agent with tools, a WhatsApp sales bot with a catalog, PDF and link Q&A, and support with handoff to a person. Each one is a single file you can paste, and runs in your browser.
+
+These are the ten bots people keep building by hand. An assistant that looks something up before it answers, a sales bot with a catalog and a real total, a bot that reads a PDF or a link, and a support bot that knows when to hand the chat over.
+
+Each one is a complete flow: the `state` it keeps, the step that does the work, and what the bot says when the customer answers something the happy path did not expect. Press **Try it live** to talk to the same flow in your browser — the network calls are replaced by fixed data, so you do not need a key.
+
+_Updated 2026-11-18._
+
+### AI agent that can look things up
+
+- **File:** `flows/agent.flow.ts`
+- **Docs:** /add-functions#add-action
+
+A chat with memory that can search the web or look up an order before it answers, instead of inventing the number.
+
+**BuilderBot implementation:**
+
+```ts
+import { EVENTS, addKeyword } from '@builderbot/bot'
+
+const SYSTEM = `You are the assistant of ACME. Reply in the customer's language, in one short WhatsApp message.
+When you need live data, reply with exactly one line and nothing else:
+TOOL search <query>
+TOOL order <id>`
+
+const MAX_TURNS = 12
+
+const searchWeb = async (query: string) => {
+    const url = `https://serpapi.com/search.json?q=${encodeURIComponent(query)}&api_key=${process.env.SERPAPI_KEY}`
+    const data = await (await fetch(url)).json()
+    const snippets = (data.organic_results ?? []).slice(0, 3).map((item: any) => item.snippet)
+    return snippets.join(' ') || 'no results'
+}
+
+const lookupOrder = async (id: string) => {
+    const res = await fetch(`${process.env.ORDERS_API}/orders/${id}`)
+    if (!res.ok) return 'order not found'
+    const order = await res.json()
+    return `status ${order.status}, total ${order.total}`
+}
+
+const ask = async (messages: { role: string; content: string }[]) => {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'system', content: SYSTEM }, ...messages] }),
+    })
+    const data = await res.json()
+    return data.choices?.[0]?.message?.content ?? 'I could not get an answer. Try again in a moment.'
+}
+
+export default addKeyword(EVENTS.WELCOME).addAction(async (ctx, { state, flowDynamic }) => {
+    const history = (state.get('history') ?? []) as { role: string; content: string }[]
+    const messages = [...history, { role: 'user', content: ctx.body }].slice(-MAX_TURNS)
+
+    let answer = await ask(messages)
+    const tool = /^TOOL (search|order) (.+)$/.exec(answer.trim())
+    if (tool) {
+        const result = tool[1] === 'search' ? await searchWeb(tool[2]) : await lookupOrder(tool[2])
+        messages.push({ role: 'assistant', content: answer }, { role: 'user', content: `TOOL RESULT: ${result}` })
+        answer = await ask(messages)
+    }
+
+    await state.update({ history: [...messages, { role: 'assistant', content: answer }].slice(-MAX_TURNS) })
+    await flowDynamic(answer)
+})
+```
+
+Keep the last turns in `state`. The model answers, or it replies `TOOL search …` / `TOOL order …`. You run that one call and ask the model again with the result. One round is enough for WhatsApp.
+
+### WhatsApp sales agent with a catalog
+
+- **File:** `flows/sales.flow.ts`
+- **Docs:** /methods#state
+
+Quotes a price, asks how many seats, and only confirms the order when the quantity is a real number.
+
+**BuilderBot implementation:**
+
+```ts
+import { EVENTS, addKeyword } from '@builderbot/bot'
+
+const CATALOG = [
+    { id: 'pro', name: 'Pro plan', price: 29 },
+    { id: 'starter', name: 'Starter plan', price: 9 },
+]
+
+const findPlan = (text: string) =>
+    CATALOG.find((plan) => text.toLowerCase().includes(plan.id))
+
+export default addKeyword(EVENTS.WELCOME)
+    .addAnswer(
+        'Hi! Pro is $29/month and Starter is $9/month. Which one do you want?',
+        { capture: true },
+        async (ctx, { state, fallBack }) => {
+            const plan = findPlan(ctx.body)
+            if (!plan) return fallBack('Write "pro" or "starter".')
+            await state.update({ plan })
+        }
+    )
+    .addAnswer('How many seats?', { capture: true }, async (ctx, { state, fallBack }) => {
+        const seats = Number(ctx.body.replace(/[^\d]/g, ''))
+        if (!seats) return fallBack('Write a number, for example 3.')
+        await state.update({ seats })
+    })
+    .addAnswer('Confirm with "yes".', { capture: true }, async (ctx, { state, flowDynamic, endFlow }) => {
+        if (!/^y(es)?$/i.test(ctx.body.trim())) return endFlow('Order cancelled. Write any time to start again.')
+        const { plan, seats } = state.getMyState()
+        await flowDynamic(`${seats} x ${plan.name} = ${plan.price * seats}/month. I will send the invoice link.`)
+    })
+```
+
+A catalog in code beats a chain of wait nodes. `capture` keeps each answer in the same flow, `fallBack` asks again when the quantity is not a number, and `state` carries the line item to the total.
+
+### Assistant for text and voice notes
+
+- **File:** `flows/assistant.flow.ts`
+- **Docs:** /events#received-voice-note
+
+A voice note is transcribed and then handled by the same flow that answers typed messages, so reminders land in one list.
+
+**BuilderBot implementation:**
+
+```ts
+import { readFile } from 'node:fs/promises'
+import { EVENTS, addKeyword } from '@builderbot/bot'
+
+const transcribe = async (filePath: string) => {
+    const audio = await readFile(filePath)
+    const form = new FormData()
+    form.append('file', new Blob([audio]), 'audio.ogg')
+    form.append('model', 'whisper-1')
+    const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+        body: form,
+    })
+    const data = await res.json()
+    return data.text as string
+}
+
+/** One place for typed text and for transcripts. */
+const remember = async (text: string, state: any, flowDynamic: any) => {
+    const reminder = /remind|recu[eé]rd|lembr/i.exec(text)
+    if (!reminder) return flowDynamic('Tell me "remind me to ..." and I will keep it.')
+    const list = state.get('reminders') ?? []
+    await state.update({ reminders: [...list, text] })
+    return flowDynamic(`Saved. You have ${list.length + 1} reminder${list.length ? 's' : ''}.`)
+}
+
+const voiceFlow = addKeyword(EVENTS.VOICE_NOTE).addAction(async (ctx, { provider, state, flowDynamic }) => {
+    const filePath = await provider.saveFile(ctx, { path: './tmp' })
+    const text = await transcribe(filePath)
+    await flowDynamic(`I heard: "${text}"`)
+    await remember(text, state, flowDynamic)
+})
+
+const textFlow = addKeyword(EVENTS.WELCOME).addAction(async (ctx, { state, flowDynamic }) => {
+    await remember(ctx.body, state, flowDynamic)
+})
+
+export default [voiceFlow, textFlow]
+```
+
+`EVENTS.VOICE_NOTE` is separate from images on purpose. Save the file, send it to Whisper, and pass the transcript to the same function that reads `ctx.body`. Store reminders in `state`, per contact.
+
+### Summarize any link in the chat
+
+- **File:** `flows/summarize.flow.ts`
+- **Docs:** /add-functions#regex
+
+Send a URL, get five bullets back. When the page does not load, the bot says so instead of going silent.
+
+**BuilderBot implementation:**
+
+```ts
+import { addKeyword } from '@builderbot/bot'
+
+const REGEX_URL = '/(https?:\\/\\/[^\\s]+)/g'
+
+const stripHtml = (html: string) =>
+    html
+        .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+        .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 8000)
+
+export default addKeyword(REGEX_URL, { regex: true }).addAction(async (ctx, { flowDynamic }) => {
+    const res = await fetch(ctx.body)
+    if (!res.ok) return flowDynamic(`I could not open that page (HTTP ${res.status}).`)
+
+    const page = stripHtml(await res.text())
+    if (page.length < 200) return flowDynamic('That page has almost no text. Try another link.')
+
+    const answer = await (async () => {
+        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({ model: 'gpt-4o-mini', messages: [
+            { role: 'system', content: 'Summarize in 5 short bullets for WhatsApp. No intro.' },
+            { role: 'user', content: page },
+        ] }),
+    })
+    const data = await res.json()
+    return data.choices?.[0]?.message?.content ?? 'I could not get an answer. Try again in a moment.'
+    })()
+    await flowDynamic(answer)
+})
+```
+
+A regex keyword catches the link without a command. Strip scripts and styles before the prompt, cap the text, and answer with the HTTP status when fetch fails.
+
+### Find leads and draft the first message
+
+- **File:** `flows/leads.flow.ts`
+- **Docs:** /methods#state
+
+Search a niche and a city, keep the list, and draft a first WhatsApp message for the lead you pick.
+
+**BuilderBot implementation:**
+
+```ts
+import { addKeyword } from '@builderbot/bot'
+
+type Lead = { name: string; phone?: string; address?: string }
+
+const searchMaps = async (query: string): Promise<Lead[]> => {
+    const url = `https://serpapi.com/search.json?engine=google_maps&q=${encodeURIComponent(query)}&api_key=${process.env.SERPAPI_KEY}`
+    const data = await (await fetch(url)).json()
+    return (data.local_results ?? []).slice(0, 8).map((item: any) => ({
+        name: item.title,
+        phone: item.phone,
+        address: item.address,
+    }))
+}
+
+export default addKeyword(['leads', 'prospectos'])
+    .addAnswer('Niche and city, for example "dentists in Madrid".', { capture: true }, async (ctx, { state, flowDynamic, endFlow }) => {
+        const leads = await searchMaps(ctx.body)
+        if (!leads.length) return endFlow('No results. Try a broader search.')
+        await state.update({ leads })
+        const lines = leads.map((lead, i) => `${i + 1}. ${lead.name} · ${lead.phone ?? 'no phone'}`)
+        await flowDynamic(`${leads.length} leads:\n${lines.join('\n')}\n\nReply with a number to draft the first message.`)
+    })
+    .addAnswer('Waiting for the lead number.', { capture: true }, async (ctx, { state, flowDynamic, fallBack }) => {
+        const { leads } = state.getMyState() as { leads: Lead[] }
+        const index = Number(ctx.body) - 1
+        const lead = leads[index]
+        if (!lead) return fallBack(`Write a number between 1 and ${leads.length}.`)
+        await flowDynamic(
+            `Draft for ${lead.name}:\nHi, I help clinics get more bookings on WhatsApp. Open to a 10 minute call this week?`
+        )
+    })
+```
+
+Search, then `capture` the number of the lead. The draft uses the business name from `state`, so the message is not generic. Sending it stays a separate step: you review it before it goes out.
+
+### Ask your sales data in the chat
+
+- **File:** `flows/analyst.flow.ts`
+- **Docs:** /add-functions#add-action
+
+The customer asks "how much did we sell in October?" and the bot answers from your rows, quoting the numbers it used.
+
+**BuilderBot implementation:**
+
+```ts
+import { EVENTS, addKeyword } from '@builderbot/bot'
+
+// Replace with the query you actually want to expose. Never pass a raw SQL string from the chat.
+const ROWS = [
+    { month: 'october', customer: 'ACME', total: 1200 },
+    { month: 'october', customer: 'North', total: 800 },
+    { month: 'november', customer: 'ACME', total: 1500 },
+]
+
+export default addKeyword(EVENTS.WELCOME).addAction(async (ctx, { flowDynamic }) => {
+    const table = ROWS.map((row) => `${row.month} | ${row.customer} | ${row.total}`).join('\n')
+    const answer = await (async () => {
+        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({ model: 'gpt-4o-mini', messages: [
+            { role: 'system', content: `Answer only from this table (month | customer | total). If it is not there, say so.\n${table}` },
+            { role: 'user', content: ctx.body },
+        ] }),
+    })
+    const data = await res.json()
+    return data.choices?.[0]?.message?.content ?? 'I could not get an answer. Try again in a moment.'
+    })()
+    await flowDynamic(answer)
+})
+```
+
+Do not hand the model a database connection. Load the rows you are willing to expose, put them in the prompt, and tell it to answer only from that table. The same flow works against a query you run yourself.
+
+### Questions about a PDF the customer sends
+
+- **File:** `flows/pdf.flow.ts`
+- **Docs:** /events#received-document
+
+The customer sends a PDF and then asks about it. The bot refuses to answer from anything that is not in the file.
+
+**BuilderBot implementation:**
+
+```ts
+import { readFile } from 'node:fs/promises'
+import { PDFParse } from 'pdf-parse'
+import { EVENTS, addKeyword } from '@builderbot/bot'
+
+export default addKeyword(EVENTS.DOCUMENT)
+    .addAction(async (ctx, { provider, state, flowDynamic }) => {
+        const filePath = await provider.saveFile(ctx, { path: './tmp' })
+        const parser = new PDFParse({ data: await readFile(filePath) })
+        const { text } = await parser.getText()
+        await parser.destroy()
+
+        if (!text.trim()) return flowDynamic('I could not read text in that PDF.')
+        await state.update({ doc: text.slice(0, 12000) })
+        await flowDynamic('Got it. Ask me about the document.')
+    })
+    .addAnswer('Any other question?', { capture: true }, async (ctx, { state, flowDynamic }) => {
+        const doc = state.get('doc') as string
+        const answer = await (async () => {
+            const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({ model: 'gpt-4o-mini', messages: [
+                { role: 'system', content: `Answer only with this document. If it is not in the text, say you don't know.\n${doc}` },
+                { role: 'user', content: ctx.body },
+            ] }),
+    })
+    const data = await res.json()
+    return data.choices?.[0]?.message?.content ?? 'I could not get an answer. Try again in a moment.'
+        })()
+        await flowDynamic(answer)
+    })
+```
+
+`EVENTS.DOCUMENT` plus `provider.saveFile` gives you the file. `pdf-parse` extracts the text into `state`. For more than a few pages, chunk it and retrieve; stuffing the whole file into the prompt is the short version.
+
+### Support bot that hands the chat to a person
+
+- **File:** `flows/support.flow.ts`
+- **Docs:** /showcases/forward-conversation-to-human
+
+Answers the FAQ, and the moment the customer asks for a person the bot stops talking to them and alerts your team.
+
+**BuilderBot implementation:**
+
+```ts
+import { EVENTS, addKeyword } from '@builderbot/bot'
+
+const HUMAN = /(human|agent|person|asesor|persona|atendente)/i
+const FAQ = 'Returns: 30 days with the receipt. Shipping: 24 to 72 hours inside the country.'
+
+const alertTeam = async (from: string, text: string) => {
+    await fetch(process.env.SLACK_WEBHOOK_URL!, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: `${from} wants a person: ${text}` }),
+    })
+}
+
+export const humanFlow = addKeyword(EVENTS.ACTION).addAnswer(
+    'I am passing you to a person. Write your message and they will reply here.',
+    { capture: true },
+    async (ctx, { blacklist, flowDynamic }) => {
+        await alertTeam(ctx.from, ctx.body)
+        blacklist.add(ctx.from)
+        await flowDynamic('Done. I will stay quiet in this chat until the team sends you back.')
+    }
+)
+
+const supportFlow = addKeyword(EVENTS.WELCOME).addAction(async (ctx, { gotoFlow, flowDynamic }) => {
+    if (HUMAN.test(ctx.body)) return gotoFlow(humanFlow)
+    const answer = await (async () => {
+        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({ model: 'gpt-4o-mini', messages: [
+            { role: 'system', content: 'Answer only from this FAQ. If it is not covered, say you will pass them to a person. FAQ: ' + FAQ },
+            { role: 'user', content: ctx.body },
+        ] }),
+    })
+    const data = await res.json()
+    return data.choices?.[0]?.message?.content ?? 'I could not get an answer. Try again in a moment.'
+    })()
+    await flowDynamic(answer)
+})
+
+export default [supportFlow, humanFlow]
+```
+
+Match the handoff before calling the model, `gotoFlow` to a flow that alerts your team, then `blacklist.add(ctx.from)`. While the number is muted the bot keeps answering everyone else. Write "unmute" from the admin chat to give the bot back.
+
+### Book a meeting from the chat
+
+- **File:** `flows/meeting.flow.ts`
+- **Docs:** /methods#fall-back
+
+Offer the slots you actually have, accept only one of them, and book it. A typo asks again instead of reserving the wrong hour.
+
+**BuilderBot implementation:**
+
+```ts
+import { addKeyword } from '@builderbot/bot'
+
+const SLOTS = ['monday 10:00', 'tuesday 16:00', 'wednesday 09:30']
+
+export default addKeyword(['meeting', 'cita', 'agenda'])
+    .addAnswer(
+        `I can do ${SLOTS.join(', ')}. Which one?`,
+        { capture: true },
+        async (ctx, { state, fallBack }) => {
+            const picked = SLOTS.find((slot) => ctx.body.toLowerCase().includes(slot.split(' ')[0]))
+            if (!picked) return fallBack('Write the day: monday, tuesday or wednesday.')
+            await state.update({ picked })
+        }
+    )
+    .addAnswer('Your email for the invite?', { capture: true }, async (ctx, { state, fallBack }) => {
+        if (!ctx.body.includes('@')) return fallBack('That does not look like an email.')
+        await state.update({ email: ctx.body.trim() })
+    })
+    .addAction(async (ctx, { state, flowDynamic }) => {
+        const { picked, email } = state.getMyState()
+        await fetch(process.env.CALENDAR_WEBHOOK_URL!, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slot: picked, email, from: ctx.from }),
+        })
+        await flowDynamic(`Booked ${picked}. The invite goes to ${email}.`)
+    })
+```
+
+Give the model a real list, not "suggest some times". Match the day in lowercase, `fallBack` when nothing matches, and only then POST to the calendar.
+
+### One inbox for text, voice, images and PDFs
+
+- **File:** `flows/inbox.flow.ts`
+- **Docs:** /events
+
+Each kind of message has its own event, and the bot remembers the last file so the next text message can refer to it.
+
+**BuilderBot implementation:**
+
+```ts
+import { EVENTS, addKeyword } from '@builderbot/bot'
+
+const note = (label: string) => async (ctx: any, { provider, state, flowDynamic }: any) => {
+    const file = await provider.saveFile(ctx, { path: './tmp' })
+    await state.update({ last: `${label}: ${file}` })
+    await flowDynamic(`Saved the ${label}. Ask me "what did I send?" any time.`)
+}
+
+const textFlow = addKeyword(EVENTS.WELCOME).addAction(async (ctx, { state, flowDynamic }) => {
+    if (!/what did i send|qu[eé] envi|o que eu enviei/i.test(ctx.body)) {
+        return flowDynamic('Send a voice note, an image or a PDF. I keep the last one.')
+    }
+    const last = state.get('last')
+    await flowDynamic(last ? `Last file: ${last}` : 'Nothing yet.')
+})
+
+export default [
+    textFlow,
+    addKeyword(EVENTS.VOICE_NOTE).addAction(note('voice note')),
+    addKeyword(EVENTS.MEDIA).addAction(note('image')),
+    addKeyword(EVENTS.DOCUMENT).addAction(note('pdf')),
+]
+
+```
+
+Do not treat a voice note as an image. `EVENTS.VOICE_NOTE`, `EVENTS.MEDIA` and `EVENTS.DOCUMENT` are different flows; they all write `state.last`, and `EVENTS.WELCOME` reads it when the customer asks "what did I send?".
+
+## What they have in common
+
+- **One file per template.** Drop it into `src/flows` and import it in `app.ts`. No node to wire, no hidden step.
+- **The unhappy path is written.** If the quantity is not a number, the link does not load or the customer asks for a person, the bot answers something useful instead of going silent.
+- **They all end the same way:** `addKeyword` + `addAnswer({ capture: true })` + `addAction`, the four [methods](/methods) this documentation covers. The difference is the [state](/methods#state), the [events](/events) and the call to your API.
+
+## Turn a card into a running bot
+
+```bash (pnpm)
+pnpm create builderbot@latest
+```
+
+```bash (npm)
+npm create builderbot@latest
+```
+
+Pick `baileys` as the provider and `memory` as the database, then copy the flow from the card into `src/flows` and import it in `app.ts`. If you need persistence, swap `MemoryDB` for [Mongo, MySQL or Postgres](/databases) without touching the flow.
+
+> **NOTE:**
+> The card shows the version that talks to the network. The live demo is the same flow with the network calls replaced by fixed data, which is why it answers the same questions without a key.
+
+## Do you have a template we are missing?
+
+If you built something that solves a real problem and want it listed here, open a PR in the [documentation repo](https://github.com/codigoencasa/documentation) or drop it in the Discord. Templates are reviewed for two things: it must run with the current version of `@builderbot/bot`, and it must explain the flow, not just the goal.
+
+---
+
 # Playground
 Source: https://www.builderbot.app/en/playground
 Markdown: https://www.builderbot.app/en/playground.md
 Description: Write BuilderBot flows with addKeyword, addAnswer and addAction and chat with them in the browser, powered by the real @builderbot/bot core.
-
-export const wide = true
-
-# Playground
 
 Edit a flow and talk to it right away. The code runs on the real `@builderbot/bot` core, the same one you install with `pnpm create builderbot`, so `addKeyword`, `addAnswer`, `addAction`, `capture`, `state`, `flowDynamic`, `fallBack`, `endFlow`, `gotoFlow` and `EVENTS` behave exactly like in your bot.
 
