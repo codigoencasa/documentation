@@ -2,7 +2,27 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 
+import { Icon } from '@/components/Icon'
 import { Tag } from '@/components/Tag'
+
+// Icon per documentation page (icon set: src/components/Icon.jsx)
+const navIcons = {
+  '/': 'book', '/quickstart': 'bolt', '/concepts': 'blocks', '/uses-cases': 'examples',
+  '/add-functions': 'functions', '/context': 'context', '/methods': 'terminal', '/events': 'events',
+  '/databases': 'database',
+  '/providers/meta': 'cloud', '/providers/twilio': 'phone', '/providers/baileys': 'qr',
+  '/providers#venom': 'browser', '/providers#wpp-connect': 'browser',
+  '/deploy': 'upload', '/deploy/railway': 'layers', '/deploy/docker': 'container', '/deploy/vps': 'server',
+  '/showcases/queue-limit': 'queue', '/showcases/modularize': 'modules', '/showcases/fast-entires': 'fast',
+  '/showcases/idle-optional': 'clock', '/showcases/docker-pm2': 'reboot', '/showcases/event-in-out-messages': 'swap',
+  '/showcases/cron-reminder': 'bell', '/showcases/forward-conversation-to-human': 'human',
+  '/showcases/gotoflow-use': 'branch', '/showcases/multiple-messages': 'messages',
+  '/tutorials/migrate-to-builderbot': 'migrate', '/tutorials/api-use': 'api',
+  '/tutorials/chatbot-with-gemini': 'sparkle', '/tutorials/langchain': 'link',
+  '/contribute': 'doc', '/contribute/core': 'chip', '/resources': 'shapes',
+  '/plugins/telegram': 'send', '/plugins/shopify': 'bag', '/plugins/agents': 'agent', '/plugins/langchain': 'link',
+}
+
 
 function TopLevelNavItem({ href, children, target }) {
   return (
@@ -18,19 +38,20 @@ function TopLevelNavItem({ href, children, target }) {
   )
 }
 
-function NavLink({ href, tag, active, children }) {
+function NavLink({ href, tag, active, icon, children }) {
   return (
     <Link
       href={href}
       aria-current={active ? 'page' : undefined}
       className={clsx(
-        'flex justify-between gap-2 py-1 pl-3 pr-3 text-[13.5px] transition',
+        'flex items-center gap-2.5 py-1 pl-3 pr-3 text-[13.5px] transition',
         active
           ? 'rounded-r-lg bg-gradient-to-r from-bb-l2/15 to-transparent font-medium text-bb-head shadow-[inset_2px_0_0_rgb(var(--bb-l2))]'
           : 'rounded-lg text-bb-ink2 hover:text-bb-head'
       )}
     >
-      <span className="truncate">{children}</span>
+      {icon && <Icon name={icon} size={16} className={active ? 'text-bb-l2' : 'text-bb-mute'} />}
+      <span className="flex-1 truncate">{children}</span>
       {tag && (
         <Tag variant="small" color="zinc">
           {tag}
@@ -57,6 +78,7 @@ function NavigationGroup({ group, className }) {
             <NavLink
               href={`/${locale}${link.href === '/' ? '' : link.href}`}
               active={parseLocation({ link: link.href, pathname: router.pathname })}
+              icon={navIcons[link.href]}
             >
               {link.title}
             </NavLink>

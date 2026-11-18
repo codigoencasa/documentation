@@ -46,11 +46,11 @@ export const Header = forwardRef(function Header({ className }, ref) {
   return (
     <div
       ref={ref}
-      className={clsx(className, 'fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6 lg:px-10', !isInsideMobileNavigation && 'bg-gradient-to-b from-bb-bg from-60% to-transparent pb-3')}
+      className={clsx(className, 'fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 lg:px-[18px]', !isInsideMobileNavigation && 'bg-gradient-to-b from-bb-bg from-60% to-transparent pb-3')}
     >
       <div
         className={clsx(
-          'mx-auto flex h-[60px] max-w-[1360px] items-center gap-2 rounded-full pl-4 pr-2 sm:gap-4 sm:pl-5',
+          'flex h-[60px] items-center gap-2 rounded-full pl-1.5 pr-2 sm:gap-4 sm:pl-2',
           isInsideMobileNavigation ? 'bg-bb-bg' : 'bg-bb-bg/85 backdrop-blur-xl backdrop-saturate-150'
         )}
       >

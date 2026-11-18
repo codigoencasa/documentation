@@ -9,20 +9,20 @@ const guides = [
     href: '/uses-cases#my-first-bot',
     name: 'My first chatbot',
     description: 'Learn how build your first chatbot in few minutes',
-    icon: 'chat',
+    icon: 'book',
     wide: true,
   },
   {
     href: '/concepts',
     name: 'Concepts',
     description: 'Understand the essential concepts for building bots',
-    icon: 'layers',
+    icon: 'blocks',
   },
   {
     href: '/add-functions',
     name: 'Add Functions',
     description: 'The key to learning how to write flows is add-functions.',
-    icon: 'code',
+    icon: 'functions',
   },
   {
     href: '/plugins',

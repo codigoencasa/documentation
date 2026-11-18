@@ -8,7 +8,7 @@ const resources = [
     href: '/showcases/modularize',
     name: 'Modularize',
     description: 'Learn how to modularise flows so that you can have a more maintainable bot.',
-    icon: 'grid',
+    icon: 'modules',
   },
   {
     href: '/tutorials/api-use',
@@ -20,13 +20,13 @@ const resources = [
     href: '/deploy/docker',
     name: 'Dockerizer',
     description: 'A good practice is to dockerise your bots to make them more maintainable and effective.',
-    icon: 'box',
+    icon: 'container',
   },
   {
     href: '/events',
     name: 'Events',
     description: 'Learning about events will make us more fluent when creating chatbots.',
-    icon: 'bolt',
+    icon: 'events',
   },
 ]
 

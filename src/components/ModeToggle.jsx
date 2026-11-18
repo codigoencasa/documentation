@@ -1,3 +1,5 @@
+import { Icon } from '@/components/Icon'
+
 function SunIcon(props) {
   return (
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
@@ -47,8 +49,8 @@ export function ModeToggle() {
       aria-label="Toggle dark mode"
       onClick={toggleMode}
     >
-      <MoonIcon className="h-5 w-5 stroke-current dark:hidden" />
-      <SunIcon className="hidden h-5 w-5 stroke-current dark:block" />
+      <Icon name="moon" size={20} className="dark:hidden" />
+      <Icon name="sun" size={20} className="hidden dark:block" />
     </button>
   )
 }

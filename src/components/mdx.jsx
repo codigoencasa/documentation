@@ -3,6 +3,7 @@ import Link from 'next/link'
 import clsx from 'clsx'
 
 import { Heading } from '@/components/Heading'
+import { Icon } from '@/components/Icon'
 import { Modal } from '@/components/Modal'
 
 export const a = Link
@@ -88,7 +89,7 @@ function InfoIcon(props) {
 export function Note({ children }) {
   return (
     <div className="my-6 flex gap-2.5 rounded-2xl bg-bb-l2/[0.06] p-4 leading-6 text-bb-ink ring-1 ring-inset ring-bb-l2/25">
-      <InfoIcon className="mt-1 h-4 w-4 flex-none fill-bb-l2 stroke-white" />
+      <Icon name="info" size={18} className="mt-1 text-bb-l2" />
       <div className="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>

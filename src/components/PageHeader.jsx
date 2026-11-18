@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 
 import { useMobileNavigationStore } from '@/components/MobileNavigation'
 import { navigation } from '@/components/Navigation'
+import { Icon } from '@/components/Icon'
 
 const REPO = 'https://github.com/codigoencasa/documentation/edit/master/'
 
@@ -16,19 +17,11 @@ function findPage(pathname) {
 }
 
 function MenuIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true" {...props}>
-      <path d="M4 5h16M4 12h16M4 19h16" />
-    </svg>
-  )
+  return <Icon name="menu" size={16} {...props} />
 }
 
 function EditIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
-      <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
-    </svg>
-  )
+  return <Icon name="edit" size={14} {...props} />
 }
 
 /**
@@ -50,7 +43,7 @@ export function PageHeader({ title, sourcePath }) {
           aria-label="Open documentation menu"
           className="mb-8 flex h-12 w-full items-center gap-2.5 rounded-xl bg-bb-bg2 px-4 text-sm text-bb-ink ring-1 ring-inset ring-bb-line lg:hidden"
         >
-          <MenuIcon className="h-4 w-4 text-bb-mute" />
+          <MenuIcon className="text-bb-mute" />
           <span className="text-bb-mute">{current.group}</span>
           <span aria-hidden="true" className="text-bb-soft">/</span>
           <span className="truncate text-bb-head">{current.page}</span>
@@ -70,7 +63,7 @@ export function PageHeader({ title, sourcePath }) {
             target="_blank"
             className="inline-flex items-center gap-1.5 font-mono text-xs text-bb-mute transition hover:text-bb-head"
           >
-            <EditIcon className="h-3.5 w-3.5" />
+            <EditIcon />
             Edit this page on GitHub
           </Link>
         )}
