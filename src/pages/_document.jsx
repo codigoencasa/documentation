@@ -39,9 +39,11 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <link rel="preload" href="/fonts/CalSansUI-Variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <script dangerouslySetInnerHTML={{ __html: modeScript }} />
       </Head>
-      <body className="bg-white antialiased dark:bg-zinc-900">
+      <body className="bg-bb-bg text-bb-ink antialiased">
         <Main />
         <NextScript />
       </body>

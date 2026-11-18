@@ -18,33 +18,20 @@ Conectores: [MemoryDB](databases#memory-db), [Json](databases#json), [Mongo](dat
 
 ```mermaid
 flowchart LR
-      subgraph sub1[ ]
-        style sub1 fill:#e2eafc,stroke:#ccdbfd,stroke-width:2px
-        subgraph wsProvider[BOT]
-            direction TB
-            top1["flows"] -.-> bottom1[addAnswer]
-        end
-        User -.-> top1
-        bottom1 -.-> user
-      end
-        zn1[(MemoryDB)]
-        zn2[(Json)]
-        zn3[(Mongo)]
-        zn4[(Custom)]
-
-        wsProvider --> C[(Database)]
-        C --> zn1
-        C --> zn2
-        C --> zn3
-        C --> zn4
-
-        style C fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
-        style zn1 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
-        style zn2 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
-        style zn3 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
-        style zn4 fill:#FFFFDE,stroke:#ADAE3C,stroke-width:1px
-    
-
+    User((User)) -.-> flows
+    subgraph BOT
+        direction LR
+        flows["flows"] -.-> addAnswer["addAnswer"]
+    end
+    addAnswer -.-> reply((user))
+    BOT --> Database[(Database)]
+    Database --> MemoryDB[(MemoryDB)]
+    Database --> Json[(Json)]
+    Database --> Mongo[(Mongo)]
+    Database --> Custom[(Custom)]
+    style User fill:#ffa69e
+    style reply fill:#ffa69e
+    style Database fill:#1dd3b0
 ```
 
 Cada base de datos puede necesitar ajustar las claves de acceso, la configuración, entre otras propiedades que se implementarán como configuración de la clase implementada.

@@ -60,10 +60,10 @@ function CopyButton({ code }) {
     <button
       type="button"
       className={cn(
-        'group/button absolute right-4 top-3.5 overflow-hidden rounded-full py-1 pl-2 pr-3 text-2xs font-medium opacity-0 backdrop-blur transition focus:opacity-100 group-hover:opacity-100',
+        'group/button absolute right-3 top-3 overflow-hidden rounded-lg py-1 pl-2 pr-2.5 font-mono text-xs font-medium opacity-0 backdrop-blur transition focus:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100',
         copied
-          ? 'bg-teal-400/10 ring-1 ring-inset ring-teal-400/20'
-          : 'bg-white/5 hover:bg-white/7.5 dark:bg-white/2.5 dark:hover:bg-white/5'
+          ? 'bg-[#818cf8]/15 ring-1 ring-inset ring-[#818cf8]/30'
+          : 'bg-white/5 hover:bg-white/10'
       )}
       onClick={() => {
         window.navigator.clipboard.writeText(code).then(() => {
@@ -74,17 +74,17 @@ function CopyButton({ code }) {
       <span
         aria-hidden={copied}
         className={cn(
-          'pointer-events-none flex items-center gap-0.5 text-zinc-400 transition duration-300',
+          'pointer-events-none flex items-center gap-1 text-[#9a998f] transition duration-300',
           copied && '-translate-y-1.5 opacity-0'
         )}
       >
-        <ClipboardIcon className="h-5 w-5 fill-zinc-500/20 stroke-zinc-500 transition-colors group-hover/button:stroke-zinc-400" />
+        <ClipboardIcon className="h-5 w-5 fill-white/5 stroke-[#9a998f] transition-colors group-hover/button:stroke-[#ecebe2]" />
         Copy
       </span>
       <span
         aria-hidden={!copied}
         className={cn(
-          'pointer-events-none absolute inset-0 flex items-center justify-center text-teal-400 transition duration-300',
+          'pointer-events-none absolute inset-0 flex items-center justify-center text-[#a5b4fc] transition duration-300',
           !copied && 'translate-y-1.5 opacity-0'
         )}
       >
@@ -100,17 +100,17 @@ function CodePanelHeader({ tag, label }) {
   }
 
   return (
-    <div className="flex h-9 items-center gap-2 border-y border-b-white/7.5 border-t-transparent bg-white/2.5 bg-zinc-900 px-4 dark:border-b-white/5 dark:bg-white/1">
+    <div className="flex h-9 items-center gap-2 border-b border-[#2a2b30] px-4">
       {tag && (
         <div className="dark flex">
           <Tag variant="small">{tag}</Tag>
         </div>
       )}
       {tag && label && (
-        <span className="h-0.5 w-0.5 rounded-full bg-zinc-500" />
+        <span className="h-0.5 w-0.5 rounded-full bg-[#6c6b64]" />
       )}
       {label && (
-        <span className="font-mono text-xs text-zinc-400">{label}</span>
+        <span className="font-mono text-xs text-[#9a998f]">{label}</span>
       )}
     </div>
   )
@@ -120,13 +120,13 @@ function CodePanel({ tag, label, code, children }) {
   let child = Children.only(children)
 
   return (
-    <div className="group dark:bg-white/2.5">
+    <div className="group">
       <CodePanelHeader
         tag={child.props.tag ?? tag}
         label={child.props.label ?? label}
       />
       <div className="relative">
-        <pre className="overflow-x-auto p-4 text-xs text-white">{children}</pre>
+        <pre className="bb-code overflow-x-auto py-4 pl-5 pr-5 font-mono text-[13px] leading-[1.7] text-[#ecebe4]">{children}</pre>
         <CopyButton code={child.props.code ?? code} />
       </div>
     </div>
@@ -141,21 +141,21 @@ function CodeGroupHeader({ title, children, selectedIndex }) {
   }
 
   return (
-    <div className="flex min-h-[calc(theme(spacing.12)+1px)] flex-wrap items-start gap-x-4 border-b border-zinc-700 bg-zinc-800 px-4 dark:border-zinc-800 dark:bg-transparent">
+    <div className="flex min-h-[calc(theme(spacing.12)+1px)] flex-wrap items-center gap-x-4 border-b border-[#2a2b30] px-3">
       {title && (
-        <h3 className="mr-auto pt-3 text-xs font-semibold text-white">
+        <h3 className="mr-auto pl-1 font-mono text-xs font-medium text-[#ecebe2]">
           {title}
         </h3>
       )}
       {hasTabs && (
-        <Tab.List className="-mb-px flex gap-4 text-xs font-medium">
+        <Tab.List className="flex gap-1 py-2 font-mono text-xs font-medium">
           {Children.map(children, (child, childIndex) => (
             <Tab
               className={cn(
-                'border-b py-3 transition focus:[&:not(:focus-visible)]:outline-none',
+                'h-[30px] rounded-lg px-3 transition focus:[&:not(:focus-visible)]:outline-none',
                 childIndex === selectedIndex
-                  ? 'border-teal-500 text-teal-400'
-                  : 'border-transparent text-zinc-400 hover:text-zinc-300'
+                  ? 'bg-[#2b2c31] text-[#ecebe2]'
+                  : 'text-[#9a998f] hover:text-[#ecebe2]'
               )}
             >
               {getPanelTitle(child.props)}
@@ -265,7 +265,7 @@ export function CodeGroup({ children, title, ...props }) {
     <CodeGroupContext.Provider value={true}>
       <Container
         {...containerProps}
-        className="not-prose aling-block my-6 overflow-hidden rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10"
+        className="bb-hairline not-prose aling-block my-6 overflow-hidden rounded-2xl bg-[#0e0f11] shadow-[0_0_0_1px_#e2e0d8,0_24px_50px_-24px_rgba(17,24,39,0.25)] dark:shadow-[inset_0_0_0_1px_#2a2b30]"
       >
         <CodeGroupHeader title={title} {...headerProps}>
           {children}

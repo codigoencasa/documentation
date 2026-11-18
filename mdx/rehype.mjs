@@ -21,6 +21,34 @@ function rehypeParseCodeBlocks() {
 
 let highlighter
 
+// Lines to highlight from a code annotation, e.g. {{ title: 'app.ts', highlight: '3-5,8' }}
+function parseHighlight(annotation) {
+  let lines = new Set()
+  let match = /highlight:\s*['"]([\d,\s-]+)['"]/.exec(annotation ?? '')
+  if (!match) return lines
+  for (let part of match[1].split(',')) {
+    let [a, b] = part.trim().split('-').map(Number)
+    for (let n = a; n <= (b || a); n++) lines.add(n)
+  }
+  return lines
+}
+
+// Exposes the page's source file so the layout can link to "Edit this page"
+function rehypeSourcePath() {
+  return (tree, file) => {
+    let path = (file.history?.[0] ?? file.path ?? '').replace(/\\/g, '/')
+    let idx = path.indexOf('src/pages/')
+    if (idx === -1) return
+    let value = JSON.stringify(path.slice(idx))
+    let exportStr = `export const sourcePath = ${value}`
+    tree.children.push({
+      type: 'mdxjsEsm',
+      value: exportStr,
+      data: { estree: acorn.parse(exportStr, { sourceType: 'module', ecmaVersion: 'latest' }) },
+    })
+  }
+}
+
 function rehypeShiki() {
   return async (tree) => {
     highlighter =
@@ -30,6 +58,7 @@ function rehypeShiki() {
       if (node.tagName === 'pre' && node.children[0]?.tagName === 'code') {
         let codeNode = node.children[0]
         let textNode = codeNode.children[0]
+        textNode.value = textNode.value.replace(/\n+$/, '')
 
         node.properties.code = textNode.value
 
@@ -39,11 +68,16 @@ function rehypeShiki() {
             node.properties.language
           )
 
+          let highlighted = parseHighlight(node.properties.annotation)
+          let lineNo = 0
           textNode.value = shiki.renderToHtml(tokens, {
             elements: {
               pre: ({ children }) => children,
               code: ({ children }) => children,
-              line: ({ children }) => `<span>${children}</span>`,
+              line: ({ children }) => {
+                lineNo++
+                return `<span class="line${highlighted.has(lineNo) ? ' hl' : ''}">${children}</span>`
+              },
             },
           })
         }
@@ -117,6 +151,7 @@ export const rehypePlugins = [
   rehypeShiki,
   rehypeSlugify,
   rehypeMdxTitle,
+  rehypeSourcePath,
   [
     rehypeAddMDXExports,
     (tree) => ({

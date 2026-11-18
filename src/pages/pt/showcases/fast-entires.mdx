@@ -12,9 +12,17 @@ Para este outro tipo de ambientes, você pode implementar uma funcionalidade que
 
 ```mermaid
 flowchart LR
-    n(User) -.m1.-> B((Bot)) -.-> p(Process) --a1--> a(Answers) --> u(User 3 answers)
-    n(User) -.m2.-> B((Bot)) -.-> p(Process) --a2--> a(Answers) --> u(User 3 answers)
-    n(User) -.m3.-> B((Bot)) -.-> p(Process) --a3--> a(Answers) --> u(User 3 answers)
+    n((User)) -. m1 .-> B((Bot))
+    n -. m2 .-> B
+    n -. m3 .-> B
+    B -.-> p[Process]
+    p -- a1 --> a[Answers]
+    p -- a2 --> a
+    p -- a3 --> a
+    a --> u((3 answers))
+    style n fill:#ffa69e
+    style u fill:#ffa69e
+    style B fill:#1dd3b0
 ```
 
 Aplicando esta aplicação, o que se consegue é que, antes de passar para a fase de processamento, todas as mensagens independentes (3) tornam-se uma (1) e são processadas como uma mensagem independente.
@@ -22,10 +30,17 @@ Aplicando esta aplicação, o que se consegue é que, antes de passar para a fas
 Obrigado __[robmoncayonabux](https://github.com/robmoncayonabux)__ para compartilhar esta solução útil para um caso de uso muito particular.
 
 ```mermaid
-flowchart LR
-    n(User) -.m1.-> Q(((Queue 3sec))) -.m1, m2, m3.-> B((Bot)) -.-> p(Process) --a1, a2, a,3--> a(Answers) --> u(User 1 answer)
-    n(User) -.m2.-> Q
-    n(User) -.m3.-> Q
+flowchart TB
+    n((User)) -. m1 .-> Q[[Queue 3 sec]]
+    n -. m2 .-> Q
+    n -. m3 .-> Q
+    Q -. "m1, m2, m3" .-> B((Bot))
+    B -.-> p[Process]
+    p -- "a1, a2, a3" --> a[Answers]
+    a --> u((1 answer))
+    style n fill:#ffa69e
+    style u fill:#ffa69e
+    style B fill:#1dd3b0
 ```
 Neste exemplo, dizemos __3000ms_ _ que é igual a 3 segundos, mas você pode modificar isso ao seu gosto em `MESSAGE_GAP_SECONDS`
 

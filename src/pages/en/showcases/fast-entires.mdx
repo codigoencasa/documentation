@@ -18,10 +18,17 @@ Sometimes it happens that people are impatient and write independent messages in
 For this type of environment, we've implemented an enhanced functionality that introduces a margin of 3000ms for the user to write messages. Each time a user writes a message within this 3000ms window, it accumulates all the messages. After the margin time expires, the bot interprets everything as a single conversation.
 
 ```mermaid
-flowchart LR
-    n(User) -.m1.-> Q(((Queue 3sec))) -.m1, m2, m3.-> B((Bot)) -.-> p(Process) --a1, a2, a,3--> a(Answers) --> u(User 1 answer)
-    n(User) -.m2.-> Q
-    n(User) -.m3.-> Q
+flowchart TB
+    n((User)) -. m1 .-> Q[[Queue 3 sec]]
+    n -. m2 .-> Q
+    n -. m3 .-> Q
+    Q -. "m1, m2, m3" .-> B((Bot))
+    B -.-> p[Process]
+    p -- "a1, a2, a3" --> a[Answers]
+    a --> u((1 answer))
+    style n fill:#ffa69e
+    style u fill:#ffa69e
+    style B fill:#1dd3b0
 ```
 
 This implementation ensures that before passing to the processing stage, all independent messages (e.g., 3) become one (1) and are processed as a single message.
