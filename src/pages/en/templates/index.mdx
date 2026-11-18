@@ -1,0 +1,42 @@
+import { Templates } from '@/components/Templates'
+
+export const wide = true
+
+export const description =
+  'Complete BuilderBot templates: an AI agent with tools, a WhatsApp sales bot with a catalog, PDF and link Q&A, and support with handoff to a person. Each one is a single file you can paste, and runs in your browser.'
+
+# Templates
+
+These are the ten bots people keep building by hand. An assistant that looks something up before it answers, a sales bot with a catalog and a real total, a bot that reads a PDF or a link, and a support bot that knows when to hand the chat over.
+
+Each one is a complete flow: the `state` it keeps, the step that does the work, and what the bot says when the customer answers something the happy path did not expect. Press **Try it live** to talk to the same flow in your browser — the network calls are replaced by fixed data, so you do not need a key.
+
+<Templates locale="en" />
+
+## What they have in common
+
+- **One file per template.** Drop it into `src/flows` and import it in `app.ts`. No node to wire, no hidden step.
+- **The unhappy path is written.** If the quantity is not a number, the link does not load or the customer asks for a person, the bot answers something useful instead of going silent.
+- **They all end the same way:** `addKeyword` + `addAnswer({ capture: true })` + `addAction`, the four [methods](/methods) this documentation covers. The difference is the [state](/methods#state), the [events](/events) and the call to your API.
+
+## Turn a card into a running bot
+
+<CodeGroup>
+```bash {{ title: 'pnpm' }}
+pnpm create builderbot@latest
+```
+
+```bash {{ title: 'npm' }}
+npm create builderbot@latest
+```
+</CodeGroup>
+
+Pick `baileys` as the provider and `memory` as the database, then copy the flow from the card into `src/flows` and import it in `app.ts`. If you need persistence, swap `MemoryDB` for [Mongo, MySQL or Postgres](/databases) without touching the flow.
+
+<Note>
+The card shows the version that talks to the network. The live demo is the same flow with the network calls replaced by fixed data, which is why it answers the same questions without a key.
+</Note>
+
+## Do you have a template we are missing?
+
+If you built something that solves a real problem and want it listed here, open a PR in the [documentation repo](https://github.com/codigoencasa/documentation) or drop it in the Discord. Templates are reviewed for two things: it must run with the current version of `@builderbot/bot`, and it must explain the flow, not just the goal.

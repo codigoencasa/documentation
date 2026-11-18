@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "predev": "node scripts/generate-seo.mjs",
+    "predev": "node scripts/sync-versions.mjs && node scripts/generate-seo.mjs",
     "build": "next build",
-    "prebuild": "node scripts/generate-seo.mjs",
+    "prebuild": "node scripts/sync-versions.mjs && node scripts/generate-seo.mjs",
     "start": "next start",
     "lint": "next lint",
     "seo": "node scripts/generate-seo.mjs",
     "sync:playground": "node scripts/sync-playground.mjs",
-    "deploy": "vercel deploy --prod"
+    "deploy": "vercel deploy --prod",
+    "versions": "node scripts/sync-versions.mjs"
   },
   "engines": {
     "node": "24.x"

@@ -8,6 +8,7 @@ import { Tag } from '@/components/Tag'
 // Icon per documentation page (icon set: src/components/Icon.jsx)
 const navIcons = {
   '/': 'book', '/quickstart': 'bolt', '/concepts': 'blocks', '/uses-cases': 'examples', '/playground': 'play',
+  '/templates': 'shapes',
   '/add-functions': 'functions', '/context': 'context', '/methods': 'terminal', '/events': 'events',
   '/databases': 'database',
   '/providers/meta': 'cloud', '/providers/twilio': 'phone', '/providers/baileys': 'qr',
@@ -100,6 +101,7 @@ export const navigation = [
       { title: 'Quickstart', href: '/quickstart' },
       { title: 'Concepts', href: '/concepts' },
       { title: 'Examples', href: '/uses-cases' },
+      { title: 'Templates', href: '/templates' },
       { title: 'Playground', href: '/playground' },
     ],
   },

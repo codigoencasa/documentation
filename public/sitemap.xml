@@ -1076,6 +1076,36 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.builderbot.app/en/templates</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.builderbot.app/en/templates"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.builderbot.app/es/templates"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.builderbot.app/pt/templates"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.builderbot.app/en/templates"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.builderbot.app/es/templates</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.builderbot.app/en/templates"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.builderbot.app/es/templates"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.builderbot.app/pt/templates"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.builderbot.app/en/templates"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.builderbot.app/pt/templates</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.builderbot.app/en/templates"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.builderbot.app/es/templates"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.builderbot.app/pt/templates"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.builderbot.app/en/templates"/>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.builderbot.app/en/tutorials</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.builderbot.app/en/tutorials"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.builderbot.app/en/tutorials"/>

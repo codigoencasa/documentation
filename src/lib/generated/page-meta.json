@@ -207,6 +207,10 @@
     "title": "Queue Limit",
     "description": "Implement message queues for better resource management"
   },
+  "/en/templates": {
+    "title": "Templates",
+    "description": "Complete BuilderBot templates: an AI agent with tools, a WhatsApp sales bot with a catalog, PDF and link Q&A, and support with handoff to a person. Each one is a single file you can paste, and runs in your browser."
+  },
   "/en/tutorials/api-use": {
     "title": "How to implement a REST API?",
     "description": "In many occasions we need to send a message via HTTP request is very useful to send reminders or order confirmations. In this case each provider implements a handleCtx function which allows you to inject the bot..."
@@ -355,6 +359,10 @@
     "title": "Queue",
     "description": "Implemente colas de mensajes para una mejor administración de recursos"
   },
+  "/es/templates": {
+    "title": "Plantillas",
+    "description": "Plantillas completas de BuilderBot: un agente con herramientas, ventas por WhatsApp con catálogo, preguntas sobre un PDF o un enlace y soporte con paso a una persona. Un solo archivo para pegar, y corre en tu navegador."
+  },
   "/es/uses-cases": {
     "title": "Practices",
     "description": "A continuación encontrará diferentes ejemplos que muestran la implementación en diferentes casos de uso. Estos ejemplos han sido compilados en base a la comunidad, siéntete libre de publicar un ejemplo que te guste o..."
@@ -490,6 +498,10 @@
   "/pt/showcases/queue-limit": {
     "title": "Queue",
     "description": "Implement message queues for better resource management"
+  },
+  "/pt/templates": {
+    "title": "Templates",
+    "description": "Templates completos do BuilderBot: um agente com ferramentas, vendas no WhatsApp com catálogo, perguntas sobre um PDF ou um link e suporte com passagem para uma pessoa. Um arquivo para colar, e roda no seu navegador."
   },
   "/pt/uses-cases": {
     "title": "Practices",
