@@ -9,19 +9,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 
-/* ANSI palette — the demo stays dark in both themes, like the code panels */
+import { Icon } from '@/components/Icon'
+
+/* ANSI palette → CSS variables (.bb-term in tailwind.css), so one markup serves light and dark */
 const C = {
-  gray: 'text-bb-term-gray', // \x1b[90m
-  cyan: 'text-bb-term-cyan', // \x1b[36m
-  green: 'text-bb-term-green', // \x1b[32m
-  magenta: 'text-bb-term-magenta', // \x1b[35m
-  yellow: 'text-bb-term-yellow', // \x1b[33m
-  dim: 'opacity-55', // \x1b[2m
-  bgCyan: 'bg-bb-term-cyan text-bb-term-chipfg', // \x1b[46m
-  bgGreen: 'bg-bb-term-green text-bb-term-chipfg', // \x1b[42m
-  user: 'text-bb-term-green',
-  host: 'text-bb-term-magenta',
-  path: 'text-bb-term-yellow',
+  gray: 'text-[rgb(var(--t-gray))]', // \x1b[90m
+  cyan: 'text-[rgb(var(--t-cyan))]', // \x1b[36m
+  green: 'text-[rgb(var(--t-green))]', // \x1b[32m
+  magenta: 'text-[rgb(var(--t-magenta))]', // \x1b[35m
+  yellow: 'text-[rgb(var(--t-yellow))]', // \x1b[33m
+  dim: 'opacity-60', // \x1b[2m
+  bgCyan: 'bg-[rgb(var(--t-cyan))] text-[rgb(var(--t-on))]', // \x1b[46m
+  bgGreen: 'bg-[rgb(var(--t-green))] text-[rgb(var(--t-on))]', // \x1b[42m
+  user: 'text-[rgb(var(--t-green))]',
+  host: 'text-[rgb(var(--t-magenta))]',
+  path: 'text-[rgb(var(--t-yellow))]',
 }
 
 const PROMPT = { user: 'Leifer Mendez@LeiferPC', host: 'MSYS', path: '/e/Projects' }
@@ -150,26 +152,25 @@ function Line({ parts }) {
 }
 
 const LABELS = {
-  en: { title: 'Terminal running pnpm create builderbot@latest' },
-  es: { title: 'Terminal ejecutando pnpm create builderbot@latest' },
-  pt: { title: 'Terminal executando pnpm create builderbot@latest' },
+  en: { replay: 'Replay', skip: 'Skip', title: 'Terminal running pnpm create builderbot@latest' },
+  es: { replay: 'Repetir', skip: 'Saltar', title: 'Terminal ejecutando pnpm create builderbot@latest' },
+  pt: { replay: 'Repetir', skip: 'Pular', title: 'Terminal executando pnpm create builderbot@latest' },
 }
 
-/* Pause on the final frame before the demo starts over */
-const LOOP_PAUSE = 2600
-
-export function TerminalDemo({ locale = 'en', version = '1.4.4', provider = 'Baileys', database = 'Memory', language = 'TypeScript' }) {
+/**
+ * theme: 'auto' follows the site (light / .dark), 'dark' or 'light' force one look.
+ */
+export function TerminalDemo({ locale = 'en', theme = 'auto', version = '1.4.4', provider = 'Baileys', database = 'Memory', language = 'TypeScript' }) {
   const t = LABELS[locale] ?? LABELS.en
   const root = useRef(null)
   const scroller = useRef(null)
   const timers = useRef([])
   const script = useRef(null)
-  const visible = useRef(false)
-  const started = useRef(false)
   if (!script.current) script.current = buildScript({ version, provider, database, language })
 
   const [lines, setLines] = useState(() => promptLines())
   const [cursor, setCursor] = useState(true)
+  const [state, setState] = useState('idle') // idle | running | done
 
   const clear = () => {
     timers.current.forEach(clearTimeout)
@@ -181,6 +182,7 @@ export function TerminalDemo({ locale = 'en', version = '1.4.4', provider = 'Bai
     clear()
     setLines(script.current.final)
     setCursor(true)
+    setState('done')
   }, [])
 
   const run = useCallback(async () => {
@@ -188,6 +190,7 @@ export function TerminalDemo({ locale = 'en', version = '1.4.4', provider = 'Bai
     const token = {}
     run.token = token
     const alive = () => run.token === token
+    setState('running')
     setCursor(true)
     setLines(promptLines())
     await later(null, 700)
@@ -213,9 +216,7 @@ export function TerminalDemo({ locale = 'en', version = '1.4.4', provider = 'Bai
       }
       if (step.type === 'prompt') setCursor(true)
     }
-    if (!alive()) return
-    /* hold the last frame, then start over while the demo is on screen */
-    await later(() => alive() && visible.current && run(), LOOP_PAUSE)
+    if (alive()) setState('done')
   }, [])
 
   /* start when visible; show the final frame for reduced motion */
@@ -227,9 +228,8 @@ export function TerminalDemo({ locale = 'en', version = '1.4.4', provider = 'Bai
     }
     const io = new IntersectionObserver(
       ([entry]) => {
-        visible.current = entry.isIntersecting
-        if (entry.isIntersecting && !started.current) {
-          started.current = true
+        if (entry.isIntersecting) {
+          io.disconnect()
           run()
         }
       },
@@ -250,24 +250,36 @@ export function TerminalDemo({ locale = 'en', version = '1.4.4', provider = 'Bai
   }, [lines])
 
   return (
-    <figure ref={root} className="not-prose my-8 overflow-hidden rounded-2xl bg-bb-term-bg shadow-[inset_0_0_0_1px_#2a2b30,0_24px_50px_-24px_rgba(17,24,39,0.45)]">
-      <figcaption className="flex h-11 items-center gap-3 border-b border-bb-term-line px-4">
+    <figure
+      ref={root}
+      data-theme={theme === 'auto' ? undefined : theme}
+      className="bb-term not-prose my-8 overflow-hidden rounded-2xl bg-[rgb(var(--t-bg))] text-[rgb(var(--t-fg))] shadow-[inset_0_0_0_1px_rgb(var(--t-line)),var(--t-shadow)]"
+    >
+      <figcaption className="flex h-11 items-center gap-3 border-b border-[rgb(var(--t-line))] bg-[rgb(var(--t-bar))] px-4">
         <span aria-hidden="true" className="flex flex-none gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-bb-term-dot" />
-          <span className="h-2.5 w-2.5 rounded-full bg-bb-term-dot" />
-          <span className="h-2.5 w-2.5 rounded-full bg-bb-term-dot" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[rgb(var(--t-dot))]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[rgb(var(--t-dot))]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[rgb(var(--t-dot))]" />
         </span>
-        <span className="min-w-0 flex-1 truncate text-center font-mono text-xs text-bb-term-mute">
+        <span className="min-w-0 flex-1 truncate text-center font-mono text-xs text-[rgb(var(--t-mute))]">
           {PROMPT.host}:{PROMPT.path}
         </span>
+        <button
+          type="button"
+          onClick={state === 'running' ? finish : run}
+          className="-mr-1.5 inline-flex h-7 flex-none items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 font-mono text-[11px] text-[rgb(var(--t-mute))] transition hover:bg-[rgb(var(--t-fg)/0.08)] hover:text-[rgb(var(--t-fg))]"
+        >
+          <Icon name={state === 'running' ? 'arrow' : 'reboot'} size={13} />
+          {state === 'running' ? t.skip : t.replay}
+        </button>
       </figcaption>
       <div
         ref={scroller}
         aria-label={t.title}
-        className="h-[420px] overflow-y-auto overflow-x-auto px-4 py-3 font-mono text-[11px] leading-[1.45] text-bb-term-fg [scrollbar-width:none] sm:h-[460px] sm:px-5 sm:text-[13px] [&::-webkit-scrollbar]:hidden"
+        className="h-[420px] overflow-y-auto overflow-x-auto px-4 py-3 font-mono text-[11px] leading-[1.45] [scrollbar-width:none] sm:h-[460px] sm:px-5 sm:text-[13px] [&::-webkit-scrollbar]:hidden"
       >
         {lines.map((parts, i) => (
-          <Line key={i} parts={i === lines.length - 1 && cursor ? [...parts, ['▍', 'animate-[bb-blink_1s_steps(1)_infinite] text-bb-term-fg']] : parts} />
+          <Line key={i} parts={i === lines.length - 1 && cursor ? [...parts, ['▍', 'animate-[bb-blink_1s_steps(1)_infinite]']] : parts} />
         ))}
       </div>
     </figure>
