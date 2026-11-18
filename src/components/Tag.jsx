@@ -6,9 +6,9 @@ const variantStyles = {
 
 const colorStyles = {
   emerald: {
-    small: 'text-emerald-500 dark:text-emerald-400',
+    small: 'text-bb-l2',
     medium:
-      'ring-emerald-300 dark:ring-emerald-400/30 bg-emerald-400/10 text-emerald-500 dark:text-emerald-400',
+      'ring-bb-l2/30 bg-bb-l2/10 text-bb-l2',
   },
   sky: {
     small: 'text-sky-500',
@@ -26,9 +26,9 @@ const colorStyles = {
       'ring-rose-200 bg-rose-50 text-red-500 dark:ring-rose-500/20 dark:bg-rose-400/10 dark:text-rose-400',
   },
   zinc: {
-    small: 'text-zinc-400 dark:text-zinc-500',
+    small: 'text-bb-mute',
     medium:
-      'ring-zinc-200 bg-zinc-50 text-zinc-500 dark:ring-zinc-500/20 dark:bg-zinc-400/10 dark:text-zinc-400',
+      'ring-bb-line bg-bb-chip text-bb-mute',
   },
 }
 

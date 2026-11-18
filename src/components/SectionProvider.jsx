@@ -52,6 +52,7 @@ function useVisibleSections(sectionStore) {
         sectionIndex++
       ) {
         let { id, headingRef, offsetRem } = sections[sectionIndex]
+        if (!headingRef?.current) continue
         let offset = remToPx(offsetRem)
         let top = headingRef.current.getBoundingClientRect().top + scrollY
 
@@ -61,7 +62,7 @@ function useVisibleSections(sectionStore) {
 
         let nextSection = sections[sectionIndex + 1]
         let bottom =
-          (nextSection?.headingRef.current.getBoundingClientRect().top ??
+          (nextSection?.headingRef?.current?.getBoundingClientRect().top ??
             Infinity) +
           scrollY -
           remToPx(nextSection?.offsetRem ?? 0)
@@ -79,12 +80,13 @@ function useVisibleSections(sectionStore) {
     }
 
     let raf = window.requestAnimationFrame(() => checkVisibleSections())
-    window.addEventListener('scroll', checkVisibleSections, { passive: true })
+    // capture: the docs scroll inside a container, not the window
+    window.addEventListener('scroll', checkVisibleSections, { passive: true, capture: true })
     window.addEventListener('resize', checkVisibleSections)
 
     return () => {
       window.cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', checkVisibleSections)
+      window.removeEventListener('scroll', checkVisibleSections, { capture: true })
       window.removeEventListener('resize', checkVisibleSections)
     }
   }, [setVisibleSections, sections])

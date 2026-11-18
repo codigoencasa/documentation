@@ -15,13 +15,15 @@ __Imagine el caso__ en el que recibe más de 60 mensajes de más de 60 personas 
 
 ```mermaid
 flowchart LR
-    n(User n) -.-> B((Bot))
-    n(User n) -.-> B((Bot))
-    n(User n) -.-> B((Bot))
-    n(User n) -.-> B((Bot))
-    n(User n) -.-> B((Bot))
-    n(User n) -.-> B((Bot))
-    n(User n) -.-> B((Bot))
+    u1((User 1)) -.-> B((Bot))
+    u2((User 2)) -.-> B
+    u3((User 3)) -.-> B
+    un((User n)) -.-> B
+    style u1 fill:#ffa69e
+    style u2 fill:#ffa69e
+    style u3 fill:#ffa69e
+    style un fill:#ffa69e
+    style B fill:#1dd3b0
 ```
 Es muy probable que no responda a todos los usuarios, ya que la configuración predeterminada del bot está configurada para manejar una cantidad menor de procesos, pero es muy fácil de modificar.
 

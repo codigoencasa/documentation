@@ -1,10 +1,13 @@
 /** @type {import('tailwindcss').Config} */
+const v = (name) => `rgb(var(--bb-${name}) / <alpha-value>)`
+
 module.exports = {
   content: ['./{src,mdx}/**/*.{js,mjs,jsx,mdx}'],
   darkMode: 'class',
   theme: {
     fontFamily: {
-      'sans': ['ui-sans-serif', 'system-ui', 'Coolvetica'],
+      sans: ['"Cal Sans UI"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      mono: ['"Geist Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
     },
     fontSize: {
       '2xs': ['0.75rem', { lineHeight: '1.25rem' }],
@@ -24,6 +27,44 @@ module.exports = {
     },
     typography: require('./typography'),
     extend: {
+      // Builderbot design tokens (see src/styles/tailwind.css for values per theme)
+      colors: {
+        bb: {
+          bg: v('bg'),
+          bg2: v('bg2'),
+          frame: v('frame'),
+          line: v('line'),
+          line2: v('line2'),
+          ink: v('ink'),
+          ink2: v('ink2'),
+          mute: v('mute'),
+          soft: v('soft'),
+          head: v('head'),
+          chip: v('chip'),
+          btn: v('btn'),
+          btnfg: v('btnfg'),
+          code: '#0e0f11',
+          l1: v('l1'),
+          l2: v('l2'),
+          l3: v('l3'),
+          pink: '#db2777',
+          // Terminal demo tokens (theme-aware)
+          'term-bg': v('term-bg'),
+          'term-fg': v('term-fg'),
+          'term-mute': v('term-mute'),
+          'term-line': v('term-line'),
+          'term-dot': v('term-dot'),
+          'term-gray': v('term-gray'),
+          'term-cyan': v('term-cyan'),
+          'term-green': v('term-green'),
+          'term-magenta': v('term-magenta'),
+          'term-yellow': v('term-yellow'),
+          'term-chipfg': v('term-chipfg'),
+        },
+      },
+      fontWeight: {
+        book: '380',
+      },
       boxShadow: {
         glow: '0 0 4px rgb(0 0 0 / 0.1)',
       },
@@ -38,6 +79,17 @@ module.exports = {
         2.5: '0.025',
         7.5: '0.075',
         15: '0.15',
+      },
+      keyframes: {
+        'bb-in': {
+          from: { opacity: '0', transform: 'translateY(16px)', filter: 'blur(4px)' },
+          to: { opacity: '1', transform: 'none', filter: 'none' },
+        },
+        'bb-run': { from: { left: '0' }, to: { left: 'calc(100% - 10px)' } },
+      },
+      animation: {
+        'bb-in': 'bb-in .9s cubic-bezier(.2,.8,.2,1) both',
+        'bb-run': 'bb-run 2s cubic-bezier(.65,0,.35,1) infinite',
       },
     },
   },

@@ -1,36 +1,82 @@
+/* Code colors (Builderbot style guide). Code panels stay dark in both themes. */
 :root {
-  --shiki-color-text: theme('colors.white');
-  --shiki-token-constant: theme('colors.teal.300');
-  --shiki-token-string: theme('colors.teal.300');
-  --shiki-token-comment: theme('colors.zinc.500');
-  --shiki-token-keyword: theme('colors.sky.300');
-  --shiki-token-parameter: theme('colors.pink.300');
-  --shiki-token-function: theme('colors.violet.300');
-  --shiki-token-string-expression: theme('colors.teal.300');
-  --shiki-token-punctuation: theme('colors.zinc.200');
+  --shiki-color-text: #ecebe4;
+  --shiki-token-constant: #f9a8d4;
+  --shiki-token-string: #67e8f9;
+  --shiki-token-comment: #9a998f;
+  --shiki-token-keyword: #c084fc;
+  --shiki-token-parameter: #fcd34d;
+  --shiki-token-function: #a5b4fc;
+  --shiki-token-string-expression: #67e8f9;
+  --shiki-token-punctuation: #d4d3ca;
 }
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Brand fonts: Cal Sans UI (OFL, cal.com) and Geist Mono (OFL, Vercel) */
 @font-face {
-  font-family: "Coolvetica";
+  font-family: 'Cal Sans UI';
+  src: url('/fonts/CalSansUI-Variable.woff2') format('woff2');
+  font-weight: 300 700;
   font-display: swap;
-  src: url("/fonts/DMSans-SemiBold.ttf") format("opentype");
 }
 
 @font-face {
-  font-family: "Coolvetica";
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
   font-display: swap;
-  font-weight: 300;
-  src: url("/fonts/DMSans-Medium.ttf");
 }
 
 @layer base {
+  /* Light theme tokens (RGB triplets for Tailwind alpha support) */
+  :root {
+    --bb-bg: 250 250 248;
+    --bb-bg2: 255 255 255;
+    --bb-frame: 243 242 238;
+    --bb-line: 230 228 222;
+    --bb-line2: 212 210 202;
+    --bb-ink: 29 29 27;
+    --bb-ink2: 61 60 56;
+    --bb-mute: 107 106 99;
+    --bb-soft: 133 132 121;
+    --bb-head: 19 19 19;
+    --bb-chip: 239 238 233;
+    --bb-btn: 19 19 19;
+    --bb-btnfg: 255 255 255;
+    --bb-l1: 8 145 178;
+    --bb-l2: 99 102 241;
+    --bb-l3: 168 85 247;
+    --bb-glow: 0.4;
+  }
+
+  /* Dark theme tokens */
+  .dark {
+    --bb-bg: 17 18 20;
+    --bb-bg2: 23 24 27;
+    --bb-frame: 21 22 25;
+    --bb-line: 42 43 48;
+    --bb-line2: 58 59 64;
+    --bb-ink: 236 235 228;
+    --bb-ink2: 212 211 202;
+    --bb-mute: 154 153 143;
+    --bb-soft: 108 107 100;
+    --bb-head: 236 235 226;
+    --bb-chip: 43 44 49;
+    --bb-btn: 236 235 226;
+    --bb-btnfg: 29 29 27;
+    --bb-l1: 34 211 238;
+    --bb-l2: 129 140 248;
+    --bb-l3: 192 132 252;
+    --bb-glow: 1;
+  }
+
   html {
-    font-family: "Coolvetica", system-ui, sans-serif;
+    font-family: 'Cal Sans UI', system-ui, sans-serif;
     font-weight: 300;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
@@ -42,7 +88,319 @@
   }
 
   p {
-    @apply text-base
+    font-size: 0.9375rem;
   }
 
+  /* Mono eyebrow / kicker label */
+  .bb-kicker {
+    @apply font-mono text-[11px] font-medium uppercase tracking-[0.06em] text-bb-mute;
+  }
+
+  /* Code blocks: line numbers (shiki lines are rendered as span.line) */
+  .bb-code {
+    counter-reset: bb-line;
+  }
+  .bb-code .line {
+    display: inline-block;
+    min-width: 100%;
+    padding-right: 1.25rem;
+  }
+  .bb-code .line::before {
+    counter-increment: bb-line;
+    content: counter(bb-line);
+    display: none;
+    width: 3ch;
+    margin-right: 1.25rem;
+    text-align: right;
+    color: #7c7b74;
+    user-select: none;
+  }
+  .bb-code .line.hl {
+    background: rgb(129 140 248 / 0.1);
+    box-shadow: inset 2px 0 0 #818cf8;
+  }
+  .bb-code .line.hl::before {
+    color: #a5b4fc;
+  }
+  /* Only number blocks with more than one line */
+  .bb-code:has(.line ~ .line) .line::before {
+    display: inline-block;
+  }
+
+  /* Mermaid diagrams: modern look on the Builderbot tokens (dark and light) */
+  .bb-diagram {
+    background-color: rgb(var(--bb-frame));
+    background-image: radial-gradient(rgb(var(--bb-head) / 0.09) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  .bb-diagram.bb-aurora::after {
+    opacity: 0.45;
+  }
+  .bb-mermaid > div {
+    margin-top: 0 !important;
+    min-width: max-content;
+  }
+  .bb-mermaid svg {
+    max-width: none !important;
+    overflow: visible;
+  }
+  .bb-mermaid foreignObject {
+    overflow: visible;
+  }
+  /* nodes: glassy pills */
+  .bb-mermaid .node:not(:has([style*='fill:#'])) :is(rect, circle, ellipse, polygon, path) {
+    fill: rgb(var(--bb-bg2) / 0.92) !important;
+    stroke: rgb(var(--bb-l2) / 0.45) !important;
+    stroke-width: 1px !important;
+  }
+  .bb-mermaid .node :is(rect, circle, ellipse, polygon, path) {
+    filter: drop-shadow(0 8px 20px rgb(0 0 0 / calc(0.3 * var(--bb-glow))));
+  }
+  .bb-mermaid .node rect {
+    rx: 17px;
+    ry: 17px;
+  }
+  .bb-mermaid .node:has(path) path {
+    stroke-width: 1px !important;
+  }
+  .bb-mermaid .node .nodeLabel {
+    font-size: 13.5px;
+    font-weight: 450;
+    letter-spacing: 0.005em;
+  }
+  .bb-mermaid .node:not(:has([style*='fill:#'])) :is(.nodeLabel, .label, foreignObject div) {
+    color: rgb(var(--bb-head)) !important;
+  }
+  /* role glows */
+  .bb-mermaid .node:has([style*='fill:#c6f6c0']) :is(rect, circle, ellipse, polygon, path) {
+    filter: drop-shadow(0 0 14px rgb(74 222 128 / calc(0.45 * var(--bb-glow))));
+  }
+  .bb-mermaid .node:has([style*='fill:#c7d2fe']) :is(rect, circle, ellipse, polygon, path) {
+    filter: drop-shadow(0 0 16px rgb(129 140 248 / calc(0.6 * var(--bb-glow))));
+  }
+  .bb-mermaid .node:has([style*='fill:#cffafe']) :is(rect, circle, ellipse, polygon, path) {
+    filter: drop-shadow(0 0 16px rgb(34 211 238 / calc(0.45 * var(--bb-glow))));
+  }
+  /* groups */
+  .bb-mermaid .cluster :is(rect, polygon) {
+    fill: rgb(var(--bb-bg) / 0.55) !important;
+    stroke: rgb(var(--bb-line2)) !important;
+    stroke-width: 1px !important;
+    stroke-dasharray: 3 5;
+    rx: 18px;
+    ry: 18px;
+  }
+  .bb-mermaid .cluster .nodeLabel,
+  .bb-mermaid .cluster-label span,
+  .bb-mermaid .cluster text {
+    color: rgb(var(--bb-mute)) !important;
+    fill: rgb(var(--bb-mute)) !important;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  /* edges: animated flow */
+  .bb-mermaid .flowchart-link,
+  .bb-mermaid .edgePath .path {
+    stroke: rgb(var(--bb-l2)) !important;
+    stroke-width: 1.5px !important;
+    stroke-linecap: round;
+    stroke-dasharray: 6 7 !important;
+    animation: bb-dash 1.1s linear infinite;
+  }
+  .bb-mermaid .edge-pattern-dotted {
+    stroke-dasharray: 1.5 6 !important;
+    stroke-width: 2px !important;
+    opacity: 0.85;
+  }
+  @keyframes bb-dash {
+    to {
+      stroke-dashoffset: -13;
+    }
+  }
+  .bb-mermaid marker path,
+  .bb-mermaid .arrowheadPath,
+  .bb-mermaid .arrowMarkerPath {
+    fill: rgb(var(--bb-l2)) !important;
+    stroke: rgb(var(--bb-l2)) !important;
+    stroke-dasharray: none !important;
+  }
+  /* edge labels: mono chips */
+  .bb-mermaid .edgeLabel,
+  .bb-mermaid .edgeLabel rect,
+  .bb-mermaid .labelBkg {
+    background: transparent !important;
+    fill: transparent !important;
+  }
+  .bb-mermaid .edgeLabel :is(p, span.edgeLabel) {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: rgb(var(--bb-bg2)) !important;
+    color: rgb(var(--bb-ink2)) !important;
+    box-shadow: inset 0 0 0 1px rgb(var(--bb-l2) / 0.35), 0 6px 14px -8px rgb(0 0 0 / 0.5);
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+  .bb-mermaid .edgeLabel :is(p, span.edgeLabel):empty {
+    display: none;
+  }
+
+  /* Gradient hairline on top of code panels */
+  .bb-hairline {
+    position: relative;
+  }
+  .bb-hairline::before {
+    content: '';
+    position: absolute;
+    left: 1.5rem;
+    right: 1.5rem;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(var(--bb-l1)), rgb(var(--bb-l3)), transparent);
+    opacity: 0.8;
+    z-index: 1;
+  }
+
+  /* Animated aurora glow (pink / violet / blue) */
+  .bb-aurora {
+    isolation: isolate;
+  }
+  .bb-aurora::after {
+    content: '';
+    position: absolute;
+    inset: -25%;
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(40px);
+    background:
+      radial-gradient(30% 34% at 24% 78%, rgb(219 39 119 / calc(0.42 * var(--bb-glow))), transparent 70%),
+      radial-gradient(26% 30% at 50% 50%, rgb(124 58 237 / calc(0.36 * var(--bb-glow))), transparent 70%),
+      radial-gradient(28% 32% at 76% 22%, rgb(37 99 235 / calc(0.45 * var(--bb-glow))), transparent 70%);
+    animation: bb-aurora 22s ease-in-out infinite alternate;
+  }
+  @keyframes bb-aurora {
+    0% { transform: translate3d(-10%, 7%, 0) rotate(0deg) scale(1); }
+    50% { transform: translate3d(8%, -6%, 0) rotate(14deg) scale(1.14); }
+    to { transform: translate3d(-4%, -10%, 0) rotate(-10deg) scale(1.04); }
+  }
+
+  /* Card with gradient border on hover */
+  .bb-gcard {
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .bb-gcard::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgb(var(--bb-l1)), rgb(var(--bb-l2)), rgb(var(--bb-l3)));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.35s;
+    pointer-events: none;
+  }
+  .bb-gcard:hover,
+  .bb-gcard:focus-within {
+    transform: translateY(-3px);
+  }
+  .bb-gcard:hover::before,
+  .bb-gcard:focus-within::before {
+    opacity: 1;
+  }
+
+  /* Animated dashed wire with a travelling dot */
+  .bb-wire {
+    position: relative;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, rgb(var(--bb-l2)) 0 7px, transparent 7px 13px);
+    opacity: 0.8;
+  }
+  .bb-wire::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 99px;
+    background: rgb(var(--bb-l2));
+    box-shadow: 0 0 16px rgb(var(--bb-l2));
+    animation: bb-run 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+  @keyframes bb-run {
+    from { left: 0; }
+    to { left: calc(100% - 10px); }
+  }
+
+  /* Logo stroke draw-in */
+  .bb-logo-path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: bb-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.1s both;
+  }
+  @keyframes bb-draw {
+    to { stroke-dashoffset: 0; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bb-aurora::after,
+  .bb-wire::after,
+  .bb-mermaid .flowchart-link,
+  .bb-mermaid .edgePath .path,
+  .bb-logo-path,
+  .animate-bb-in {
+    animation: none !important;
+  }
+  .bb-logo-path {
+    stroke-dashoffset: 0;
+  }
+  .bb-gcard {
+    transition: none;
+  }
+}
+
+@keyframes bb-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* TerminalDemo palette: light by default, dark under .dark; data-theme forces one */
+.bb-term {
+  --t-bg: 250 250 248;
+  --t-bar: 255 255 255;
+  --t-line: 226 224 216;
+  --t-fg: 19 19 19;
+  --t-mute: 95 94 87;
+  --t-gray: 150 149 140;
+  --t-dot: 214 211 204;
+  --t-cyan: 8 145 178;
+  --t-green: 22 163 74;
+  --t-magenta: 147 51 234;
+  --t-yellow: 180 83 9;
+  --t-on: 255 255 255;
+  --t-shadow: 0 24px 50px -24px rgba(17, 24, 39, 0.25);
+}
+.dark .bb-term:not([data-theme='light']),
+.bb-term[data-theme='dark'] {
+  --t-bg: 14 15 17;
+  --t-bar: 14 15 17;
+  --t-line: 42 43 48;
+  --t-fg: 236 235 228;
+  --t-mute: 154 153 143;
+  --t-gray: 108 107 100;
+  --t-dot: 58 59 64;
+  --t-cyan: 34 211 238;
+  --t-green: 74 222 128;
+  --t-magenta: 192 132 252;
+  --t-yellow: 251 191 36;
+  --t-on: 11 11 12;
+  --t-shadow: 0 0 #0000;
 }

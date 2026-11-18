@@ -1,0 +1,23 @@
+import { Playground } from '@/components/Playground'
+
+export const wide = true
+
+export const description =
+  'Escreva fluxos do BuilderBot com addKeyword, addAnswer e addAction e converse com eles no navegador, com o núcleo real do @builderbot/bot.'
+
+# Playground
+
+Edite um fluxo e converse com ele na hora. O código roda no núcleo real do `@builderbot/bot`, o mesmo que você instala com `pnpm create builderbot`, então `addKeyword`, `addAnswer`, `addAction`, `capture`, `state`, `flowDynamic`, `fallBack`, `endFlow`, `gotoFlow` e `EVENTS` se comportam exatamente como no seu bot.
+
+<Playground locale="pt" />
+
+## Como funciona
+
+- **Escolha um exemplo** da documentação ou escreva os seus próprios fluxos. Clique em **Executar** (ou ⌘/Ctrl + Enter) para reiniciar o bot com o seu código.
+- **Escreva como num projeto real**: importe de `@builderbot/bot` e passe os seus fluxos para `createFlow([...])`. O playground coloca o `MemoryDB` e um provider do navegador no lugar do WhatsApp.
+- **Converse como um contato.** Use os botões de eventos para enviar uma imagem, uma nota de voz, um documento ou uma localização e disparar `EVENTS.MEDIA`, `EVENTS.VOICE_NOTE`, `EVENTS.DOCUMENT` ou `EVENTS.LOCATION`.
+- **O log do motor** mostra cada mensagem que entra e sai, com o seu tempo, `delay` e `capture`.
+
+<Note>
+  Tudo roda no seu navegador. Nada é enviado ao WhatsApp e nenhum servidor participa, então recursos específicos de cada provider (download real de arquivos, presença, botões renderizados pelo WhatsApp) não estão disponíveis aqui.
+</Note>

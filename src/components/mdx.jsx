@@ -3,11 +3,29 @@ import Link from 'next/link'
 import clsx from 'clsx'
 
 import { Heading } from '@/components/Heading'
+import { Icon } from '@/components/Icon'
 import { Modal } from '@/components/Modal'
 
 export const a = Link
 export { Button } from '@/components/Button'
+export { Award } from '@/components/PageHeader'
+export { TerminalDemo } from '@/components/TerminalDemo'
 export { CodeGroup, Code as code, Pre as pre } from '@/components/Code'
+
+/** Frame around mermaid diagrams; colors are set in .bb-mermaid (tailwind.css). */
+export function MermaidFrame({ children }) {
+  return (
+    <figure className="bb-diagram bb-aurora not-prose aling-block relative my-8 overflow-hidden rounded-[20px] ring-1 ring-inset ring-bb-line">
+      <figcaption className="absolute left-4 top-3 z-10 flex items-center gap-2 font-mono text-[10.5px] font-medium uppercase tracking-[0.08em] text-bb-mute">
+        <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-bb-l2 shadow-[0_0_10px_rgb(var(--bb-l2))]" />
+        Diagram
+      </figcaption>
+      <div className="bb-mermaid overflow-x-auto px-6 pb-8 pt-12 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-bb-line2">
+        {children}
+      </div>
+    </figure>
+  )
+}
 
 export const h2 = function H2(props) {
   return <Heading level={2} {...props} />
@@ -18,11 +36,11 @@ export const Image = function Img(props) {
   const showModal = () => setIsOpen(true)
 
   return (
-  <div className='my-6 bg-gray-100 rounded-2xl dark:bg-zinc-800'>
-    {props?.label ? <div className="flex py-1 flex-wrap items-start gap-x-4 px-4  dark:border-zinc-800 dark:bg-transparent"><h3 className="mr-auto m-0 text-xs font-thin">{props.label}</h3></div> : <></> }
+  <div className='my-6 overflow-hidden rounded-2xl bg-bb-frame ring-1 ring-inset ring-bb-line'>
+    {props?.label ? <div className="flex py-1 flex-wrap items-start gap-x-4 px-4  dark:border-zinc-800 dark:bg-transparent"><h3 className="bb-kicker mr-auto m-0">{props.label}</h3></div> : <></> }
     <img 
       onClick={showModal}
-      className='not-prose w-full justify-center text-center cursor-pointer aling-block max-w-full h-auto overflow-hidden max-h-[800px]  rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10' {...props} />
+      className='not-prose w-full justify-center text-center cursor-pointer aling-block max-w-full h-auto overflow-hidden max-h-[800px] rounded-2xl bg-bb-bg2' {...props} />
             {isOpen && (
             <Modal
               src={props.src}
@@ -37,18 +55,18 @@ export const Image = function Img(props) {
 
 export function Video(props) {
   return (
-  <div className='my-6 bg-gray-100 rounded-2xl dark:bg-zinc-800 '>
-    {props?.label ? <div className="flex py-1 flex-wrap items-start gap-x-4 px-4 dark:border-zinc-800 dark:bg-transparent"><h3 className="mr-auto m-0 text-xs font-thin">{props.label}</h3></div> : <></> }
-    <iframe width="800" className='rounded-2xl w-full max-sm:w-full max-sm:h-[220px] ' height="450" src={'https://www.youtube.com/embed/'+props.yt} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />    
+  <div className='bb-aurora relative my-6 overflow-hidden rounded-[20px] bg-bb-frame p-3 sm:p-4'>
+    {props?.label ? <div className="flex py-1 flex-wrap items-start gap-x-4 px-4 dark:border-zinc-800 dark:bg-transparent"><h3 className="bb-kicker mr-auto m-0">{props.label}</h3></div> : <></> }
+    <iframe width="800" className='rounded-2xl w-full max-sm:w-full max-sm:h-[220px] ' height="450" src={'https://www.youtube.com/embed/'+props.yt} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />    
   </div>
   )
 }
 
 export function VideoVertical(props) {
   return (
-  <div className='my-6 bg-gray-100 rounded-2xl dark:bg-zinc-800 w-[315px] h-[560px]'>
-    {props?.label ? <div className="flex py-1 flex-wrap items-start gap-x-4 px-4 dark:border-zinc-800 dark:bg-transparent"><h3 className="mr-auto m-0 text-xs font-thin">{props.label}</h3></div> : <></> }
-    <iframe width="800" className='rounded-2xl w-full max-sm:w-full max-sm:h-[220px] ' height="530" src={'https://www.youtube.com/embed/'+props.yt} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />    
+  <div className='my-6 h-[560px] w-[315px] overflow-hidden rounded-2xl bg-bb-frame ring-1 ring-inset ring-bb-line'>
+    {props?.label ? <div className="flex py-1 flex-wrap items-start gap-x-4 px-4 dark:border-zinc-800 dark:bg-transparent"><h3 className="bb-kicker mr-auto m-0">{props.label}</h3></div> : <></> }
+    <iframe width="800" className='rounded-2xl w-full max-sm:w-full max-sm:h-[220px] ' height="530" src={'https://www.youtube.com/embed/'+props.yt} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />    
   </div>
   )
 }
@@ -71,9 +89,9 @@ function InfoIcon(props) {
 
 export function Note({ children }) {
   return (
-    <div className="my-6 flex gap-2.5 rounded-2xl border border-emerald-500/20 bg-emerald-50/50 p-4 leading-6 text-emerald-900 dark:border-emerald-500/30 dark:bg-emerald-500/5 dark:text-emerald-200 dark:[--tw-prose-links-hover:theme(colors.emerald.300)] dark:[--tw-prose-links:theme(colors.white)]">
-      <InfoIcon className="mt-1 h-4 w-4 flex-none fill-emerald-500 stroke-white dark:fill-emerald-200/20 dark:stroke-emerald-200" />
-      <div className="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
+    <div className="my-6 flex gap-2.5 rounded-2xl bg-bb-l2/[0.06] p-4 leading-6 text-bb-ink ring-1 ring-inset ring-bb-l2/25">
+      <Icon name="info" size={18} className="mt-1 text-bb-l2" />
+      <div className="min-w-0 flex-1 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
     </div>
@@ -83,7 +101,7 @@ export function Note({ children }) {
 export function Error({ children }) {
   return (
     <div className="my-6 flex gap-2.5 rounded-2xl border border-rose-500/20 bg-rose-50/50 p-4 leading-6 text-rose-900 dark:border-rose-500/30 dark:bg-rose-500/5 dark:text-rose-200 dark:[--tw-prose-links-hover:theme(colors.rose.300)] dark:[--tw-prose-links:theme(colors.white)]">
-      <div className="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
+      <div className="min-w-0 flex-1 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
     </div>
@@ -93,7 +111,7 @@ export function Error({ children }) {
 export function Warning({ children }) {
   return (
     <div className="my-6 flex gap-2.5 rounded-2xl border border-orange-500/20 bg-orange-50/50 p-4 leading-6 text-orange-900 dark:border-orange-500/30 dark:bg-orange-500/5 dark:text-orange-200 dark:[--tw-prose-links-hover:theme(colors.orange.300)] dark:[--tw-prose-links:theme(colors.white)]">
-      <div className="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
+      <div className="min-w-0 flex-1 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
     </div>
@@ -102,7 +120,7 @@ export function Warning({ children }) {
 
 export function Row({ children }) {
   return (
-    <div className="grid grid-cols-1 items-start gap-x-16 gap-y-10 xl:max-w-none xl:grid-cols-2">
+    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-y-6">
       {children}
     </div>
   )
@@ -110,7 +128,7 @@ export function Row({ children }) {
 
 export function RowCenter({ children }) {
   return (
-    <div className="grid grid-cols-1 items-start gap-x-16 gap-y-10 xl:grid-cols-2">
+    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-y-6">
       {children}
     </div>
   )
@@ -121,7 +139,7 @@ export function Col({ children, sticky = false }) {
     <div
       className={clsx(
         '[&>:first-child]:mt-0 [&>:last-child]:mb-0',
-        sticky && 'xl:sticky xl:top-24'
+        sticky && 'xl:static'
       )}
     >
       {children}
@@ -134,7 +152,7 @@ export function Properties({ children }) {
     <div className="my-6">
       <ul
         role="list"
-        className="m-0 max-w-[calc(theme(maxWidth.lg)-theme(spacing.8))] list-none divide-y divide-zinc-900/5 p-0 dark:divide-white/5"
+        className="m-0 max-w-[calc(theme(maxWidth.lg)-theme(spacing.8))] list-none divide-y divide-bb-line p-0"
       >
         {children}
       </ul>
@@ -151,7 +169,7 @@ export function Property({ name, type, children }) {
           <code>{name}</code>
         </dd>
         <dt className="sr-only">Type</dt>
-        <dd className="font-mono text-xs text-zinc-400 dark:text-zinc-500">
+        <dd className="font-mono text-xs text-bb-mute">
           {type}
         </dd>
         <dt className="sr-only">Description</dt>

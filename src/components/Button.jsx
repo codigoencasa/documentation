@@ -16,14 +16,14 @@ function ArrowIcon(props) {
 
 const variantStyles = {
   primary:
-    'rounded-full bg-zinc-900 py-1 px-3 text-white hover:bg-zinc-700 dark:bg-teal-400/10 dark:text-teal-400 dark:ring-1 dark:ring-inset dark:ring-teal-400/20 dark:hover:bg-teal-400/10 dark:hover:text-teal-300 dark:hover:ring-teal-300',
+    'rounded-full bg-bb-btn py-1.5 px-4 text-bb-btnfg hover:opacity-90',
   secondary:
-    'rounded-full bg-zinc-100 py-1 px-3 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800/40 dark:text-zinc-400 dark:ring-1 dark:ring-inset dark:ring-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-300',
+    'rounded-full bg-bb-chip py-1 px-3 text-bb-head ring-1 ring-inset ring-bb-line hover:ring-bb-line2',
   filled:
-    'rounded-full bg-zinc-900 py-1 px-3 text-white hover:bg-zinc-700 dark:bg-teal-500 dark:text-white dark:hover:bg-teal-400',
+    'rounded-full bg-bb-btn py-1.5 px-4 text-bb-btnfg hover:opacity-90',
   outline:
-    'rounded-full py-1 px-3 text-zinc-700 ring-1 ring-inset ring-zinc-900/10 hover:bg-zinc-900/2.5 hover:text-zinc-900 dark:text-zinc-400 dark:ring-white/10 dark:hover:bg-white/5 dark:hover:text-white',
-  text: 'text-teal-500 hover:text-teal-600 dark:text-teal-400 dark:hover:text-teal-500',
+    'rounded-full py-1 px-3 text-bb-ink ring-1 ring-inset ring-bb-line2 hover:bg-bb-chip hover:text-bb-head',
+  text: 'text-bb-head underline decoration-bb-line2 underline-offset-[6px] hover:decoration-bb-l2',
 }
 
 export function Button({
@@ -36,7 +36,7 @@ export function Button({
   let Component = props.href ? Link : 'button'
 
   className = cn(
-    'inline-flex gap-0.5 justify-center overflow-hidden text-sm font-medium transition',
+    'inline-flex max-w-full items-center gap-0.5 justify-center overflow-hidden whitespace-nowrap text-sm font-medium transition',
     variantStyles[variant],
     className
   )
@@ -44,7 +44,7 @@ export function Button({
   let arrowIcon = (
     <ArrowIcon
       className={cn(
-        'mt-0.5 h-5 w-5',
+        'h-5 w-5 flex-none',
         variant === 'text' && 'relative top-px',
         arrow === 'left' && '-ml-1 rotate-180',
         arrow === 'right' && '-mr-1'
@@ -55,7 +55,7 @@ export function Button({
   return (
     <Component className={className} {...props}>
       {arrow === 'left' && arrowIcon}
-      {children}
+      <span className="min-w-0 truncate">{children}</span>
       {arrow === 'right' && arrowIcon}
     </Component>
   )

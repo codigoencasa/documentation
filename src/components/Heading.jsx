@@ -26,13 +26,13 @@ function Eyebrow({ tag, label }) {
   }
 
   return (
-    <div className="flex items-center gap-x-3">
+    <div className="mt-14 flex items-center gap-x-3">
       {tag && <Tag>{tag}</Tag>}
       {tag && label && (
-        <span className="h-0.5 w-0.5 rounded-full bg-zinc-300 dark:bg-zinc-600" />
+        <span className="h-0.5 w-0.5 rounded-full bg-bb-soft" />
       )}
       {label && (
-        <span className="font-mono text-xs text-zinc-400">{label}</span>
+        <span className="bb-kicker">{label}</span>
       )}
     </div>
   )
@@ -46,8 +46,8 @@ function Anchor({ id, inView, children }) {
     >
       {inView && (
         <div className="absolute ml-[calc(-1*var(--width))] mt-1 hidden w-[var(--width)] opacity-0 transition [--width:calc(2.625rem+0.5px+50%-min(50%,calc(theme(maxWidth.lg)+theme(spacing.8))))] group-hover:opacity-100 group-focus:opacity-100 md:block lg:z-50 2xl:[--width:theme(spacing.10)]">
-          <div className="group/anchor block h-5 w-5 rounded-lg bg-zinc-50 ring-1 ring-inset ring-zinc-300 transition hover:ring-zinc-500 dark:bg-zinc-800 dark:ring-zinc-700 dark:hover:bg-zinc-700 dark:hover:ring-zinc-600">
-            <AnchorIcon className="h-5 w-5 stroke-zinc-500 transition dark:stroke-zinc-400 dark:group-hover/anchor:stroke-white" />
+          <div className="group/anchor block h-5 w-5 rounded-lg bg-bb-chip ring-1 ring-inset ring-bb-line transition hover:ring-bb-l2">
+            <AnchorIcon className="h-5 w-5 stroke-bb-mute transition group-hover/anchor:stroke-bb-head" />
           </div>
         </div>
       )}
@@ -85,7 +85,7 @@ export function Heading({
       <Eyebrow tag={tag} label={label} />
       <Component
         ref={ref}
-        id={anchor ? id : undefined}
+        id={id}
         className={tag || label ? 'mt-2 scroll-mt-32' : 'scroll-mt-24'}
         {...props}
       >

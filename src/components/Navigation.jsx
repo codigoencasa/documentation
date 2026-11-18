@@ -1,26 +1,36 @@
-import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
-import { AnimatePresence, motion, useIsPresent } from 'framer-motion'
 
-import { Button } from '@/components/Button'
-import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
-import { useSectionStore } from '@/components/SectionProvider'
+import { Icon } from '@/components/Icon'
 import { Tag } from '@/components/Tag'
-import { remToPx } from '@/lib/remToPx'
 
-function useInitialValue(value, condition = true) {
-  let initialValue = useRef(value).current
-  return condition ? initialValue : value
+// Icon per documentation page (icon set: src/components/Icon.jsx)
+const navIcons = {
+  '/': 'book', '/quickstart': 'bolt', '/concepts': 'blocks', '/uses-cases': 'examples', '/playground': 'play',
+  '/add-functions': 'functions', '/context': 'context', '/methods': 'terminal', '/events': 'events',
+  '/databases': 'database',
+  '/providers/meta': 'cloud', '/providers/twilio': 'phone', '/providers/baileys': 'qr',
+  '/providers#venom': 'browser', '/providers#wpp-connect': 'browser',
+  '/deploy': 'upload', '/deploy/railway': 'layers', '/deploy/docker': 'container', '/deploy/vps': 'server',
+  '/showcases/queue-limit': 'queue', '/showcases/modularize': 'modules', '/showcases/fast-entires': 'fast',
+  '/showcases/idle-optional': 'clock', '/showcases/docker-pm2': 'reboot', '/showcases/event-in-out-messages': 'swap',
+  '/showcases/cron-reminder': 'bell', '/showcases/forward-conversation-to-human': 'human',
+  '/showcases/gotoflow-use': 'branch', '/showcases/multiple-messages': 'messages',
+  '/tutorials/migrate-to-builderbot': 'migrate', '/tutorials/api-use': 'api',
+  '/tutorials/chatbot-with-gemini': 'sparkle', '/tutorials/langchain': 'link',
+  '/contribute': 'doc', '/contribute/core': 'chip', '/resources': 'shapes',
+  '/plugins/telegram': 'send', '/plugins/shopify': 'bag', '/plugins/agents': 'agent', '/plugins/langchain': 'link',
 }
 
-function TopLevelNavItem({ href, children }) {
+
+function TopLevelNavItem({ href, children, target }) {
   return (
-    <li className="md:hidden">
+    <li className="lg:hidden">
       <Link
         href={href}
-        className="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+        target={target}
+        className="block py-1.5 text-sm font-medium text-bb-ink2 transition hover:text-bb-head"
       >
         {children}
       </Link>
@@ -28,21 +38,23 @@ function TopLevelNavItem({ href, children }) {
   )
 }
 
-function NavLink({ href, tag, active, isAnchorLink = false, children }) {
+function NavLink({ href, tag, active, icon, collapsed, children }) {
   return (
     <Link
       href={href}
       aria-current={active ? 'page' : undefined}
+      title={collapsed ? children : undefined}
       className={clsx(
-        'flex justify-between gap-2 py-1 pr-3 text-sm transition',
-        isAnchorLink ? 'pl-7' : 'pl-4',
+        'flex items-center gap-2.5 text-[13.5px] transition',
+        collapsed ? 'h-9 justify-center' : 'py-1 pl-3 pr-3',
         active
-          ? 'text-zinc-900 dark:text-white'
-          : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'
+          ? 'rounded-r-lg bg-gradient-to-r from-bb-l2/15 to-transparent font-medium text-bb-head shadow-[inset_2px_0_0_rgb(var(--bb-l2))]'
+          : 'rounded-lg text-bb-ink2 hover:text-bb-head'
       )}
     >
-      <span className="truncate">{children}</span>
-      {tag && (
+      {icon && <Icon name={icon} size={16} className={active ? 'text-bb-l2' : 'text-bb-mute'} />}
+      <span className={collapsed ? 'sr-only' : 'flex-1 truncate'}>{children}</span>
+      {tag && !collapsed && (
         <Tag variant="small" color="zinc">
           {tag}
         </Tag>
@@ -52,141 +64,30 @@ function NavLink({ href, tag, active, isAnchorLink = false, children }) {
 }
 
 function parseLocation({ link, pathname }) {
-  return link === pathname.slice(3)
+  return link === (pathname.slice(3) || '/')
 }
 
-function VisibleSectionHighlight({ group, pathname }) {
-  let [sections, visibleSections] = useInitialValue(
-    [
-      useSectionStore((s) => s.sections),
-      useSectionStore((s) => s.visibleSections),
-    ],
-    useIsInsideMobileNavigation()
-  )
-
-  let isPresent = useIsPresent()
-  let firstVisibleSectionIndex = Math.max(
-    0,
-    [{ id: '_top' }, ...sections].findIndex(
-      (section) => section.id === visibleSections[0]
-    )
-  )
-  let itemHeight = remToPx(2)
-  let height = isPresent
-    ? Math.max(1, visibleSections.length) * itemHeight
-    : itemHeight
-  let top =
-    group.links.findIndex((link) => parseLocation({ link: link.href, pathname })) * itemHeight +
-    firstVisibleSectionIndex * itemHeight
+function NavigationGroup({ group, className, collapsed }) {
+  let router = useRouter()
+  let locale = (router.asPath.split('/')[1] || 'en').toLowerCase()
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { delay: 0.2 } }}
-      exit={{ opacity: 0 }}
-      className="absolute inset-x-0 top-0 bg-zinc-800/2.5 will-change-transform dark:bg-white/2.5"
-      style={{ borderRadius: 8, height, top }}
-    />
-  )
-}
-
-function ActivePageMarker({ group, pathname }) {
-  let itemHeight = remToPx(2)
-  let offset = remToPx(0.25)
-  let activePageIndex = group.links.findIndex((link) => parseLocation({ link: link.href, pathname }))
-  let top = offset + activePageIndex * itemHeight
-
-  return (
-    <motion.div
-      layout
-      className="absolute left-2 h-6 w-px bg-teal-500"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { delay: 0.2 } }}
-      exit={{ opacity: 0 }}
-      style={{ top }}
-    />
-  )
-}
-
-function NavigationGroup({ group, className }) {
-  const route = useRouter()
-  const regexLanguage = /^\/([^\/]+)/;
-  const currentPath = route.asPath;
-  const language = currentPath.split(regexLanguage)[1].toLocaleLowerCase();
-  const [locale, setLocale] = useState(language)
-  let isInsideMobileNavigation = useIsInsideMobileNavigation()
-  let [router, sections] = useInitialValue(
-    [useRouter(), useSectionStore((s) => s.sections)],
-    isInsideMobileNavigation
-  )
-
-  useEffect(() => setLocale(language), [language])
-
-  let isActiveGroup =
-    group.links.findIndex((link) => parseLocation({ link: link.href, pathname: router.pathname })) !== -1
-
-  return (
-    <li className={clsx('relative mt-6', className)}>
-      <motion.h2
-        layout="position"
-        className="text-xs font-semibold text-zinc-900 dark:text-white"
-      >
-        {group.title}
-      </motion.h2>
-      <div className="relative mt-3 pl-2">
-        <AnimatePresence initial={!isInsideMobileNavigation}>
-          {isActiveGroup && (
-            <VisibleSectionHighlight group={group} pathname={router.pathname} />
-          )}
-        </AnimatePresence>
-        <motion.div
-          layout
-          className="absolute inset-y-0 left-2 w-px bg-zinc-900/10 dark:bg-white/5"
-        />
-        <AnimatePresence initial={false}>
-          {isActiveGroup && (
-            <ActivePageMarker group={group} pathname={router.pathname} />
-          )}
-        </AnimatePresence>
-        <ul role="list" className="border-l border-transparent">
-          {group.links.map((link) => (
-            <motion.li key={link.href} layout="position" className="relative">
-              <NavLink href={`${link.href}`} active={parseLocation({ link: link.href, pathname: router.pathname })}>
-                {link.title}
-              </NavLink>
-              <AnimatePresence mode="popLayout" initial={false}>
-                {parseLocation({ link: link.href, pathname: router.pathname }) && sections.length > 0 && (
-                  <motion.ul
-                    role="list"
-                    initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: 1,
-                      transition: { delay: 0.1 },
-                    }}
-                    exit={{
-                      opacity: 0,
-                      transition: { duration: 0.15 },
-                    }}
-                  >
-                    {sections.filter((s) => !s?.not).map((section) => (
-                      <li key={section.id}>
-                        <NavLink
-                          href={`/${locale}${link.href}#${section.id}`}
-                          tag={section.tag}
-                          isAnchorLink
-                        >
-                          {section.title}
-                        </NavLink>
-                      </li>
-                    ))}
-                  </motion.ul>
-                )}
-              </AnimatePresence>
-            </motion.li>
-          ))}
-        </ul>
-      </div>
+    <li className={clsx('relative', collapsed ? 'mt-3 border-t border-bb-line pt-3 first:border-0 first:pt-0' : 'mt-6', className)}>
+      <h2 className={collapsed ? 'sr-only' : 'bb-kicker'}>{group.title}</h2>
+      <ul role="list" className={clsx('flex flex-col gap-0.5', !collapsed && 'mt-2')}>
+        {group.links.map((link) => (
+          <li key={link.href}>
+            <NavLink
+              href={`/${locale}${link.href === '/' ? '' : link.href}`}
+              active={parseLocation({ link: link.href, pathname: router.pathname })}
+              icon={navIcons[link.href]}
+              collapsed={collapsed}
+            >
+              {link.title}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
     </li>
   )
 }
@@ -199,6 +100,7 @@ export const navigation = [
       { title: 'Quickstart', href: '/quickstart' },
       { title: 'Concepts', href: '/concepts' },
       { title: 'Examples', href: '/uses-cases' },
+      { title: 'Playground', href: '/playground' },
     ],
   },
   {
@@ -278,25 +180,23 @@ export const navigation = [
   },
 ]
 
-export function Navigation(props) {
+export function Navigation({ collapsed = false, ...props }) {
   return (
     <nav {...props}>
       <ul role="list">
-        <TopLevelNavItem href="/">API</TopLevelNavItem>
-        <TopLevelNavItem href="#">Documentation</TopLevelNavItem>
-        <TopLevelNavItem href="#">Support</TopLevelNavItem>
+        <TopLevelNavItem href="/tutorials/api-use">API</TopLevelNavItem>
+        <TopLevelNavItem href="/">Documentation</TopLevelNavItem>
+        <TopLevelNavItem href="https://link.codigoencasa.com/DISCORD" target="_blank">Support</TopLevelNavItem>
+        <TopLevelNavItem href="/contribute">Contribute</TopLevelNavItem>
+        <TopLevelNavItem href="https://app.codigoencasa.com/courses/curso-chatbot-whatsapp?refCode=LEIFER" target="_blank">Course</TopLevelNavItem>
         {navigation.map((group, groupIndex) => (
           <NavigationGroup
             key={group.title}
             group={group}
-            className={groupIndex === 0 && 'md:mt-0'}
+            collapsed={collapsed}
+            className={groupIndex === 0 && (collapsed ? 'lg:mt-0' : 'lg:mt-0 lg:pt-6')}
           />
         ))}
-        <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          <Button href="#" variant="filled" className="w-full">
-            Sign in
-          </Button>
-        </li>
       </ul>
     </nav>
   )

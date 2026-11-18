@@ -1,27 +1,28 @@
 import { forwardRef } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import clsx from 'clsx'
-import { motion, useScroll, useTransform } from 'framer-motion'
 
-import { Button } from '@/components/Button'
 import { Logo } from '@/components/Logo'
 import {
   MobileNavigation,
   useIsInsideMobileNavigation,
 } from '@/components/MobileNavigation'
-import { useMobileNavigationStore } from '@/components/MobileNavigation'
 import { ModeToggle } from '@/components/ModeToggle'
 import { MobileSearch, Search } from '@/components/Search'
 import LanguageSelector from './LanguajeSelector'
-import { TopBar } from './TopBar'
 
-function TopLevelNavItem({ href, children, target }) {
+function TopLevelNavItem({ href, children, target, current = false, className }) {
   return (
-    <li>
+    <li className={className}>
       <Link
         href={href}
         target={target ?? '_self'}
-        className="text-sm leading-5 transition text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+        aria-current={current ? 'page' : undefined}
+        className={clsx(
+          'text-sm font-medium transition',
+          current ? 'text-bb-head' : 'text-bb-ink2 hover:text-bb-head'
+        )}
       >
         {children}
       </Link>
@@ -29,63 +30,75 @@ function TopLevelNavItem({ href, children, target }) {
   )
 }
 
-export const Header = forwardRef(function Header({ className }, ref) {
-  let { isOpen: mobileNavIsOpen } = useMobileNavigationStore()
-  let isInsideMobileNavigation = useIsInsideMobileNavigation()
+function GitHubIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" />
+    </svg>
+  )
+}
 
-  let { scrollY } = useScroll()
-  let bgOpacityLight = useTransform(scrollY, [0, 72], [0.5, 0.9])
-  let bgOpacityDark = useTransform(scrollY, [0, 72], [0.2, 0.8])
+export const Header = forwardRef(function Header({ className }, ref) {
+  let isInsideMobileNavigation = useIsInsideMobileNavigation()
+  let router = useRouter()
+  let locale = router.asPath.split('/')[1] || 'en'
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      className={clsx(
-        className,
-        'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-12 px-4 transition sm:px-6 lg:left-72 lg:z-30 lg:px-8 xl:left-80',
-        !isInsideMobileNavigation &&
-          'backdrop-blur-sm dark:backdrop-blur lg:left-72 xl:left-80',
-        isInsideMobileNavigation
-          ? 'bg-white dark:bg-zinc-900'
-          : 'bg-white/[var(--bg-opacity-light)] dark:bg-zinc-900/[var(--bg-opacity-dark)]'
-      )}
-      style={{
-        '--bg-opacity-light': bgOpacityLight,
-        '--bg-opacity-dark': bgOpacityDark,
-      }}
+      className={clsx(className, 'fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 lg:px-[18px]', !isInsideMobileNavigation && 'bg-gradient-to-b from-bb-bg from-60% to-transparent pb-3')}
     >
-  
       <div
         className={clsx(
-          'absolute inset-x-0 top-full h-px transition',
-          (isInsideMobileNavigation || !mobileNavIsOpen) &&
-            'bg-zinc-900/7.5 dark:bg-white/7.5'
+          'flex h-[60px] items-center gap-2 rounded-full pl-1.5 pr-2 sm:gap-4 sm:pl-2',
+          isInsideMobileNavigation ? 'bg-bb-bg' : 'bg-bb-bg/85 backdrop-blur-xl backdrop-saturate-150'
         )}
-      />
-      <Search />
-      <div className="flex items-center gap-5 lg:hidden">
-        <MobileNavigation />
-        <Link href="/" aria-label="Home">
-          <Logo className="h-6" />
+      >
+        <Link href={`/${locale}`} aria-label="BuilderBot, home" className="flex-none">
+          <Logo />
         </Link>
-      </div>
-      <div className="flex items-center gap-5">
-        <nav className="hidden md:block">
-          <ul role="list" className="flex items-center gap-8">
-            <TopLevelNavItem href="/contribute">Contribute</TopLevelNavItem>
-            <TopLevelNavItem target='_blank' href="https://app.codigoencasa.com/courses/curso-chatbot-whatsapp?refCode=LEIFER">Course</TopLevelNavItem>
+        <Search />
+        <span className="flex-1" />
+        <nav aria-label="Main" className="hidden xl:block">
+          <ul role="list" className="flex items-center gap-5">
+            <TopLevelNavItem href={`/${locale}`} current>Documentation</TopLevelNavItem>
+            <TopLevelNavItem href={`/${locale}/tutorials/api-use`}>API</TopLevelNavItem>
+            <TopLevelNavItem href="https://link.codigoencasa.com/DISCORD" target="_blank">Support</TopLevelNavItem>
+            <TopLevelNavItem href={`/${locale}/contribute`} className="hidden 2xl:block">Contribute</TopLevelNavItem>
+            <TopLevelNavItem
+              target="_blank"
+              href="https://app.codigoencasa.com/courses/curso-chatbot-whatsapp?refCode=LEIFER"
+              className="hidden 2xl:block"
+            >
+              Course
+            </TopLevelNavItem>
           </ul>
         </nav>
-        <div className="hidden md:block md:h-5 md:w-px md:bg-zinc-900/10 md:dark:bg-white/15" />
-        <div className="flex gap-2 items-center justify-content-end">
-          {/* <LanguageSelector /> */}
-          <MobileSearch />
+        <div className="flex items-center gap-1">
+          <Link
+            href="https://github.com/codigoencasa/bot-whatsapp"
+            target="_blank"
+            aria-label="GitHub"
+            className="hidden h-10 w-10 place-items-center rounded-full text-bb-ink transition hover:bg-bb-chip sm:grid"
+          >
+            <GitHubIcon className="h-[18px] w-[18px]" />
+          </Link>
+          <div className="hidden sm:block">
+            <LanguageSelector />
+          </div>
           <ModeToggle />
+          <MobileSearch />
+          <div className="lg:hidden">
+            <MobileNavigation />
+          </div>
         </div>
-        <div className="hidden min-[416px]:contents">
-          <Button href="https://builderbot.cloud">Get started</Button>
-        </div>
+        <Link
+          href="https://builderbot.cloud"
+          className="hidden h-10 items-center whitespace-nowrap rounded-full bg-bb-btn px-5 text-[13px] text-bb-btnfg transition hover:opacity-90 sm:inline-flex"
+        >
+          Get started
+        </Link>
       </div>
-    </motion.div>
+    </div>
   )
 })
