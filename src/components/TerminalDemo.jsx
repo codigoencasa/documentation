@@ -2,14 +2,16 @@
  * LAYER: Interface
  * Contains: TerminalDemo — animated replay of `pnpm create builderbot@latest`
  * Rules: Presentation only. Every line, symbol and color below was captured from the real
- *   create-builderbot CLI (v1.4.4, @clack/prompts) running in a pseudo-terminal, so the demo
- *   stays faithful to what users see. Replaces the old console.webm video.
+ *   create-builderbot CLI (captured on v1.4.4, @clack/prompts) running in a pseudo-terminal, so the demo
+ *   stays faithful to what users see. The version line comes from src/lib/generated/versions.json
+ *   (npm registry, refreshed on predev/prebuild). Replaces the old console.webm video.
  * GOAL: Show the CLI flow as live, selectable text instead of a video.
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 
 import { Icon } from '@/components/Icon'
+import versions from '@/lib/generated/versions.json'
 
 /* ANSI palette → CSS variables (.bb-term in tailwind.css), so one markup serves light and dark */
 const C = {
@@ -160,7 +162,7 @@ const LABELS = {
 /**
  * theme: 'auto' follows the site (light / .dark), 'dark' or 'light' force one look.
  */
-export function TerminalDemo({ locale = 'en', theme = 'auto', version = '1.4.4', provider = 'Baileys', database = 'Memory', language = 'TypeScript' }) {
+export function TerminalDemo({ locale = 'en', theme = 'auto', version = versions.cli ?? '', provider = 'Baileys', database = 'Memory', language = 'TypeScript' }) {
   const t = LABELS[locale] ?? LABELS.en
   const root = useRef(null)
   const scroller = useRef(null)

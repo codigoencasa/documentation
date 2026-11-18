@@ -11,6 +11,10 @@ import clsx from 'clsx'
 import { Icon } from '@/components/Icon'
 import { EXAMPLES, findExample } from '@/lib/playground/examples'
 import { BOT_VERSION, INBOUND_EVENT, startBot } from '@/lib/playground/runtime'
+import versions from '@/lib/generated/versions.json'
+
+/** Version the docs talk about: what is published on npm, falling back to the bundled engine. */
+const LATEST_BOT = versions.bot ?? BOT_VERSION
 
 const KICKER = 'font-mono text-[10.5px] font-medium uppercase tracking-[0.06em]'
 const COPY = {
@@ -21,7 +25,7 @@ const COPY = {
     docs: 'Read the docs',
     editor: 'Flow code',
     log: 'Engine log',
-    running: `@builderbot/bot ${BOT_VERSION} · running`,
+    running: (version) => `@builderbot/bot ${version} · running`,
     changed: 'Code changed · ⌘/Ctrl + Enter to run',
     restarted: 'Bot restarted with your code',
     placeholder: 'Write a message…',
@@ -34,6 +38,10 @@ const COPY = {
     events: { media: 'Image', voice: 'Voice note', document: 'Document', location: 'Location' },
     logIn: 'in',
     logOut: 'out',
+    published: (latest, engine) =>
+      latest === engine
+        ? `Playground runs @builderbot/bot ${engine}, the current npm release`
+        : `Playground runs @builderbot/bot ${engine}; npm has ${latest}. Run pnpm sync:playground to update it`,
   },
   es: {
     examples: 'Ejemplos',
@@ -42,7 +50,7 @@ const COPY = {
     docs: 'Ver la documentación',
     editor: 'Código del flujo',
     log: 'Log del motor',
-    running: `@builderbot/bot ${BOT_VERSION} · en marcha`,
+    running: (version) => `@builderbot/bot ${version} · en marcha`,
     changed: 'El código cambió · ⌘/Ctrl + Enter para ejecutar',
     restarted: 'Bot reiniciado con tu código',
     placeholder: 'Escribe un mensaje…',
@@ -55,6 +63,10 @@ const COPY = {
     events: { media: 'Imagen', voice: 'Nota de voz', document: 'Documento', location: 'Ubicación' },
     logIn: 'entra',
     logOut: 'sale',
+    published: (latest, engine) =>
+      latest === engine
+        ? `El playground corre @builderbot/bot ${engine}, la versión actual en npm`
+        : `El playground corre @builderbot/bot ${engine}; en npm hay ${latest}. Ejecuta pnpm sync:playground para actualizarlo`,
   },
   pt: {
     examples: 'Exemplos',
@@ -63,7 +75,7 @@ const COPY = {
     docs: 'Ler a documentação',
     editor: 'Código do fluxo',
     log: 'Log do motor',
-    running: `@builderbot/bot ${BOT_VERSION} · rodando`,
+    running: (version) => `@builderbot/bot ${version} · rodando`,
     changed: 'O código mudou · ⌘/Ctrl + Enter para executar',
     restarted: 'Bot reiniciado com o seu código',
     placeholder: 'Escreva uma mensagem…',
@@ -76,6 +88,10 @@ const COPY = {
     events: { media: 'Imagem', voice: 'Nota de voz', document: 'Documento', location: 'Localização' },
     logIn: 'entra',
     logOut: 'sai',
+    published: (latest, engine) =>
+      latest === engine
+        ? `O playground roda @builderbot/bot ${engine}, a versão atual no npm`
+        : `O playground roda @builderbot/bot ${engine}; no npm há ${latest}. Rode pnpm sync:playground para atualizá-lo`,
   },
 }
 
@@ -279,7 +295,7 @@ export function Playground({ locale = 'en', example = EXAMPLES[0].id, single = f
             trace('out', [JSON.stringify(message), ...extras.filter(Boolean)].join('  '))
           },
         })
-        trace('info', `createBot · ${t.running}`)
+        trace('info', `createBot · ${t.running(BOT_VERSION)}`)
       } catch (error) {
         fail(error.message)
       }
@@ -332,8 +348,11 @@ export function Playground({ locale = 'en', example = EXAMPLES[0].id, single = f
     <section className="not-prose my-10 flex flex-col gap-4 lg:!mx-0 lg:!max-w-none">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-3">
         <span className={clsx('text-bb-mute', KICKER)}>Playground</span>
-        <span className={clsx('rounded-full px-1.5 py-0.5 text-[9.5px] text-bb-mute ring-1 ring-inset ring-bb-line2', KICKER)}>
-          @builderbot/bot {BOT_VERSION}
+        <span
+          title={t.published(LATEST_BOT, BOT_VERSION)}
+          className={clsx('rounded-full px-1.5 py-0.5 text-[9.5px] text-bb-mute ring-1 ring-inset ring-bb-line2', KICKER)}
+        >
+          @builderbot/bot {LATEST_BOT}
         </span>
         {!single && (
           <>
@@ -417,7 +436,7 @@ export function Playground({ locale = 'en', example = EXAMPLES[0].id, single = f
                 dirty ? 'text-amber-400' : 'text-[#6c6b64]'
               )}
             >
-              {dirty ? t.changed : t.running}
+              {dirty ? t.changed : t.running(BOT_VERSION)}
             </span>
             <button
               type="button"
