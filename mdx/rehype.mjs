@@ -145,8 +145,24 @@ function getSections(node) {
   return sections
 }
 
+/** Markdown tables scroll inside their own box instead of widening the page on small screens. */
+function rehypeWrapTables() {
+  return (tree) => {
+    visit(tree, 'element', (node, index, parent) => {
+      if (node.tagName !== 'table' || !parent || parent.properties?.className?.includes('bb-table-scroll')) return
+      parent.children[index] = {
+        type: 'element',
+        tagName: 'div',
+        properties: { className: ['bb-table-scroll', 'overflow-x-auto'] },
+        children: [node],
+      }
+    })
+  }
+}
+
 export const rehypePlugins = [
   mdxAnnotations.rehype,
+  rehypeWrapTables,
   rehypeParseCodeBlocks,
   rehypeShiki,
   rehypeSlugify,

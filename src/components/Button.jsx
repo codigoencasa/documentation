@@ -36,7 +36,7 @@ export function Button({
   let Component = props.href ? Link : 'button'
 
   className = cn(
-    'inline-flex gap-0.5 justify-center overflow-hidden text-sm font-medium transition',
+    'inline-flex max-w-full items-center gap-0.5 justify-center overflow-hidden whitespace-nowrap text-sm font-medium transition',
     variantStyles[variant],
     className
   )
@@ -44,7 +44,7 @@ export function Button({
   let arrowIcon = (
     <ArrowIcon
       className={cn(
-        'mt-0.5 h-5 w-5',
+        'h-5 w-5 flex-none',
         variant === 'text' && 'relative top-px',
         arrow === 'left' && '-ml-1 rotate-180',
         arrow === 'right' && '-mr-1'
@@ -55,7 +55,7 @@ export function Button({
   return (
     <Component className={className} {...props}>
       {arrow === 'left' && arrowIcon}
-      {children}
+      <span className="min-w-0 truncate">{children}</span>
       {arrow === 'right' && arrowIcon}
     </Component>
   )

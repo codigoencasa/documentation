@@ -48,6 +48,18 @@ module.exports = {
           l2: v('l2'),
           l3: v('l3'),
           pink: '#db2777',
+          // Terminal demo tokens (theme-aware)
+          'term-bg': v('term-bg'),
+          'term-fg': v('term-fg'),
+          'term-mute': v('term-mute'),
+          'term-line': v('term-line'),
+          'term-dot': v('term-dot'),
+          'term-gray': v('term-gray'),
+          'term-cyan': v('term-cyan'),
+          'term-green': v('term-green'),
+          'term-magenta': v('term-magenta'),
+          'term-yellow': v('term-yellow'),
+          'term-chipfg': v('term-chipfg'),
         },
       },
       fontWeight: {

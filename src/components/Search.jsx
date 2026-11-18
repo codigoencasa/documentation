@@ -315,7 +315,7 @@ function SearchButton(props) {
       </button>
       <button
         type="button"
-        className="flex h-10 w-10 items-center justify-center rounded-full text-bb-ink transition hover:bg-bb-chip lg:hidden focus:[&:not(:focus-visible)]:outline-none"
+        className="flex h-11 w-11 items-center justify-center rounded-full text-bb-ink transition hover:bg-bb-chip lg:hidden focus:[&:not(:focus-visible)]:outline-none"
         aria-label="Search the documentation"
         {...props}
       >
@@ -503,7 +503,7 @@ export function MobileSearch() {
     <div className="contents lg:hidden">
       <button
         type="button"
-        className="flex h-10 w-10 items-center justify-center rounded-full text-bb-ink transition hover:bg-bb-chip lg:hidden focus:[&:not(:focus-visible)]:outline-none"
+        className="flex h-11 w-11 items-center justify-center rounded-full text-bb-ink transition hover:bg-bb-chip lg:hidden focus:[&:not(:focus-visible)]:outline-none"
         aria-label="Search the documentation"
         {...buttonProps}
       >

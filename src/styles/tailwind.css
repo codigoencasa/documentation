@@ -52,6 +52,21 @@
     --bb-glow: 0.4;
   }
 
+  /* Terminal demo: always dark, in both themes (like the code panels) */
+  :root {
+    --bb-term-bg: 14 15 17;
+    --bb-term-fg: 236 235 228;
+    --bb-term-mute: 154 153 143;
+    --bb-term-line: 42 43 48;
+    --bb-term-dot: 58 59 64;
+    --bb-term-gray: 108 107 100;
+    --bb-term-cyan: 34 211 238;
+    --bb-term-green: 74 222 128;
+    --bb-term-magenta: 192 132 252;
+    --bb-term-yellow: 251 191 36;
+    --bb-term-chipfg: 11 11 12;
+  }
+
   /* Dark theme tokens */
   .dark {
     --bb-bg: 17 18 20;
@@ -363,5 +378,11 @@
   }
   .bb-gcard {
     transition: none;
+  }
+}
+
+@keyframes bb-blink {
+  50% {
+    opacity: 0;
   }
 }

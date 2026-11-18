@@ -1,0 +1,97 @@
+# BuilderBot
+
+> BuilderBot is a free, open-source TypeScript and JavaScript framework for building automated chatbots and conversational agents across WhatsApp (Baileys, Meta Cloud API, Twilio, Venom, WPPConnect), Telegram, and other messaging channels with pluggable database adapters (Memory, JSON, MongoDB, MySQL, PostgreSQL).
+
+Key facts for coding agents and LLMs:
+
+- **Scaffold a new project:** `pnpm create builderbot@latest` or `npm create builderbot@latest` (requires Node.js >= 20 and Git).
+- **Core package:** `@builderbot/bot` — exports `createBot`, `createFlow`, `createProvider`, `addKeyword`, `addAnswer`, `EVENTS`, `MemoryDB`.
+- **Three core primitives:** **Flow** (conversation steps built with `addKeyword(...).addAnswer(...).addAction(...)`), **Provider** (channel adapter such as `@builderbot/provider-baileys`, `@builderbot/provider-meta`, `@builderbot/provider-twilio`), and **Database** (`@builderbot/database-memory`, `@builderbot/database-json`, `@builderbot/database-mongo`, `@builderbot/database-mysql`, `@builderbot/database-postgres`).
+- **Markdown endpoints:** Every documentation page has a clean Markdown counterpart at `<url>.md` (for example, `https://www.builderbot.app/en/quickstart.md`).
+- **Context bundles:** Curated core context at [https://www.builderbot.app/llms-ctx.txt](https://www.builderbot.app/llms-ctx.txt) and complete documentation corpus at [https://www.builderbot.app/llms-full.txt](https://www.builderbot.app/llms-full.txt).
+- **Localized indexes:** [English (https://www.builderbot.app/en/llms.txt)](https://www.builderbot.app/en/llms.txt) · [Español (https://www.builderbot.app/es/llms.txt)](https://www.builderbot.app/es/llms.txt) · [Português (https://www.builderbot.app/pt/llms.txt)](https://www.builderbot.app/pt/llms.txt).
+
+## Start here
+
+- [Get started with BuilderBot](https://www.builderbot.app/en/index.md): BuilderBot With this library, you can set up automated responses to frequently asked questions, receive and respond to messages in an automated way, and track customer interactions. In addition, our Chatbot integrates...
+- [Quickstart](https://www.builderbot.app/en/quickstart.md): Creating a bot is as simple as running the following command and following the instructions
+- [Why BuilderBot?](https://www.builderbot.app/en/concepts.md): BuilderBot is the framework for the creation of ChatBots focused on low-frequency communication channels, whatsapp, telegram, etc. We implement an architecture focused on improving the developer experience and the reuse...
+- [Examples](https://www.builderbot.app/en/uses-cases.md): Below you will find different examples showing the implementation in different use cases. These examples have been compiled based on the community, feel free to post an example that you like or that you think would be...
+- [Playground](https://www.builderbot.app/en/playground.md): Write BuilderBot flows with addKeyword, addAnswer and addAction and chat with them in the browser, powered by the real @builderbot/bot core.
+
+## Basics
+
+- [Add keyword](https://www.builderbot.app/en/add-functions.md): addKeyword is the starting point of a conversation flow, just need to pass an array of keywords, when someone text those keywords in the chatbot, the function will trigger the predefined dialog you have set up.
+- [Context](https://www.builderbot.app/en/context.md): The "context" object is a key component within the framework that provides developers with access to essential information about the ongoing interaction between the user and the bot. This information includes default...
+- [Methods](https://www.builderbot.app/en/methods.md): Inside each addAction or addAnswer we can execute logic and we can make use of some methods that will facilitate the development.
+- [Events](https://www.builderbot.app/en/events.md): Sometimes users send messages such as an image, a video or special location messages, among others, to receive and start a conversation when a message of this type arrives we can use the events.
+- [Errors](https://www.builderbot.app/en/errors.md): This error occurs when you're using handleCtx, which is a method responsible for handling and checking if the session instantiation is correct. Possible causes of this error are:
+
+## Databases
+
+- [Databases](https://www.builderbot.app/en/databases.md): Just as providers can be easily exchanged between adapters, we can do the same with the database. Now the important thing to understand is how it works. The main purpose of the database inside the bot is to provide the...
+- [Memory](https://www.builderbot.app/en/databases/memory.md): Official BuilderBot guide for Memory: TypeScript and JavaScript examples for WhatsApp and Telegram chatbots.
+- [Supabase Uses Cases](https://www.builderbot.app/en/databases/postgres/uses-cases.md): Connect to your Cloud Supabase database
+- [Getting Starter](https://www.builderbot.app/en/databases/postgres/uses-cases/uses-cases-supabase.md): Postgres database supports other types of connections as in this case it is Supabase, let's take a quick tour on the Supabase platform to get our database credentials
+
+## Providers
+
+- [Providers](https://www.builderbot.app/en/providers.md): Providers are in charge of providing the communication bridge between your bot and whatsapp, telegram or custom provider.
+- [Baileys Provider](https://www.builderbot.app/en/providers/baileys.md): The Baileys library originated as a project for CS-2362 at Ashoka University and is not affiliated with or endorsed by WhatsApp. Use it at your own discretion and avoid spamming individuals. We discourage the use of...
+- [Blocked Users on BOT](https://www.builderbot.app/en/providers/baileys/blocked-users.md): To check the blocked users on the BOT, you should use the 'fetchBlocklist()' method of the provider. This method has the following signature:
+- [Delete Bot Message](https://www.builderbot.app/en/providers/baileys/delete-bot-message.md): We can use the sendMessage method to delete a message sent by the bot. This method has the following signature:
+- [Contacts on BOT](https://www.builderbot.app/en/providers/baileys/delete-on-bot.md): From the adapterProvider, we can utilize the store property to fetch all contacts, store them in a variable, and subsequently display them to the user. This property has the following signature:
+- [External API Call](https://www.builderbot.app/en/providers/baileys/external-api.md): Firstly, let's create a script named 'getjoke.ts' inside a folder called 'services'. This script will handle the API call to the external service and return the response. Then, in our 'app.ts', we import it, make the...
+- [Fetch Status](https://www.builderbot.app/en/providers/baileys/fetchStatus.md): This method has the following signature:
+- [Basic Menu](https://www.builderbot.app/en/providers/baileys/menu.md): Basic menu navigating to two sub-menus with the option to return to the main menu.
+- [Meta Provider](https://www.builderbot.app/en/providers/meta.md): The WhatsApp Business Platform allows medium and large businesses to communicate with their customers on a large scale. You can start conversations with customers in just a few minutes, send them customer service...
+- [Meta Uses Cases](https://www.builderbot.app/en/providers/meta/uses-cases.md): There are several features that the default provider does not provide and you can create them along the way
+- [Twilio Provider](https://www.builderbot.app/en/providers/twilio.md): Twilio is a development platform that enables developers to build cloud communication applications and web systems. Twilio's communication APIs empower businesses to provide the appropriate communication experience for...
+- [Twilio Uses Cases](https://www.builderbot.app/en/providers/twilio/uses-cases.md): Official BuilderBot guide for Twilio Uses Cases: TypeScript and JavaScript examples for WhatsApp and Telegram chatbots.
+- [Twilio Setup](https://www.builderbot.app/en/providers/twilio/deploy.md): Twilio is a development platform that enables developers to build cloud communication applications and web systems. Twilio's communication APIs empower businesses to provide the appropriate communication experience for...
+- [venom](https://www.builderbot.app/en/providers/venom.md): The WhatsApp Business Platform enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service...
+- [wpp-connect](https://www.builderbot.app/en/providers/wpp-connect.md): The WhatsApp Business Platform enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service...
+
+## Deploy
+
+- [Deploying](https://www.builderbot.app/en/deploy.md): Congratulations the time has come to take your project to production and for your convenience there are several ways to achieve this from quite tenic options to other easier strategies.
+- [Railway](https://www.builderbot.app/en/deploy/railway.md): Railway provides infrastructure primitives with sane defaults to manage secrets, builds, and deploys. So you can start quickly and focus on your product.
+- [Deploy](https://www.builderbot.app/en/deploy/docker.md): In this guide, we will discuss how to create a Dockerfile and how to deploy your bot.
+- [VPS (Virtual Private Server)](https://www.builderbot.app/en/deploy/vps.md): Prioritize initiating a connection to your server using SSH or via your chosen cloud provider's preferred method. This initial step is essential to start following this entire tutorial.
+- [Deploying Your Chatbot with Meta API](https://www.builderbot.app/en/deploy/meta.md): This guide is designed for those who have already followed the official documentation at Meta Provider. It assumes that developer accounts have been created and business and app verification has been completed.
+
+## Recipes & Showcases
+
+- [Showcases](https://www.builderbot.app/en/showcases.md): Official BuilderBot guide for Showcases: TypeScript and JavaScript examples for WhatsApp and Telegram chatbots.
+- [Queue Limit](https://www.builderbot.app/en/showcases/queue-limit.md): Implement message queues for better resource management
+- [Modularize Flows](https://www.builderbot.app/en/showcases/modularize.md): As our projects grow we will need to implement a better way to maintain the project, in this case it is highly recommended to implement a module view.
+- [Fast Entries](https://www.builderbot.app/en/showcases/fast-entires.md): For this type of environment, we've implemented an enhanced functionality that introduces a margin of 3000ms for the user to write messages. Each time a user writes a message within this 3000ms window, it accumulates...
+- [Idle](https://www.builderbot.app/en/showcases/idle-optional.md): The inactivity of flows in our business logic can become a nuisance, that is why we share the following resources as an alternative solution to this situation.
+- [Scheduled Reboots](https://www.builderbot.app/en/showcases/docker-pm2.md): When using the free providers we will need to restart the bot to avoid accumulating temporary data that may affect its performance. In that case an easy solution to implement is to schedule restarts, these restarts will...
+- [Incoming and outgoing messages](https://www.builderbot.app/en/showcases/event-in-out-messages.md): In the example below we show a code which you can execute and observe the messages in the console. The objective is to capture the incoming and outgoing message from the bot.
+- [Reminder (cron)](https://www.builderbot.app/en/showcases/cron-reminder.md): For this we will need to install some dependencies that will facilitate the work of the scheduled tasks, we will use node-cron below you will find the instructions on how to install install
+- [Forward conversation to human](https://www.builderbot.app/en/showcases/forward-conversation-to-human.md): In this example let's imagine that the bot number is ADMINNUMBER the idea is that if a user writes me the bot will answer this is correct, but I want to pause the bot for that user, what I do is write to my own number...
+- [How to Use GotoFlow?](https://www.builderbot.app/en/showcases/gotoflow-use.md): A possible solution is to make use of the gotoFlow to be able to divert the logic depending on the response of the http request to be able to verify if the user is registered in the database or is a new user. registered...
+- [Multiple messages](https://www.builderbot.app/en/showcases/multiple-messages.md): Implement a debounce decorator to prevent the bot from responding multiple times in a short period of time
+
+## Tutorials
+
+- [Tutorials](https://www.builderbot.app/en/tutorials.md): Official BuilderBot guide for Tutorials: TypeScript and JavaScript examples for WhatsApp and Telegram chatbots.
+- [Migrating from bot-whatsapp to builderbot: A Simple Guide](https://www.builderbot.app/en/tutorials/migrate-to-builderbot.md): builderbot is the next evolution of bot-whatsapp, maintaining 99% compatibility while introducing significant improvements. This guide will walk you through the straightforward migration process.
+- [How to implement a REST API?](https://www.builderbot.app/en/tutorials/api-use.md): In many occasions we need to send a message via HTTP request is very useful to send reminders or order confirmations. In this case each provider implements a handleCtx function which allows you to inject the bot...
+- [Chatbot with Context](https://www.builderbot.app/en/tutorials/chatbot-with-gemini.md): Implement context for your chatbot solution
+- [Langchain](https://www.builderbot.app/en/tutorials/langchain.md): When we want something more personality and intelligence in our assistants, the first thing we think about is Openai, what if I tell you that there is a simple way to get the most out of your LLM?
+
+## Plugins
+
+- [CONTRIBUTING](https://www.builderbot.app/en/plugins.md): Contributing with us, join and coding side to side a great community
+- [Telegram](https://www.builderbot.app/en/plugins/telegram.md): Telegram is a user-friendly provider, in this article you will learn how to integrate your Telegram bots with the library.
+- [Shopify](https://www.builderbot.app/en/plugins/shopify.md): Learn how to implement your own Shopify bot to assist your store's customers and take care of sales
+- [OpenAi Plugin](https://www.builderbot.app/en/plugins/agents.md): Install the library to make use of OpenAI:
+- [Builderbot x Langchain](https://www.builderbot.app/en/plugins/langchain.md): This is a series of utilities that use AI based on the langchain framework
+
+## Optional
+
+- [Contribute](https://www.builderbot.app/en/contribute.md): Welcome to the BuilderBot Contribution Guide We're glad to have you here.
+- [Core](https://www.builderbot.app/en/contribute/core.md): Official BuilderBot guide for Core: TypeScript and JavaScript examples for WhatsApp and Telegram chatbots.
+- [BuilderBot Brand Guidelines and Assets](https://www.builderbot.app/en/resources.md): Brand guidelines and assets for using Instagram logos and resources.

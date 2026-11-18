@@ -1,0 +1,257 @@
+{
+  "/": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/add-functions": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/attachments": [
+    "pt"
+  ],
+  "/concepts": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/contacts": [
+    "es",
+    "pt"
+  ],
+  "/context": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/contribute": [
+    "en"
+  ],
+  "/contribute/core": [
+    "en"
+  ],
+  "/conversations": [
+    "es",
+    "pt"
+  ],
+  "/databases": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/databases/memory": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/databases/postgres/uses-cases": [
+    "en"
+  ],
+  "/databases/postgres/uses-cases/uses-cases-supabase": [
+    "en"
+  ],
+  "/deploy": [
+    "en"
+  ],
+  "/deploy/docker": [
+    "en"
+  ],
+  "/deploy/meta": [
+    "en"
+  ],
+  "/deploy/railway": [
+    "en"
+  ],
+  "/deploy/vps": [
+    "en"
+  ],
+  "/errors": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/events": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/groups": [
+    "es",
+    "pt"
+  ],
+  "/messages": [
+    "es",
+    "pt"
+  ],
+  "/methods": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/playground": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/plugins": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/plugins/agents": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/plugins/langchain": [
+    "en"
+  ],
+  "/plugins/shopify": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/plugins/telegram": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/providers": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/providers/baileys": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/providers/baileys/blocked-users": [
+    "en"
+  ],
+  "/providers/baileys/delete-bot-message": [
+    "en"
+  ],
+  "/providers/baileys/delete-on-bot": [
+    "en"
+  ],
+  "/providers/baileys/external-api": [
+    "en"
+  ],
+  "/providers/baileys/fetchStatus": [
+    "en"
+  ],
+  "/providers/baileys/menu": [
+    "en"
+  ],
+  "/providers/meta": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/providers/meta/uses-cases": [
+    "en"
+  ],
+  "/providers/twilio": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/providers/twilio/deploy": [
+    "en"
+  ],
+  "/providers/twilio/uses-cases": [
+    "en"
+  ],
+  "/providers/venom": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/providers/wpp-connect": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/quickstart": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/resources": [
+    "en"
+  ],
+  "/showcases": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/showcases/api-use": [
+    "es",
+    "pt"
+  ],
+  "/showcases/cron-reminder": [
+    "en"
+  ],
+  "/showcases/docker-pm2": [
+    "en"
+  ],
+  "/showcases/event-in-out-messages": [
+    "en"
+  ],
+  "/showcases/fast-entires": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/showcases/forward-conversation-to-human": [
+    "en"
+  ],
+  "/showcases/gotoflow-use": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/showcases/idle-optional": [
+    "en"
+  ],
+  "/showcases/modularize": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/showcases/multiple-messages": [
+    "en"
+  ],
+  "/showcases/queue-limit": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/tutorials": [
+    "en"
+  ],
+  "/tutorials/api-use": [
+    "en"
+  ],
+  "/tutorials/chatbot-with-gemini": [
+    "en"
+  ],
+  "/tutorials/langchain": [
+    "en"
+  ],
+  "/tutorials/migrate-to-builderbot": [
+    "en"
+  ],
+  "/uses-cases": [
+    "en",
+    "es",
+    "pt"
+  ],
+  "/webhooks": [
+    "es",
+    "pt"
+  ]
+}

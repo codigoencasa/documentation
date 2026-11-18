@@ -59,7 +59,7 @@ export const Header = forwardRef(function Header({ className }, ref) {
         </Link>
         <Search />
         <span className="flex-1" />
-        <nav aria-label="Main" className="hidden lg:block">
+        <nav aria-label="Main" className="hidden xl:block">
           <ul role="list" className="flex items-center gap-5">
             <TopLevelNavItem href={`/${locale}`} current>Documentation</TopLevelNavItem>
             <TopLevelNavItem href={`/${locale}/tutorials/api-use`}>API</TopLevelNavItem>
@@ -94,7 +94,7 @@ export const Header = forwardRef(function Header({ className }, ref) {
         </div>
         <Link
           href="https://builderbot.cloud"
-          className="hidden h-10 items-center rounded-full bg-bb-btn px-5 text-[13px] text-bb-btnfg transition hover:opacity-90 sm:inline-flex"
+          className="hidden h-10 items-center whitespace-nowrap rounded-full bg-bb-btn px-5 text-[13px] text-bb-btnfg transition hover:opacity-90 sm:inline-flex"
         >
           Get started
         </Link>

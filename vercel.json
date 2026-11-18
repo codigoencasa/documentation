@@ -1,4 +1,4 @@
 {
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "buildCommand": "node scripts/generate-seo.mjs && next build"
 }
-

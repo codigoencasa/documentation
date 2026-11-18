@@ -7,7 +7,7 @@ import { Tag } from '@/components/Tag'
 
 // Icon per documentation page (icon set: src/components/Icon.jsx)
 const navIcons = {
-  '/': 'book', '/quickstart': 'bolt', '/concepts': 'blocks', '/uses-cases': 'examples',
+  '/': 'book', '/quickstart': 'bolt', '/concepts': 'blocks', '/uses-cases': 'examples', '/playground': 'play',
   '/add-functions': 'functions', '/context': 'context', '/methods': 'terminal', '/events': 'events',
   '/databases': 'database',
   '/providers/meta': 'cloud', '/providers/twilio': 'phone', '/providers/baileys': 'qr',
@@ -38,21 +38,23 @@ function TopLevelNavItem({ href, children, target }) {
   )
 }
 
-function NavLink({ href, tag, active, icon, children }) {
+function NavLink({ href, tag, active, icon, collapsed, children }) {
   return (
     <Link
       href={href}
       aria-current={active ? 'page' : undefined}
+      title={collapsed ? children : undefined}
       className={clsx(
-        'flex items-center gap-2.5 py-1 pl-3 pr-3 text-[13.5px] transition',
+        'flex items-center gap-2.5 text-[13.5px] transition',
+        collapsed ? 'h-9 justify-center' : 'py-1 pl-3 pr-3',
         active
           ? 'rounded-r-lg bg-gradient-to-r from-bb-l2/15 to-transparent font-medium text-bb-head shadow-[inset_2px_0_0_rgb(var(--bb-l2))]'
           : 'rounded-lg text-bb-ink2 hover:text-bb-head'
       )}
     >
       {icon && <Icon name={icon} size={16} className={active ? 'text-bb-l2' : 'text-bb-mute'} />}
-      <span className="flex-1 truncate">{children}</span>
-      {tag && (
+      <span className={collapsed ? 'sr-only' : 'flex-1 truncate'}>{children}</span>
+      {tag && !collapsed && (
         <Tag variant="small" color="zinc">
           {tag}
         </Tag>
@@ -65,20 +67,21 @@ function parseLocation({ link, pathname }) {
   return link === (pathname.slice(3) || '/')
 }
 
-function NavigationGroup({ group, className }) {
+function NavigationGroup({ group, className, collapsed }) {
   let router = useRouter()
   let locale = (router.asPath.split('/')[1] || 'en').toLowerCase()
 
   return (
-    <li className={clsx('relative mt-6', className)}>
-      <h2 className="bb-kicker">{group.title}</h2>
-      <ul role="list" className="mt-2 flex flex-col gap-0.5">
+    <li className={clsx('relative', collapsed ? 'mt-3 border-t border-bb-line pt-3 first:border-0 first:pt-0' : 'mt-6', className)}>
+      <h2 className={collapsed ? 'sr-only' : 'bb-kicker'}>{group.title}</h2>
+      <ul role="list" className={clsx('flex flex-col gap-0.5', !collapsed && 'mt-2')}>
         {group.links.map((link) => (
           <li key={link.href}>
             <NavLink
               href={`/${locale}${link.href === '/' ? '' : link.href}`}
               active={parseLocation({ link: link.href, pathname: router.pathname })}
               icon={navIcons[link.href]}
+              collapsed={collapsed}
             >
               {link.title}
             </NavLink>
@@ -97,6 +100,7 @@ export const navigation = [
       { title: 'Quickstart', href: '/quickstart' },
       { title: 'Concepts', href: '/concepts' },
       { title: 'Examples', href: '/uses-cases' },
+      { title: 'Playground', href: '/playground' },
     ],
   },
   {
@@ -176,7 +180,7 @@ export const navigation = [
   },
 ]
 
-export function Navigation(props) {
+export function Navigation({ collapsed = false, ...props }) {
   return (
     <nav {...props}>
       <ul role="list">
@@ -189,7 +193,8 @@ export function Navigation(props) {
           <NavigationGroup
             key={group.title}
             group={group}
-            className={groupIndex === 0 && 'lg:mt-0'}
+            collapsed={collapsed}
+            className={groupIndex === 0 && (collapsed ? 'lg:mt-0' : 'lg:mt-0 lg:pt-6')}
           />
         ))}
       </ul>

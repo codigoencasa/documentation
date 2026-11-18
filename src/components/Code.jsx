@@ -110,7 +110,7 @@ function CodePanelHeader({ tag, label }) {
         <span className="h-0.5 w-0.5 rounded-full bg-[#6c6b64]" />
       )}
       {label && (
-        <span className="font-mono text-xs text-[#9a998f]">{label}</span>
+        <span className="min-w-0 truncate font-mono text-xs text-[#9a998f]">{label}</span>
       )}
     </div>
   )
@@ -141,18 +141,18 @@ function CodeGroupHeader({ title, children, selectedIndex }) {
   }
 
   return (
-    <div className="flex min-h-[calc(theme(spacing.12)+1px)] flex-wrap items-center gap-x-4 border-b border-[#2a2b30] px-3">
+    <div className="flex min-h-[calc(theme(spacing.12)+1px)] min-w-0 items-center gap-x-4 border-b border-[#2a2b30] px-3">
       {title && (
-        <h3 className="mr-auto pl-1 font-mono text-xs font-medium text-[#ecebe2]">
+        <h3 className="mr-auto min-w-0 truncate pl-1 font-mono text-xs font-medium text-[#ecebe2]" title={typeof title === 'string' ? title : undefined}>
           {title}
         </h3>
       )}
       {hasTabs && (
-        <Tab.List className="flex gap-1 py-2 font-mono text-xs font-medium">
+        <Tab.List className="-mx-3 flex min-w-0 max-w-[calc(100%+1.5rem)] gap-1 overflow-x-auto px-3 py-2 font-mono text-xs font-medium [mask-image:linear-gradient(90deg,#000_calc(100%-20px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {Children.map(children, (child, childIndex) => (
             <Tab
               className={cn(
-                'h-[30px] rounded-lg px-3 transition focus:[&:not(:focus-visible)]:outline-none',
+                'h-7 flex-none whitespace-nowrap rounded-lg px-3 transition focus:[&:not(:focus-visible)]:outline-none',
                 childIndex === selectedIndex
                   ? 'bg-[#2b2c31] text-[#ecebe2]'
                   : 'text-[#9a998f] hover:text-[#ecebe2]'

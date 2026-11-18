@@ -41,12 +41,12 @@ export function PageHeader({ title, sourcePath }) {
           type="button"
           onClick={open}
           aria-label="Open documentation menu"
-          className="mb-8 flex h-12 w-full items-center gap-2.5 rounded-xl bg-bb-bg2 px-4 text-sm text-bb-ink ring-1 ring-inset ring-bb-line lg:hidden"
+          className="mb-8 flex h-11 w-full items-center gap-2.5 rounded-full bg-bb-bg2 px-4 text-sm text-bb-ink ring-1 ring-inset ring-bb-line lg:hidden"
         >
           <MenuIcon className="text-bb-mute" />
-          <span className="text-bb-mute">{current.group}</span>
-          <span aria-hidden="true" className="text-bb-soft">/</span>
-          <span className="truncate text-bb-head">{current.page}</span>
+          <span className="min-w-0 shrink-[3] truncate text-bb-mute">{current.group}</span>
+          <span aria-hidden="true" className="flex-none text-bb-soft">/</span>
+          <span className="min-w-0 truncate text-bb-head">{current.page}</span>
           <span aria-hidden="true" className="ml-auto text-bb-mute">⌄</span>
         </button>
       )}
@@ -83,12 +83,12 @@ export function Award({ href, children }) {
     <Link
       href={href}
       target="_blank"
-      className="not-prose inline-flex items-center gap-2 rounded-full bg-bb-head/[0.06] py-1 pl-1 pr-3 text-[13px] font-normal text-bb-ink no-underline ring-1 ring-inset ring-bb-line transition hover:ring-bb-line2"
+      className="not-prose inline-flex max-w-full items-center gap-2 rounded-full bg-bb-head/[0.06] py-1 pl-1 pr-3 text-[13px] font-normal text-bb-ink no-underline ring-1 ring-inset ring-bb-line transition hover:ring-bb-line2"
     >
-      <span className="rounded-full bg-[linear-gradient(90deg,#22d3ee,#818cf8_50%,#c084fc)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[#0b0b0c]">
+      <span className="flex-none whitespace-nowrap rounded-full bg-[linear-gradient(90deg,#22d3ee,#818cf8_50%,#c084fc)] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[#0b0b0c]">
         1ST PRIZE
       </span>
-      {children}
+      <span className="min-w-0 truncate">{children}</span>
     </Link>
   )
 }

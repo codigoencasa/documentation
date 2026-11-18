@@ -1,0 +1,502 @@
+{
+  "/en/add-functions": {
+    "title": "Add keyword",
+    "description": "addKeyword is the starting point of a conversation flow, just need to pass an array of keywords, when someone text those keywords in the chatbot, the function will trigger the predefined dialog you have set up."
+  },
+  "/en/concepts": {
+    "title": "Why BuilderBot?",
+    "description": "BuilderBot is the framework for the creation of ChatBots focused on low-frequency communication channels, whatsapp, telegram, etc. We implement an architecture focused on improving the developer experience and the reuse..."
+  },
+  "/en/context": {
+    "title": "Context",
+    "description": "The \"context\" object is a key component within the framework that provides developers with access to essential information about the ongoing interaction between the user and the bot. This information includes default..."
+  },
+  "/en/contribute/core": {
+    "title": "Core",
+    "description": "Official BuilderBot guide for Core: TypeScript and JavaScript examples for WhatsApp and Telegram chatbots."
+  },
+  "/en/contribute": {
+    "title": "Contribute",
+    "description": "Welcome to the BuilderBot Contribution Guide We're glad to have you here."
+  },
+  "/en/databases": {
+    "title": "Databases",
+    "description": "Just as providers can be easily exchanged between adapters, we can do the same with the database. Now the important thing to understand is how it works. The main purpose of the database inside the bot is to provide the..."
+  },
+  "/en/databases/memory": {
+    "title": "Memory",
+    "description": "Official BuilderBot guide for Memory: TypeScript and JavaScript examples for WhatsApp and Telegram chatbots."
+  },
+  "/en/databases/postgres/uses-cases": {
+    "title": "Supabase Uses Cases",
+    "description": "Connect to your Cloud Supabase database"
+  },
+  "/en/databases/postgres/uses-cases/uses-cases-supabase": {
+    "title": "Getting Starter",
+    "description": "Postgres database supports other types of connections as in this case it is Supabase, let's take a quick tour on the Supabase platform to get our database credentials"
+  },
+  "/en/deploy/docker": {
+    "title": "Deploy",
+    "description": "In this guide, we will discuss how to create a Dockerfile and how to deploy your bot."
+  },
+  "/en/deploy": {
+    "title": "Deploying",
+    "description": "Congratulations the time has come to take your project to production and for your convenience there are several ways to achieve this from quite tenic options to other easier strategies."
+  },
+  "/en/deploy/meta": {
+    "title": "Deploying Your Chatbot with Meta API",
+    "description": "This guide is designed for those who have already followed the official documentation at Meta Provider. It assumes that developer accounts have been created and business and app verification has been completed."
+  },
+  "/en/deploy/railway": {
+    "title": "Railway",
+    "description": "Railway provides infrastructure primitives with sane defaults to manage secrets, builds, and deploys. So you can start quickly and focus on your product."
+  },
+  "/en/deploy/vps": {
+    "title": "VPS (Virtual Private Server)",
+    "description": "Prioritize initiating a connection to your server using SSH or via your chosen cloud provider's preferred method. This initial step is essential to start following this entire tutorial."
+  },
+  "/en/errors": {
+    "title": "Errors",
+    "description": "This error occurs when you're using handleCtx, which is a method responsible for handling and checking if the session instantiation is correct. Possible causes of this error are:"
+  },
+  "/en/events": {
+    "title": "Events",
+    "description": "Sometimes users send messages such as an image, a video or special location messages, among others, to receive and start a conversation when a message of this type arrives we can use the events."
+  },
+  "/en": {
+    "title": "Get started with BuilderBot",
+    "description": "BuilderBot With this library, you can set up automated responses to frequently asked questions, receive and respond to messages in an automated way, and track customer interactions. In addition, our Chatbot integrates..."
+  },
+  "/en/methods": {
+    "title": "Methods",
+    "description": "Inside each addAction or addAnswer we can execute logic and we can make use of some methods that will facilitate the development."
+  },
+  "/en/playground": {
+    "title": "Playground",
+    "description": "Write BuilderBot flows with addKeyword, addAnswer and addAction and chat with them in the browser, powered by the real @builderbot/bot core."
+  },
+  "/en/plugins/agents": {
+    "title": "OpenAi Plugin",
+    "description": "Install the library to make use of OpenAI:"
+  },
+  "/en/plugins": {
+    "title": "CONTRIBUTING",
+    "description": "Contributing with us, join and coding side to side a great community"
+  },
+  "/en/plugins/langchain": {
+    "title": "Builderbot x Langchain",
+    "description": "This is a series of utilities that use AI based on the langchain framework"
+  },
+  "/en/plugins/shopify": {
+    "title": "Shopify",
+    "description": "Learn how to implement your own Shopify bot to assist your store's customers and take care of sales"
+  },
+  "/en/plugins/telegram": {
+    "title": "Telegram",
+    "description": "Telegram is a user-friendly provider, in this article you will learn how to integrate your Telegram bots with the library."
+  },
+  "/en/providers/baileys/blocked-users": {
+    "title": "Blocked Users on BOT",
+    "description": "To check the blocked users on the BOT, you should use the 'fetchBlocklist()' method of the provider. This method has the following signature:"
+  },
+  "/en/providers/baileys/delete-bot-message": {
+    "title": "Delete Bot Message",
+    "description": "We can use the sendMessage method to delete a message sent by the bot. This method has the following signature:"
+  },
+  "/en/providers/baileys/delete-on-bot": {
+    "title": "Contacts on BOT",
+    "description": "From the adapterProvider, we can utilize the store property to fetch all contacts, store them in a variable, and subsequently display them to the user. This property has the following signature:"
+  },
+  "/en/providers/baileys/external-api": {
+    "title": "External API Call",
+    "description": "Firstly, let's create a script named 'getjoke.ts' inside a folder called 'services'. This script will handle the API call to the external service and return the response. Then, in our 'app.ts', we import it, make the..."
+  },
+  "/en/providers/baileys/fetchStatus": {
+    "title": "Fetch Status",
+    "description": "This method has the following signature:"
+  },
+  "/en/providers/baileys": {
+    "title": "Baileys Provider",
+    "description": "The Baileys library originated as a project for CS-2362 at Ashoka University and is not affiliated with or endorsed by WhatsApp. Use it at your own discretion and avoid spamming individuals. We discourage the use of..."
+  },
+  "/en/providers/baileys/menu": {
+    "title": "Basic Menu",
+    "description": "Basic menu navigating to two sub-menus with the option to return to the main menu."
+  },
+  "/en/providers": {
+    "title": "Providers",
+    "description": "Providers are in charge of providing the communication bridge between your bot and whatsapp, telegram or custom provider."
+  },
+  "/en/providers/meta": {
+    "title": "Meta Provider",
+    "description": "The WhatsApp Business Platform allows medium and large businesses to communicate with their customers on a large scale. You can start conversations with customers in just a few minutes, send them customer service..."
+  },
+  "/en/providers/meta/uses-cases": {
+    "title": "Meta Uses Cases",
+    "description": "There are several features that the default provider does not provide and you can create them along the way"
+  },
+  "/en/providers/twilio/deploy": {
+    "title": "Twilio Setup",
+    "description": "Twilio is a development platform that enables developers to build cloud communication applications and web systems. Twilio's communication APIs empower businesses to provide the appropriate communication experience for..."
+  },
+  "/en/providers/twilio": {
+    "title": "Twilio Provider",
+    "description": "Twilio is a development platform that enables developers to build cloud communication applications and web systems. Twilio's communication APIs empower businesses to provide the appropriate communication experience for..."
+  },
+  "/en/providers/twilio/uses-cases": {
+    "title": "Twilio Uses Cases",
+    "description": "Official BuilderBot guide for Twilio Uses Cases: TypeScript and JavaScript examples for WhatsApp and Telegram chatbots."
+  },
+  "/en/providers/venom": {
+    "title": "venom",
+    "description": "The WhatsApp Business Platform enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service..."
+  },
+  "/en/providers/wpp-connect": {
+    "title": "wpp-connect",
+    "description": "The WhatsApp Business Platform enables medium and large businesses to communicate with their customers on a large scale. You can initiate conversations with customers in just minutes, send them customer service..."
+  },
+  "/en/quickstart": {
+    "title": "Quickstart",
+    "description": "Creating a bot is as simple as running the following command and following the instructions"
+  },
+  "/en/resources": {
+    "title": "BuilderBot Brand Guidelines and Assets",
+    "description": "Brand guidelines and assets for using Instagram logos and resources."
+  },
+  "/en/showcases/cron-reminder": {
+    "title": "Reminder (cron)",
+    "description": "For this we will need to install some dependencies that will facilitate the work of the scheduled tasks, we will use node-cron below you will find the instructions on how to install install"
+  },
+  "/en/showcases/docker-pm2": {
+    "title": "Scheduled Reboots",
+    "description": "When using the free providers we will need to restart the bot to avoid accumulating temporary data that may affect its performance. In that case an easy solution to implement is to schedule restarts, these restarts will..."
+  },
+  "/en/showcases/event-in-out-messages": {
+    "title": "Incoming and outgoing messages",
+    "description": "In the example below we show a code which you can execute and observe the messages in the console. The objective is to capture the incoming and outgoing message from the bot."
+  },
+  "/en/showcases/fast-entires": {
+    "title": "Fast Entries",
+    "description": "For this type of environment, we've implemented an enhanced functionality that introduces a margin of 3000ms for the user to write messages. Each time a user writes a message within this 3000ms window, it accumulates..."
+  },
+  "/en/showcases/forward-conversation-to-human": {
+    "title": "Forward conversation to human",
+    "description": "In this example let's imagine that the bot number is ADMINNUMBER the idea is that if a user writes me the bot will answer this is correct, but I want to pause the bot for that user, what I do is write to my own number..."
+  },
+  "/en/showcases/gotoflow-use": {
+    "title": "How to Use GotoFlow?",
+    "description": "A possible solution is to make use of the gotoFlow to be able to divert the logic depending on the response of the http request to be able to verify if the user is registered in the database or is a new user. registered..."
+  },
+  "/en/showcases/idle-optional": {
+    "title": "Idle",
+    "description": "The inactivity of flows in our business logic can become a nuisance, that is why we share the following resources as an alternative solution to this situation."
+  },
+  "/en/showcases": {
+    "title": "Showcases",
+    "description": "Official BuilderBot guide for Showcases: TypeScript and JavaScript examples for WhatsApp and Telegram chatbots."
+  },
+  "/en/showcases/modularize": {
+    "title": "Modularize Flows",
+    "description": "As our projects grow we will need to implement a better way to maintain the project, in this case it is highly recommended to implement a module view."
+  },
+  "/en/showcases/multiple-messages": {
+    "title": "Multiple messages",
+    "description": "Implement a debounce decorator to prevent the bot from responding multiple times in a short period of time"
+  },
+  "/en/showcases/queue-limit": {
+    "title": "Queue Limit",
+    "description": "Implement message queues for better resource management"
+  },
+  "/en/tutorials/api-use": {
+    "title": "How to implement a REST API?",
+    "description": "In many occasions we need to send a message via HTTP request is very useful to send reminders or order confirmations. In this case each provider implements a handleCtx function which allows you to inject the bot..."
+  },
+  "/en/tutorials/chatbot-with-gemini": {
+    "title": "Chatbot with Context",
+    "description": "Implement context for your chatbot solution"
+  },
+  "/en/tutorials": {
+    "title": "Tutorials",
+    "description": "Official BuilderBot guide for Tutorials: TypeScript and JavaScript examples for WhatsApp and Telegram chatbots."
+  },
+  "/en/tutorials/langchain": {
+    "title": "Langchain",
+    "description": "When we want something more personality and intelligence in our assistants, the first thing we think about is Openai, what if I tell you that there is a simple way to get the most out of your LLM?"
+  },
+  "/en/tutorials/migrate-to-builderbot": {
+    "title": "Migrating from bot-whatsapp to builderbot: A Simple Guide",
+    "description": "builderbot is the next evolution of bot-whatsapp, maintaining 99% compatibility while introducing significant improvements. This guide will walk you through the straightforward migration process."
+  },
+  "/en/uses-cases": {
+    "title": "Examples",
+    "description": "Below you will find different examples showing the implementation in different use cases. These examples have been compiled based on the community, feel free to post an example that you like or that you think would be..."
+  },
+  "/es/add-functions": {
+    "title": "Features",
+    "description": "Estas son las funciones más importantes que debes aprender a la hora de crear flujos o interacciones dinámicas con el bot"
+  },
+  "/es/concepts": {
+    "title": "Concepts",
+    "description": "En esta guía, hablaremos sobre lo que sucede cuando algo sale mal mientras trabajas con la API."
+  },
+  "/es/contacts": {
+    "title": "Contacts",
+    "description": "On this page, we’ll dive into the different contact endpoints you can use to manage contacts programmatically."
+  },
+  "/es/context": {
+    "title": "Context",
+    "description": "El objeto \"context\" es un componente clave dentro del marco que brinda a los desarrolladores acceso a información esencial sobre la interacción continua entre el usuario y el bot. Esta información incluye propiedades..."
+  },
+  "/es/conversations": {
+    "title": "Conversations",
+    "description": "En esta página, profundizaremos en los diferentes puntos finales de conversación que puede usar para administrar conversaciones mediante programación."
+  },
+  "/es/databases": {
+    "title": "Databases",
+    "description": "Así como los proveedores se pueden intercambiar fácilmente entre adaptadores, podemos hacer lo mismo con la base de datos. Ahora lo importante es entender cómo funciona. El objetivo principal de la base de datos dentro..."
+  },
+  "/es/databases/memory": {
+    "title": "Memory",
+    "description": "Guía oficial de BuilderBot sobre Memory: ejemplos en TypeScript/JavaScript para bots de WhatsApp y Telegram."
+  },
+  "/es/errors": {
+    "title": "Errors",
+    "description": "Guía oficial de BuilderBot sobre Errors: ejemplos en TypeScript/JavaScript para bots de WhatsApp y Telegram."
+  },
+  "/es/events": {
+    "title": "Events",
+    "description": "En ocasiones los usuarios envían mensajes como una imagen, un video o mensajes de ubicación especial, entre otros, para recibir e iniciar una conversación cuando llega un mensaje de este tipo podemos utilizar los..."
+  },
+  "/es/groups": {
+    "title": "Groups",
+    "description": "En esta página, analizaremos los diferentes puntos finales de grupo que puede usar para administrar grupos mediante programación."
+  },
+  "/es": {
+    "title": "Introducción a BuilderBot",
+    "description": "Con esta biblioteca, puede configurar respuestas automatizadas a preguntas frecuentes, recibir y responder mensajes de forma automatizada y realizar un seguimiento de las interacciones con los clientes. Además, nuestro..."
+  },
+  "/es/messages": {
+    "title": "Messages",
+    "description": "En esta página, profundizaremos en los diferentes puntos finales de mensajes que puede usar para administrar mensajes mediante programación."
+  },
+  "/es/methods": {
+    "title": "Methods",
+    "description": "En muchas ocasiones necesitarás compartir datos entre flujos y sin importar si has modularizado tu proyecto en diferentes archivos puedes usar state en la función callback para poder acceder al estado individual de cada..."
+  },
+  "/es/playground": {
+    "title": "Playground",
+    "description": "Escribe flujos de BuilderBot con addKeyword, addAnswer y addAction y conversa con ellos en el navegador, con el núcleo real de @builderbot/bot."
+  },
+  "/es/plugins/agents": {
+    "title": "OpenAi Plugin",
+    "description": "Instala la librería para hacer uso de OpenAI:"
+  },
+  "/es/plugins": {
+    "title": "CONTRIBUTING",
+    "description": "Contribuyendo con nosotros, uniéndote y codificando lado a lado una gran comunidad"
+  },
+  "/es/plugins/shopify": {
+    "title": "Shopify",
+    "description": "Aprende a implementar tu propio bot de Shopify para ayudar a los clientes de tu tienda y encargarte de las ventas"
+  },
+  "/es/plugins/telegram": {
+    "title": "Telegram",
+    "description": "Telegram es un proveedor fácil de usar, en este artículo aprenderá cómo integrar sus bots de Telegram con la biblioteca."
+  },
+  "/es/providers/baileys": {
+    "title": "baileys",
+    "description": "La plataforma WhatsApp Business permite a medianas y grandes empresas comunicarse con sus clientes a gran escala. Puede iniciar conversaciones con los clientes en solo minutos, enviarles notificaciones de servicio al..."
+  },
+  "/es/providers": {
+    "title": "Providers",
+    "description": "Los proveedores se encargan de proporcionar el puente de comunicación entre su bot y whatsapp, telegram o proveedor personalizado."
+  },
+  "/es/providers/meta": {
+    "title": "Meta",
+    "description": "En esta guía, discutiremos qué hacer cuando algo sale mal mientras trabajamos con la API."
+  },
+  "/es/providers/twilio": {
+    "title": "Providers",
+    "description": "La plataforma WhatsApp Business permite a medianas y grandes empresas comunicarse con sus clientes a gran escala. Puede iniciar conversaciones con los clientes en solo minutos, enviarles notificaciones de servicio al..."
+  },
+  "/es/providers/venom": {
+    "title": "venom",
+    "description": "La plataforma WhatsApp Business permite a medianas y grandes empresas comunicarse con sus clientes a gran escala. Puede iniciar conversaciones con los clientes en solo minutos, enviarles notificaciones de servicio al..."
+  },
+  "/es/providers/wpp-connect": {
+    "title": "wpp-connect",
+    "description": "La plataforma WhatsApp Business permite a medianas y grandes empresas comunicarse con sus clientes a gran escala. Puede iniciar conversaciones con los clientes en solo minutos, enviarles notificaciones de servicio al..."
+  },
+  "/es/quickstart": {
+    "title": "Quickstart",
+    "description": "Crear un bot es tan sencillo como ejecutar el siguiente comando y seguir las instrucciones"
+  },
+  "/es/showcases/api-use": {
+    "title": "How to implement a REST API?",
+    "description": "En muchas ocasiones necesitamos enviar un mensaje a través de una solicitud HTTP es muy útil para enviar recordatorios o confirmaciones de pedidos. En este caso, cada proveedor implementa una función 'handleCtx' que le..."
+  },
+  "/es/showcases/fast-entires": {
+    "title": "Fast Entires",
+    "description": "Implemente colas de mensajes para una mejor administración de recursos"
+  },
+  "/es/showcases/gotoflow-use": {
+    "title": "How to use gotoFlow?",
+    "description": "GotoFlow es una funcionalidad diseñada para permitir la transición de un flujo a otro dentro de un bot de WhatsApp. Esta capacidad es particularmente útil cuando se tiene lógica de negocios distribuida en diferentes..."
+  },
+  "/es/showcases": {
+    "title": "Showcases",
+    "description": "Guía oficial de BuilderBot sobre Showcases: ejemplos en TypeScript/JavaScript para bots de WhatsApp y Telegram."
+  },
+  "/es/showcases/modularize": {
+    "title": "Modularize",
+    "description": "Implemente colas de mensajes para una mejor administración de recursos"
+  },
+  "/es/showcases/queue-limit": {
+    "title": "Queue",
+    "description": "Implemente colas de mensajes para una mejor administración de recursos"
+  },
+  "/es/uses-cases": {
+    "title": "Practices",
+    "description": "A continuación encontrará diferentes ejemplos que muestran la implementación en diferentes casos de uso. Estos ejemplos han sido compilados en base a la comunidad, siéntete libre de publicar un ejemplo que te guste o..."
+  },
+  "/es/webhooks": {
+    "title": "Webhooks",
+    "description": "Guía oficial de BuilderBot sobre Webhooks: ejemplos en TypeScript/JavaScript para bots de WhatsApp y Telegram."
+  },
+  "/pt/add-functions": {
+    "title": "Features",
+    "description": "Estas são as funções mais importantes que você deve aprender ao criar fluxos ou interações dinâmicas com o bot"
+  },
+  "/pt/attachments": {
+    "title": "Attachments",
+    "description": "Nesta página, vamos nos aprofundar nos diferentes endpoints de anexos que você pode usar para gerenciar anexos programaticamente."
+  },
+  "/pt/concepts": {
+    "title": "Concepts",
+    "description": "A biblioteca baseia-se em três componentes fundamentais para o seu correcto funcionamento: o fluxo, encarregado de construir o contexto da conversa e de oferecer uma interface amigável ao programador; o fornecedor, que..."
+  },
+  "/pt/contacts": {
+    "title": "Contacts",
+    "description": "Nesta página, vamos nos aprofundar nos diferentes endpoints de contato que você pode usar para gerenciar contatos programaticamente."
+  },
+  "/pt/context": {
+    "title": "Context",
+    "description": "O objeto \"contexto\" é um componente-chave dentro da estrutura que fornece aos desenvolvedores acesso a informações essenciais sobre a interação contínua entre o Usuário e o bot. Esta informação inclui propriedades..."
+  },
+  "/pt/conversations": {
+    "title": "Conversations",
+    "description": "Nesta página, vamos nos aprofundar nos diferentes pontos finais de conversação que você pode usar para gerenciar conversas programaticamente."
+  },
+  "/pt/databases": {
+    "title": "Databases",
+    "description": "Assim como os fornecedores podem ser facilmente trocados entre adaptadores, podemos fazer o mesmo com a base de dados. Agora, o importante a entender é como funciona. O principal objectivo do banco de dados dentro da..."
+  },
+  "/pt/databases/memory": {
+    "title": "Memory",
+    "description": "Guia oficial do BuilderBot sobre Memory: exemplos em TypeScript/JavaScript para bots de WhatsApp e Telegram."
+  },
+  "/pt/errors": {
+    "title": "Errors",
+    "description": "Guia oficial do BuilderBot sobre Errors: exemplos em TypeScript/JavaScript para bots de WhatsApp e Telegram."
+  },
+  "/pt/events": {
+    "title": "Events",
+    "description": "Às vezes, os usuários enviam mensagens como uma imagem, um vídeo ou mensagens de localização especial, entre outras, para receber e iniciar uma conversa quando chega uma mensagem desse tipo, podemos usar os eventos."
+  },
+  "/pt/groups": {
+    "title": "Groups",
+    "description": "Nesta página, vamos nos aprofundar nos diferentes endpoints de grupo que você pode usar para gerenciar grupos programaticamente."
+  },
+  "/pt": {
+    "title": "Introdução ao BuilderBot",
+    "description": "Com esta biblioteca, pode configurar respostas automatizadas a perguntas frequentes, receber e responder a mensagens de forma automatizada e acompanhar as interações com os clientes. Além disso, o nosso Chatbot..."
+  },
+  "/pt/messages": {
+    "title": "Messages",
+    "description": "Nesta página, vamos nos aprofundar nos diferentes endpoints de mensagens que você pode usar para gerenciar mensagens programaticamente."
+  },
+  "/pt/methods": {
+    "title": "Methods",
+    "description": "Em muitas ocasiões, você precisará compartilhar dados entre fluxos e não importa se modularizou seu projeto em arquivos diferentes, você pode usar o estado na função de retorno de chamada para poder acessar o estado..."
+  },
+  "/pt/playground": {
+    "title": "Playground",
+    "description": "Escreva fluxos do BuilderBot com addKeyword, addAnswer e addAction e converse com eles no navegador, com o núcleo real do @builderbot/bot."
+  },
+  "/pt/plugins/agents": {
+    "title": "OpenAi Plugin",
+    "description": "Instalar a biblioteca para fazer uso do OpenAI:"
+  },
+  "/pt/plugins": {
+    "title": "CONTRIBUTING",
+    "description": "Contribuindo connosco, juntando-se e codificando lado a lado uma grande comunidade"
+  },
+  "/pt/plugins/shopify": {
+    "title": "Shopify",
+    "description": "Saiba como implementar o seu próprio bot da Shopify para ajudar os clientes da sua loja e cuidar das vendas"
+  },
+  "/pt/plugins/telegram": {
+    "title": "Telegram",
+    "description": "O Telegram é um provedor amigável, neste artigo você aprenderá como integrar seus bots do Telegram à biblioteca."
+  },
+  "/pt/providers/baileys": {
+    "title": "baileys",
+    "description": "A plataforma WhatsApp Business permite que empresas de médio e grande porte se comuniquem com seus clientes em grande escala. Você pode iniciar conversas com os clientes em apenas alguns minutos, enviar-lhes..."
+  },
+  "/pt/providers": {
+    "title": "Providers",
+    "description": "Os provedores são responsáveis por fornecer a ponte de comunicação entre seu bot e whatsapp, telegram ou provedor personalizado."
+  },
+  "/pt/providers/meta": {
+    "title": "Meta",
+    "description": "Neste guia, discutiremos o que fazer quando algo der errado ao trabalhar com a API."
+  },
+  "/pt/providers/twilio": {
+    "title": "Providers",
+    "description": "A plataforma WhatsApp Business permite que empresas de médio e grande porte se comuniquem com seus clientes em grande escala. Você pode iniciar conversas com os clientes em apenas alguns minutos, enviar-lhes..."
+  },
+  "/pt/providers/venom": {
+    "title": "venom",
+    "description": "A plataforma WhatsApp Business permite que empresas de médio e grande porte se comuniquem com seus clientes em grande escala. Você pode iniciar conversas com os clientes em apenas alguns minutos, enviar-lhes..."
+  },
+  "/pt/providers/wpp-connect": {
+    "title": "wpp-connect",
+    "description": "A plataforma WhatsApp Business permite que empresas de médio e grande porte se comuniquem com seus clientes em grande escala. Você pode iniciar conversas com os clientes em apenas alguns minutos, enviar-lhes..."
+  },
+  "/pt/quickstart": {
+    "title": "Quickstart",
+    "description": "Este guia irá prepará-lo e pronto para usar a API do Protocolo. Abordaremos como iniciar um cliente de API e como fazer sua primeira solicitação de API."
+  },
+  "/pt/showcases/api-use": {
+    "title": "How to implement a REST API?",
+    "description": "Em muitas ocasiões, precisamos enviar uma mensagem via solicitação HTTP é muito útil para enviar lembretes ou confirmações de Pedidos. Nesse caso, cada provedor implementa uma função handleCtx que permite injetar a..."
+  },
+  "/pt/showcases/fast-entires": {
+    "title": "Fast Entires",
+    "description": "Implementar filas de mensagens para uma melhor gestão dos recursos"
+  },
+  "/pt/showcases/gotoflow-use": {
+    "title": "Como Usar GotoFlow?",
+    "description": "GotoFlow é um recurso projetado para permitir a transição de um fluxo para outro dentro de um bot do WhatsApp. Essa capacidade é particularmente útil quando se tem lógica de negócios distribuída em diferentes fluxos..."
+  },
+  "/pt/showcases": {
+    "title": "Showcases",
+    "description": "Guia oficial do BuilderBot sobre Showcases: exemplos em TypeScript/JavaScript para bots de WhatsApp e Telegram."
+  },
+  "/pt/showcases/modularize": {
+    "title": "Modularize",
+    "description": "Implementar filas de mensagens para uma melhor gestão dos recursos"
+  },
+  "/pt/showcases/queue-limit": {
+    "title": "Queue",
+    "description": "Implement message queues for better resource management"
+  },
+  "/pt/uses-cases": {
+    "title": "Practices",
+    "description": "Abaixo, você encontrará diferentes exemplos mostrando a implementação em diferentes casos de uso. Estes exemplos foram compilados com base na comunidade, sinta-se livre para postar um exemplo que você gosta ou que você..."
+  },
+  "/pt/webhooks": {
+    "title": "Webhooks",
+    "description": "Guia oficial do BuilderBot sobre Webhooks: exemplos em TypeScript/JavaScript para bots de WhatsApp e Telegram."
+  }
+}

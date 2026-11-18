@@ -31,21 +31,20 @@ export function ModeToggle() {
   function toggleMode() {
     disableTransitionsTemporarily()
 
-    let darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    let isSystemDarkMode = darkModeMediaQuery.matches
     let isDarkMode = document.documentElement.classList.toggle('dark')
 
-    if (isDarkMode === isSystemDarkMode) {
+    // Dark is the default, so only the explicit light choice is persisted
+    if (isDarkMode) {
       delete window.localStorage.isDarkMode
     } else {
-      window.localStorage.isDarkMode = isDarkMode
+      window.localStorage.isDarkMode = 'false'
     }
   }
 
   return (
     <button
       type="button"
-      className="flex h-10 w-10 items-center justify-center rounded-full text-bb-ink transition hover:bg-bb-chip"
+      className="flex h-11 w-11 items-center lg:h-10 lg:w-10 justify-center rounded-full text-bb-ink transition hover:bg-bb-chip"
       aria-label="Toggle dark mode"
       onClick={toggleMode}
     >

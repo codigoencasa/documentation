@@ -334,6 +334,12 @@ module.exports = ({ theme }) => ({
       ':is(h1, h2, h3) + *': {
         marginTop: '0',
       },
+      'h1 + h2': {
+        marginTop: theme('spacing.8'),
+      },
+      'h2 + h3': {
+        marginTop: theme('spacing.6'),
+      },
       '> :first-child': {
         marginTop: '0 !important',
       },

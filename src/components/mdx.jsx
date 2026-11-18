@@ -9,6 +9,7 @@ import { Modal } from '@/components/Modal'
 export const a = Link
 export { Button } from '@/components/Button'
 export { Award } from '@/components/PageHeader'
+export { TerminalDemo } from '@/components/TerminalDemo'
 export { CodeGroup, Code as code, Pre as pre } from '@/components/Code'
 
 /** Frame around mermaid diagrams; colors are set in .bb-mermaid (tailwind.css). */
@@ -56,7 +57,7 @@ export function Video(props) {
   return (
   <div className='bb-aurora relative my-6 overflow-hidden rounded-[20px] bg-bb-frame p-3 sm:p-4'>
     {props?.label ? <div className="flex py-1 flex-wrap items-start gap-x-4 px-4 dark:border-zinc-800 dark:bg-transparent"><h3 className="bb-kicker mr-auto m-0">{props.label}</h3></div> : <></> }
-    <iframe width="800" className='rounded-2xl w-full max-sm:w-full max-sm:h-[220px] ' height="450" src={'https://www.youtube.com/embed/'+props.yt} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />    
+    <iframe width="800" className='rounded-2xl w-full max-sm:w-full max-sm:h-[220px] ' height="450" src={'https://www.youtube.com/embed/'+props.yt} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />    
   </div>
   )
 }
@@ -65,7 +66,7 @@ export function VideoVertical(props) {
   return (
   <div className='my-6 h-[560px] w-[315px] overflow-hidden rounded-2xl bg-bb-frame ring-1 ring-inset ring-bb-line'>
     {props?.label ? <div className="flex py-1 flex-wrap items-start gap-x-4 px-4 dark:border-zinc-800 dark:bg-transparent"><h3 className="bb-kicker mr-auto m-0">{props.label}</h3></div> : <></> }
-    <iframe width="800" className='rounded-2xl w-full max-sm:w-full max-sm:h-[220px] ' height="530" src={'https://www.youtube.com/embed/'+props.yt} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />    
+    <iframe width="800" className='rounded-2xl w-full max-sm:w-full max-sm:h-[220px] ' height="530" src={'https://www.youtube.com/embed/'+props.yt} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />    
   </div>
   )
 }
@@ -90,7 +91,7 @@ export function Note({ children }) {
   return (
     <div className="my-6 flex gap-2.5 rounded-2xl bg-bb-l2/[0.06] p-4 leading-6 text-bb-ink ring-1 ring-inset ring-bb-l2/25">
       <Icon name="info" size={18} className="mt-1 text-bb-l2" />
-      <div className="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
+      <div className="min-w-0 flex-1 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
     </div>
@@ -100,7 +101,7 @@ export function Note({ children }) {
 export function Error({ children }) {
   return (
     <div className="my-6 flex gap-2.5 rounded-2xl border border-rose-500/20 bg-rose-50/50 p-4 leading-6 text-rose-900 dark:border-rose-500/30 dark:bg-rose-500/5 dark:text-rose-200 dark:[--tw-prose-links-hover:theme(colors.rose.300)] dark:[--tw-prose-links:theme(colors.white)]">
-      <div className="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
+      <div className="min-w-0 flex-1 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
     </div>
@@ -110,7 +111,7 @@ export function Error({ children }) {
 export function Warning({ children }) {
   return (
     <div className="my-6 flex gap-2.5 rounded-2xl border border-orange-500/20 bg-orange-50/50 p-4 leading-6 text-orange-900 dark:border-orange-500/30 dark:bg-orange-500/5 dark:text-orange-200 dark:[--tw-prose-links-hover:theme(colors.orange.300)] dark:[--tw-prose-links:theme(colors.white)]">
-      <div className="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
+      <div className="min-w-0 flex-1 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
     </div>
@@ -119,7 +120,7 @@ export function Warning({ children }) {
 
 export function Row({ children }) {
   return (
-    <div className="grid grid-cols-1 items-start gap-y-6">
+    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-y-6">
       {children}
     </div>
   )
@@ -127,7 +128,7 @@ export function Row({ children }) {
 
 export function RowCenter({ children }) {
   return (
-    <div className="grid grid-cols-1 items-start gap-y-6">
+    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-y-6">
       {children}
     </div>
   )

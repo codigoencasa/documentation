@@ -6,6 +6,8 @@ import clsx from 'clsx'
  * Use one color (currentColor); sizes 16, 20 or 24.
  */
 export const iconPaths = {
+  "sidebar-close": "M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9.5 4v16M16 9.5 13.5 12l2.5 2.5",
+  "sidebar-open": "M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9.5 4v16M13.5 9.5 16 12l-2.5 2.5",
   "book": "M5 5.5A1.5 1.5 0 0 1 6.5 4H18v13H7.5A2.5 2.5 0 0 0 5 19.5zM5 19.5A1.5 1.5 0 0 0 6.5 21H18v-4",
   "bolt": "M13 3 5 13.5h6L10 21l8-10.5h-6L13 3z",
   "blocks": "M8 4h10a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H9L5 6.5A2 2 0 0 1 8 4zM8 14h10a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H9l-4-3.5A2 2 0 0 1 8 14z",
